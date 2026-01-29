@@ -16,7 +16,7 @@ export const Collections: CollectionConfig = {
     update: admins,
   },
   admin: {
-    group: groups.catalog,
+    group: groups.products.name,
     useAsTitle: 'title',
   },
   fields: [

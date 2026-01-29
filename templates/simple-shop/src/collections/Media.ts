@@ -13,7 +13,7 @@ export const Media: CollectionConfig = {
         update: admins,
     },
     admin: {
-        group: groups.content,
+        group: groups.content.name,
     },
     fields: [
         {

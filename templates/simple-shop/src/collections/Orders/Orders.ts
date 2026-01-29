@@ -17,7 +17,7 @@ export const Orders: CollectionConfig = {
     update: admins,
   },
   admin: {
-    group: groups.orders,
+    group: groups.orders.name,
     useAsTitle: 'orderId',
   },
   endpoints: [checkoutEndpoint],

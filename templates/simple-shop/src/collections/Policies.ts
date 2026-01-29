@@ -3,6 +3,7 @@ import type { CollectionConfig } from "payload";
 import { admins, anyone } from "@/access/roles";
 import { HandleField } from "@/fields/handle";
 import { RichTextEditor } from "@/fields/RichTextEditor/RichTextEditor";
+import { groups } from "./groups";
 
 export const Policies: CollectionConfig = {
     slug: "policies",
@@ -14,7 +15,7 @@ export const Policies: CollectionConfig = {
     },
     admin: {
         defaultColumns: ["title", "handle", "createdAt", "updatedAt"],
-        group: "Settings",
+        group: groups.settings.name,
         useAsTitle: "title",
     },
     fields: [

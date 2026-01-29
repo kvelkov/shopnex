@@ -5,7 +5,7 @@ import { groups } from "./groups";
 export const Locations: CollectionConfig = {
     slug: "locations",
     admin: {
-        group: groups.settings,
+        group: groups.settings.name,
         useAsTitle: "name",
     },
     fields: [

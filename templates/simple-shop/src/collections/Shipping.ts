@@ -8,7 +8,7 @@ export const CustomShipping: Block = {
     slug: "custom-shipping",
     admin: {
         disableBlockName: true,
-        group: groups.settings,
+        group: groups.settings.name,
     },
     fields: [
         {
@@ -63,7 +63,7 @@ export const Shipping: CollectionConfig = {
         update: admins,
     },
     admin: {
-        group: groups.settings,
+        group: groups.settings.name,
         useAsTitle: "name",
     },
     fields: [

@@ -18,7 +18,7 @@ export const Products: CollectionConfig = {
   },
   admin: {
     defaultColumns: ['title', 'image', 'variants', 'collections'],
-    group: groups.catalog,
+    group: groups.products.name,
     useAsTitle: 'title',
   },
   fields: [

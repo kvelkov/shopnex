@@ -79,7 +79,7 @@ export const Payments: CollectionConfig = {
         update: admins,
     },
     admin: {
-        group: groups.settings,
+        group: groups.settings.name,
         useAsTitle: "name",
     },
     fields: [

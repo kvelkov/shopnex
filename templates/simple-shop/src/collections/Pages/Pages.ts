@@ -1,10 +1,11 @@
 import { admins, anyone } from '@/access/roles'
 import { CollectionConfig } from 'payload'
+import { groups } from '../groups'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
   admin: {
-    group: 'Design',
+    group: groups.design.name,
     useAsTitle: 'title',
     defaultColumns: ['title', 'handle', 'createdAt', 'updatedAt'],
   },

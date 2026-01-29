@@ -22,7 +22,7 @@ export const GiftCards: CollectionConfig = {
     },
     admin: {
         defaultColumns: ["code", "value", "expiryDate"],
-        group: groups.catalog,
+        group: groups.products.name,
         useAsTitle: "code",
     },
     endpoints: [
