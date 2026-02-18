@@ -7,7 +7,7 @@
 ![Build](https://img.shields.io/github/actions/workflow/status/shopnex-ai/shopnex/ci.yaml)
 ![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen)
 ![Last Commit](https://img.shields.io/github/last-commit/shopnex-ai/shopnex)
-<a href="https://discord.gg/6NTt49jguY">
+<a href="https://discord.gg/xQ8xKV6MdF">
 <img src="https://img.shields.io/badge/chat-on%20discord-7289DA.svg" alt="Discord Chat" />
 </a>
 
@@ -107,7 +107,7 @@ We welcome contributions! If you find any bugs or have ideas for improvements, f
 
 - 🐛 [Open an issue](https://github.com/shopnex-ai/shopnex/issues) to report bugs or request features.
 - 🔧 Fork the repo and submit a pull request with your improvements.
-- 💬 Join our [Discord](https://discord.gg/MFc9x7vdXK) community for discussions and support.
+- 💬 Join our [Discord](https://discord.gg/xQ8xKV6MdF) community for discussions and support.
 
 Before contributing, please:
 
