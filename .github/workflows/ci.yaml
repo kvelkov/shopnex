@@ -76,6 +76,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - run: pnpm turbo build --filter='./packages/*'
+
       - name: Run integration tests
         run: pnpm --filter ./apps/simple-shop test:int
 
