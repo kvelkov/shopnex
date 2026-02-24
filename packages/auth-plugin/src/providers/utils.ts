@@ -1,10 +1,11 @@
-import { ProviderAlreadyExists } from "../core/errors/consoleErrors";
-import {
-    ProvidersConfig,
+import type {
     OAuthProviderConfig,
     PasskeyProviderConfig,
     PasswordProviderConfig,
+    ProvidersConfig,
 } from "../types";
+
+import { ProviderAlreadyExists } from "../core/errors/consoleErrors";
 
 /**
  * Simplified function to extract OAuth providers (Google and GitHub)
@@ -35,7 +36,7 @@ export function getOAuthProviders(
  */
 export function getPasskeyProvider(
     providers: ProvidersConfig[]
-): PasskeyProviderConfig | null {
+): null | PasskeyProviderConfig {
     return providers.find(provider => provider.kind === "passkey") as PasskeyProviderConfig || null;
 }
 
@@ -44,6 +45,6 @@ export function getPasskeyProvider(
  */
 export function getPasswordProvider(
     providers: ProvidersConfig[]
-): PasswordProviderConfig | null {
+): null | PasswordProviderConfig {
     return providers.find(provider => provider.kind === "password") as PasswordProviderConfig || null;
 }

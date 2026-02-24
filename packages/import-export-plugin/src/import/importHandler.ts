@@ -1,7 +1,8 @@
 import type { PayloadHandler } from "payload";
-import { APIError } from "payload";
-import { unflatten } from "flat";
+
 import { parse as parseCookie } from "cookie";
+import { unflatten } from "flat";
+import { APIError } from "payload";
 
 // Normalize prices if there are variants
 function normalizePrices(documents: any[]) {

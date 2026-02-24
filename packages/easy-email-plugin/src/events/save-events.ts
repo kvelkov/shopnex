@@ -1,30 +1,31 @@
 import { toast } from "@payloadcms/ui";
-import { SaveOutput, EmailTemplateData } from '../types/email-template.types';
+
+import type { EmailTemplateData, SaveOutput } from '../types/email-template.types';
 
 export type SaveSuccessHandler = (data: EmailTemplateData) => void;
 export type SaveErrorHandler = (error: Error) => void;
 
 export class SaveEventManager {
-    private onSaveSuccess?: SaveSuccessHandler;
     private onSaveError?: SaveErrorHandler;
+    private onSaveSuccess?: SaveSuccessHandler;
 
-    setSaveSuccessHandler(handler: SaveSuccessHandler): void {
-        this.onSaveSuccess = handler;
+    handleSaveError(error: Error): void {
+        console.error("Save failed:", error);
+        toast.error("Failed to save email template. Please try again.");
+        this.onSaveError?.(error);
+    }
+
+    handleSaveSuccess(savedData: EmailTemplateData): void {
+        toast.success("Email template saved successfully!");
+        this.onSaveSuccess?.(savedData);
     }
 
     setSaveErrorHandler(handler: SaveErrorHandler): void {
         this.onSaveError = handler;
     }
 
-    async handleSaveSuccess(savedData: EmailTemplateData): Promise<void> {
-        toast.success("Email template saved successfully!");
-        this.onSaveSuccess?.(savedData);
-    }
-
-    async handleSaveError(error: Error): Promise<void> {
-        console.error("Save failed:", error);
-        toast.error("Failed to save email template. Please try again.");
-        this.onSaveError?.(error);
+    setSaveSuccessHandler(handler: SaveSuccessHandler): void {
+        this.onSaveSuccess = handler;
     }
 
     validateSaveData(output: SaveOutput): boolean {

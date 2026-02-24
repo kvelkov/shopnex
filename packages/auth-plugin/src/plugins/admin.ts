@@ -5,36 +5,38 @@ import type {
     PayloadRequest,
     Plugin,
 } from "payload";
+
+import type { AccountInfo, ProvidersConfig } from "../types";
+
 import {
     EndpointsFactory,
     OAuthEndpointStrategy,
     PasskeyEndpointStrategy,
 } from "../core/endpoints";
-import type { AccountInfo, ProvidersConfig } from "../types";
-import { PayloadSession } from "../core/session/payload";
 import { InvalidServerURL } from "../core/errors/consoleErrors";
-import { getOAuthProviders, getPasskeyProvider } from "../providers/utils";
 import { preflightCollectionCheck } from "../core/preflights/collections";
+import { PayloadSession } from "../core/session/payload";
+import { getOAuthProviders, getPasskeyProvider } from "../providers/utils";
 
 interface PluginOptions {
-    /* Enable or disable plugin
-     * @default true
-     */
-    enabled?: boolean;
-    /*
-     * OAuth Providers
-     */
-    providers: ProvidersConfig[];
-
     /*
      * Accounts collections config
      */
     accountsCollectionSlug: string;
-
     /* Enable or disable user creation. WARNING: If applied to your admin users collection it will allow ANYONE to sign up as an admin.
      * @default false
      */
     allowSignUp?: boolean;
+
+    /* Enable or disable plugin
+     * @default true
+     */
+    enabled?: boolean;
+
+    /*
+     * OAuth Providers
+     */
+    providers: ProvidersConfig[];
 }
 
 export const adminAuthPlugin =
@@ -50,7 +52,7 @@ export const adminAuthPlugin =
         //     throw new InvalidServerURL();
         // }
 
-        const { accountsCollectionSlug, providers, allowSignUp } =
+        const { accountsCollectionSlug, allowSignUp, providers } =
             pluginOptions;
 
         preflightCollectionCheck(
@@ -64,7 +66,7 @@ export const adminAuthPlugin =
 
         const session = new PayloadSession(
             {
-                accountsCollectionSlug: accountsCollectionSlug,
+                accountsCollectionSlug,
                 usersCollectionSlug: config.admin.user!,
             },
             allowSignUp
@@ -80,7 +82,7 @@ export const adminAuthPlugin =
 
         let oauthEndpoints: Endpoint[] = [];
         let passkeyEndpoints: Endpoint[] = [];
-        let passwordEndpoints: Endpoint[] = [];
+        const passwordEndpoints: Endpoint[] = [];
 
         if (Object.keys(oauthProviders).length > 0) {
             endpointsFactory.registerStrategy(
@@ -120,8 +122,6 @@ export const adminAuthPlugin =
 
             passwordEndpoints.push(
                 {
-                    path: "/admin/auth/signin",
-                    method: "post",
                     handler: async (req: PayloadRequest) => {
                         return PasswordAuthHandlers(
                             req,
@@ -137,10 +137,10 @@ export const adminAuthPlugin =
                             req.payload.secret
                         );
                     },
+                    method: "post",
+                    path: "/admin/auth/signin",
                 },
                 {
-                    path: "/admin/auth/signup",
-                    method: "post",
                     handler: async (req: PayloadRequest) => {
                         return PasswordAuthHandlers(
                             req,
@@ -156,10 +156,10 @@ export const adminAuthPlugin =
                             req.payload.secret
                         );
                     },
+                    method: "post",
+                    path: "/admin/auth/signup",
                 },
                 {
-                    path: "/admin/auth/forgot-password",
-                    method: "post",
                     handler: async (req: PayloadRequest) => {
                         return PasswordAuthHandlers(
                             req,
@@ -176,10 +176,10 @@ export const adminAuthPlugin =
                             req.query.stage as string
                         );
                     },
+                    method: "post",
+                    path: "/admin/auth/forgot-password",
                 },
                 {
-                    path: "/admin/auth/reset-password",
-                    method: "post",
                     handler: async (req: PayloadRequest) => {
                         return PasswordAuthHandlers(
                             req,
@@ -195,6 +195,8 @@ export const adminAuthPlugin =
                             req.payload.secret
                         );
                     },
+                    method: "post",
+                    path: "/admin/auth/reset-password",
                 }
             );
         }

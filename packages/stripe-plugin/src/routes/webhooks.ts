@@ -4,10 +4,11 @@ import type {
     PayloadRequest,
 } from "payload";
 
+import { getTenantFromCookie } from "@shopnex/utils/helpers";
 import Stripe from "stripe";
 
 import type { StripePluginConfig } from "../types";
-import { getTenantFromCookie } from "@shopnex/utils/helpers";
+
 import { getStripeBlock } from "../utilities/get-stripe-block";
 
 export const stripeWebhooks = async (args: {
@@ -41,7 +42,7 @@ export const stripeWebhooks = async (args: {
     const { stripeSecretKey, stripeWebhooksEndpointSecret } = stripeBlock;
 
     if (stripeWebhooksEndpointSecret) {
-        const stripe = new Stripe(stripeSecretKey as string, {
+        const stripe = new Stripe(stripeSecretKey, {
             apiVersion: "2022-08-01",
             appInfo: {
                 name: "ShopNex Stripe Plugin",
@@ -59,7 +60,7 @@ export const stripeWebhooks = async (args: {
                 event = stripe.webhooks.constructEvent(
                     body!,
                     stripeSignature,
-                    stripeWebhooksEndpointSecret as string
+                    stripeWebhooksEndpointSecret
                 );
             } catch (err: unknown) {
                 const msg: string =
@@ -73,7 +74,7 @@ export const stripeWebhooks = async (args: {
             if (event) {
                 // Fire external webhook handlers if they exist
                 if (typeof webhooks === "function") {
-                    webhooks({
+                    void webhooks({
                         config,
                         event,
                         payload: req.payload,
@@ -86,7 +87,7 @@ export const stripeWebhooks = async (args: {
                 if (typeof webhooks === "object") {
                     const webhookEventHandler = webhooks[event.type];
                     if (typeof webhookEventHandler === "function") {
-                        webhookEventHandler({
+                        void webhookEventHandler({
                             config,
                             event,
                             payload: req.payload,

@@ -1,4 +1,5 @@
-import { CollectionConfig } from "payload";
+import type { CollectionConfig } from "payload";
+
 import {
     InvalidCollectionSlug,
     MissingCollections,

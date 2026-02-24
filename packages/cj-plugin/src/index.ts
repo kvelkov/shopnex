@@ -1,15 +1,18 @@
 import type { Config, SelectField } from "payload";
+
+import type { CjCollectionProps} from "./CjCollection";
+
+import pkg from "../package.json";
+import { CjCollection } from "./CjCollection";
 import { setTenantCredentials } from "./sdk/access-token";
 import { createOrderHook } from "./service/create-order.hook";
-import { CjCollectionProps, CjCollection } from "./CjCollection";
-import pkg from "../package.json";
 
 interface PluginOptions {
-    isEnabled?: boolean;
     cjApiKey: string;
     cjEmailAddress: string;
     cjRefreshToken?: string;
     collectionOverrides?: CjCollectionProps["overrides"];
+    isEnabled?: boolean;
     orderCollectionSlug?: string;
 }
 
@@ -82,12 +85,12 @@ export const cjPlugin =
 
             await config.custom?.syncPlugin?.(payload, {
                 name: pkg.name,
-                version: pkg.version,
-                description: pkg.description,
-                license: pkg.license,
                 author: pkg.author,
-                icon: pkg.icon,
                 category: pkg.category,
+                description: pkg.description,
+                icon: pkg.icon,
+                license: pkg.license,
+                version: pkg.version,
             });
 
             const cjSettingsDocs: any = [];

@@ -1,9 +1,10 @@
 import type { Config } from "payload";
+
 import pkg from "../package.json";
 
 type EmailChannelPluginConfig = {
-    enabled?: boolean;
     collectionSlug?: string;
+    enabled?: boolean;
 };
 
 export const analyticsPlugin = (pluginConfig: EmailChannelPluginConfig) => {
@@ -61,12 +62,12 @@ export const analyticsPlugin = (pluginConfig: EmailChannelPluginConfig) => {
 
             await config.custom?.syncPlugin?.(payload, {
                 name: pkg.name,
-                version: pkg.version,
-                description: pkg.description,
-                license: pkg.license,
                 author: pkg.author,
-                icon: pkg.icon,
                 category: pkg.category,
+                description: pkg.description,
+                icon: pkg.icon,
+                license: pkg.license,
+                version: pkg.version,
             });
         };
 

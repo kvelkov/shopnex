@@ -1,107 +1,109 @@
+import type { ComponentConfig } from "@puckeditor/core";
+
 import React from "react";
-import { ComponentConfig } from "@measured/puck";
+
 import styles from "./styles.module.css";
 
 export type FooterLink = {
-    text: string;
     href: string;
+    text: string;
 };
 
 export type FooterProps = {
-    leftLinks: FooterLink[];
-    copyrightYear: string;
-    copyrightText: string;
-    poweredByText: string;
-    poweredByLink: string;
     backgroundColor: string;
-    textColor: string;
-    linkColor: string;
+    copyrightText: string;
+    copyrightYear: string;
     dividerColor: string;
+    leftLinks: FooterLink[];
+    linkColor: string;
+    poweredByLink: string;
+    poweredByText: string;
+    textColor: string;
 };
 
 export const Footer: ComponentConfig<FooterProps> = {
-    label: "Footer",
+    defaultProps: {
+        backgroundColor: "#f8f9fa",
+        copyrightText: "Vvveb",
+        copyrightYear: "2023",
+        dividerColor: "#dee2e6",
+        leftLinks: [
+            { href: "/terms", text: "Terms and conditions" },
+            { href: "/privacy", text: "Privacy Policy" },
+        ],
+        linkColor: "#007bff",
+        poweredByLink: "https://vvveb.com",
+        poweredByText: "Powered by Vvveb",
+        textColor: "#6c757d",
+    },
     fields: {
-        leftLinks: {
-            type: "array",
-            label: "Left Links",
-            arrayFields: {
-                text: {
-                    type: "text",
-                    label: "Link Text",
-                },
-                href: {
-                    type: "text",
-                    label: "Link URL",
-                },
-            },
-        },
-        copyrightYear: {
+        backgroundColor: {
             type: "text",
-            label: "Copyright Year",
+            label: "Background Color",
         },
         copyrightText: {
             type: "text",
             label: "Copyright Text",
         },
-        poweredByText: {
+        copyrightYear: {
             type: "text",
-            label: "Powered By Text",
-        },
-        poweredByLink: {
-            type: "text",
-            label: "Powered By Link",
-        },
-        backgroundColor: {
-            type: "text",
-            label: "Background Color",
-        },
-        textColor: {
-            type: "text",
-            label: "Text Color",
-        },
-        linkColor: {
-            type: "text",
-            label: "Link Color",
+            label: "Copyright Year",
         },
         dividerColor: {
             type: "text",
             label: "Divider Color",
         },
+        leftLinks: {
+            type: "array",
+            arrayFields: {
+                href: {
+                    type: "text",
+                    label: "Link URL",
+                },
+                text: {
+                    type: "text",
+                    label: "Link Text",
+                },
+            },
+            label: "Left Links",
+        },
+        linkColor: {
+            type: "text",
+            label: "Link Color",
+        },
+        poweredByLink: {
+            type: "text",
+            label: "Powered By Link",
+        },
+        poweredByText: {
+            type: "text",
+            label: "Powered By Text",
+        },
+        textColor: {
+            type: "text",
+            label: "Text Color",
+        },
     },
-    defaultProps: {
-        leftLinks: [
-            { text: "Terms and conditions", href: "/terms" },
-            { text: "Privacy Policy", href: "/privacy" },
-        ],
-        copyrightYear: "2023",
-        copyrightText: "Vvveb",
-        poweredByText: "Powered by Vvveb",
-        poweredByLink: "https://vvveb.com",
-        backgroundColor: "#f8f9fa",
-        textColor: "#6c757d",
-        linkColor: "#007bff",
-        dividerColor: "#dee2e6",
-    },
+    label: "Footer",
     render: ({
-        leftLinks,
-        copyrightYear,
-        copyrightText,
-        poweredByText,
-        poweredByLink,
         backgroundColor,
-        textColor,
-        linkColor,
+        copyrightText,
+        copyrightYear,
         dividerColor,
+        leftLinks,
+        linkColor,
+        poweredByLink,
+        poweredByText,
         puck,
+        textColor,
     }) => {
         return (
-            <footer 
+            <footer
                 className={styles.footer}
-                style={{ 
+                style={{
                     backgroundColor,
-                    color: textColor,
                     borderTopColor: dividerColor,
+                    color: textColor,
                 }}
             >
                 <div className={styles.container}>
@@ -113,15 +115,23 @@ export const Footer: ComponentConfig<FooterProps> = {
                                     {leftLinks.map((link, index) => (
                                         <React.Fragment key={index}>
                                             <a
-                                                href={puck?.isEditing ? "#" : link.href}
                                                 className={styles.link}
+                                                href={
+                                                    puck?.isEditing
+                                                        ? "#"
+                                                        : link.href
+                                                }
                                                 style={{ color: linkColor }}
-                                                tabIndex={puck?.isEditing ? -1 : undefined}
+                                                tabIndex={
+                                                    puck?.isEditing
+                                                        ? -1
+                                                        : undefined
+                                                }
                                             >
                                                 {link.text}
                                             </a>
                                             {index < leftLinks.length - 1 && (
-                                                <span 
+                                                <span
                                                     className={styles.separator}
                                                     style={{ color: textColor }}
                                                 >
@@ -141,11 +151,11 @@ export const Footer: ComponentConfig<FooterProps> = {
                                 <span className={styles.copyright}>
                                     © {copyrightYear} {copyrightText}.
                                 </span>
-                                
+
                                 {/* Powered By */}
                                 <a
-                                    href={puck?.isEditing ? "#" : poweredByLink}
                                     className={styles.poweredBy}
+                                    href={puck?.isEditing ? "#" : poweredByLink}
                                     style={{ color: linkColor }}
                                     tabIndex={puck?.isEditing ? -1 : undefined}
                                 >

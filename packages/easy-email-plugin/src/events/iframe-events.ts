@@ -1,9 +1,10 @@
+import type { MessagePayload } from "../types/email-template.types";
+
 import { MESSAGE_TYPES } from "../utils/constants";
-import { MessagePayload } from "../types/email-template.types";
 
 export class IframeEventManager {
-    private iframeRef: React.RefObject<HTMLIFrameElement | null>;
     private iframeOrigin: string;
+    private iframeRef: React.RefObject<HTMLIFrameElement | null>;
 
     constructor(
         iframeRef: React.RefObject<HTMLIFrameElement | null>,
@@ -11,6 +12,17 @@ export class IframeEventManager {
     ) {
         this.iframeRef = iframeRef;
         this.iframeOrigin = iframeOrigin;
+    }
+
+    isValidOrigin(origin: string): boolean {
+        return origin === this.iframeOrigin;
+    }
+
+    sendCurrentTemplate(templateData: any): void {
+        this.sendMessage({
+            type: MESSAGE_TYPES.CURRENT_EMAIL_TEMPLATE,
+            payload: templateData,
+        });
     }
 
     sendMessage(payload: MessagePayload): void {
@@ -28,20 +40,9 @@ export class IframeEventManager {
         });
     }
 
-    sendCurrentTemplate(templateData: any): void {
-        this.sendMessage({
-            type: MESSAGE_TYPES.CURRENT_EMAIL_TEMPLATE,
-            payload: templateData,
-        });
-    }
-
     triggerSave(): void {
         this.sendMessage({
             type: MESSAGE_TYPES.TRIGGER_SAVE,
         });
-    }
-
-    isValidOrigin(origin: string): boolean {
-        return origin === this.iframeOrigin;
     }
 }

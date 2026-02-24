@@ -1,118 +1,155 @@
+import type { ComponentConfig } from "@puckeditor/core";
+
 import React, { useState } from "react";
-import { ComponentConfig } from "@measured/puck";
+
 import styles from "./styles.module.css";
 
 export type ProductImage = {
-    src: string;
     alt: string;
+    src: string;
 };
 
 export type ProductDetailsProps = {
-    name: string;
-    manufacturer: string;
-    vendor: string;
+    addToCartText: string;
     availability: string;
+    buyNowText: string;
+    compareText: string;
+    description: string;
+    discount?: number;
+    images: ProductImage[];
+    manufacturer: string;
+    name: string;
+    originalPrice?: string;
+    price: string;
+    priceExcludingTax: string;
     rating: number;
     reviewsCount: number;
-    price: string;
-    originalPrice?: string;
-    discount?: number;
-    priceExcludingTax: string;
-    images: ProductImage[];
-    description: string;
-    showManufacturer: boolean;
-    showVendor: boolean;
     showAvailability: boolean;
+    showManufacturer: boolean;
     showRating: boolean;
-    addToCartText: string;
-    buyNowText: string;
+    showVendor: boolean;
+    vendor: string;
     wishlistText: string;
-    compareText: string;
 };
 
 export const ProductDetails: ComponentConfig<ProductDetailsProps> = {
-    label: "Product Details",
+    defaultProps: {
+        name: "One Shoulder Glitter Midi Dress",
+        addToCartText: "Add to cart",
+        availability: "In stock",
+        buyNowText: "Buy now",
+        compareText: "Compare product",
+        description:
+            "Elegant one shoulder glitter midi dress perfect for special occasions. Made with high-quality materials and attention to detail.",
+        discount: 30,
+        images: [
+            {
+                alt: "Product main image",
+                src: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+            },
+            {
+                alt: "Product image 2",
+                src: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+            },
+            {
+                alt: "Product image 3",
+                src: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+            },
+        ],
+        manufacturer: "Mango",
+        originalPrice: "$65.00",
+        price: "$49.00",
+        priceExcludingTax: "$41.00",
+        rating: 4,
+        reviewsCount: 12,
+        showAvailability: true,
+        showManufacturer: true,
+        showRating: true,
+        showVendor: true,
+        vendor: "Fashion Store",
+        wishlistText: "Add to Wish List",
+    },
     fields: {
         name: {
             type: "text",
-            label: "Product Name",
             contentEditable: true,
+            label: "Product Name",
         },
-        manufacturer: {
+        addToCartText: {
             type: "text",
-            label: "Manufacturer",
-        },
-        vendor: {
-            type: "text",
-            label: "Vendor",
+            label: "Add to Cart Button Text",
         },
         availability: {
             type: "text",
             label: "Availability",
         },
-        rating: {
-            type: "number",
-            label: "Rating (1-5)",
-            min: 1,
-            max: 5,
-        },
-        reviewsCount: {
-            type: "number",
-            label: "Reviews Count",
-        },
-        price: {
+        buyNowText: {
             type: "text",
-            label: "Price",
+            label: "Buy Now Button Text",
         },
-        originalPrice: {
+        compareText: {
             type: "text",
-            label: "Original Price (for discounts)",
-        },
-        discount: {
-            type: "number",
-            label: "Discount Percentage",
-        },
-        priceExcludingTax: {
-            type: "text",
-            label: "Price Excluding Tax",
-        },
-        images: {
-            type: "array",
-            label: "Product Images",
-            arrayFields: {
-                src: {
-                    type: "text",
-                    label: "Image URL",
-                },
-                alt: {
-                    type: "text",
-                    label: "Alt Text",
-                },
-            },
+            label: "Compare Button Text",
         },
         description: {
             type: "textarea",
             label: "Product Description",
         },
-        showManufacturer: {
-            type: "radio",
-            label: "Show Manufacturer",
-            options: [
-                { label: "Yes", value: true },
-                { label: "No", value: false },
-            ],
+        discount: {
+            type: "number",
+            label: "Discount Percentage",
         },
-        showVendor: {
-            type: "radio",
-            label: "Show Vendor",
-            options: [
-                { label: "Yes", value: true },
-                { label: "No", value: false },
-            ],
+        images: {
+            type: "array",
+            arrayFields: {
+                alt: {
+                    type: "text",
+                    label: "Alt Text",
+                },
+                src: {
+                    type: "text",
+                    label: "Image URL",
+                },
+            },
+            label: "Product Images",
+        },
+        manufacturer: {
+            type: "text",
+            label: "Manufacturer",
+        },
+        originalPrice: {
+            type: "text",
+            label: "Original Price (for discounts)",
+        },
+        price: {
+            type: "text",
+            label: "Price",
+        },
+        priceExcludingTax: {
+            type: "text",
+            label: "Price Excluding Tax",
+        },
+        rating: {
+            type: "number",
+            label: "Rating (1-5)",
+            max: 5,
+            min: 1,
+        },
+        reviewsCount: {
+            type: "number",
+            label: "Reviews Count",
         },
         showAvailability: {
             type: "radio",
             label: "Show Availability",
+            options: [
+                { label: "Yes", value: true },
+                { label: "No", value: false },
+            ],
+        },
+        showManufacturer: {
+            type: "radio",
+            label: "Show Manufacturer",
             options: [
                 { label: "Yes", value: true },
                 { label: "No", value: false },
@@ -126,80 +163,46 @@ export const ProductDetails: ComponentConfig<ProductDetailsProps> = {
                 { label: "No", value: false },
             ],
         },
-        addToCartText: {
-            type: "text",
-            label: "Add to Cart Button Text",
+        showVendor: {
+            type: "radio",
+            label: "Show Vendor",
+            options: [
+                { label: "Yes", value: true },
+                { label: "No", value: false },
+            ],
         },
-        buyNowText: {
+        vendor: {
             type: "text",
-            label: "Buy Now Button Text",
+            label: "Vendor",
         },
         wishlistText: {
             type: "text",
             label: "Wishlist Button Text",
         },
-        compareText: {
-            type: "text",
-            label: "Compare Button Text",
-        },
     },
-    defaultProps: {
-        name: "One Shoulder Glitter Midi Dress",
-        manufacturer: "Mango",
-        vendor: "Fashion Store",
-        availability: "In stock",
-        rating: 4,
-        reviewsCount: 12,
-        price: "$49.00",
-        originalPrice: "$65.00",
-        discount: 30,
-        priceExcludingTax: "$41.00",
-        images: [
-            {
-                src: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-                alt: "Product main image",
-            },
-            {
-                src: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-                alt: "Product image 2",
-            },
-            {
-                src: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-                alt: "Product image 3",
-            },
-        ],
-        description: "Elegant one shoulder glitter midi dress perfect for special occasions. Made with high-quality materials and attention to detail.",
-        showManufacturer: true,
-        showVendor: true,
-        showAvailability: true,
-        showRating: true,
-        addToCartText: "Add to cart",
-        buyNowText: "Buy now",
-        wishlistText: "Add to Wish List",
-        compareText: "Compare product",
-    },
-    render: ({ 
-        name, 
-        manufacturer, 
-        vendor, 
-        availability, 
-        rating, 
-        reviewsCount, 
-        price, 
-        originalPrice, 
-        discount, 
-        priceExcludingTax,
-        images,
-        description,
-        showManufacturer,
-        showVendor,
-        showAvailability,
-        showRating,
+    label: "Product Details",
+    render: ({
+        name,
         addToCartText,
+        availability,
         buyNowText,
-        wishlistText,
         compareText,
-        puck 
+        description,
+        discount,
+        images,
+        manufacturer,
+        originalPrice,
+        price,
+        priceExcludingTax,
+        puck,
+        rating,
+        reviewsCount,
+        showAvailability,
+        showManufacturer,
+        showRating,
+        showVendor,
+        vendor,
+        wishlistText,
     }) => {
         const [activeImageIndex, setActiveImageIndex] = useState(0);
         const [quantity, setQuantity] = useState(1);
@@ -207,8 +210,8 @@ export const ProductDetails: ComponentConfig<ProductDetailsProps> = {
         const renderStars = (rating: number) => {
             return Array.from({ length: 5 }, (_, index) => (
                 <span
-                    key={index}
                     className={`${styles.star} ${index < rating ? styles.starFilled : styles.starEmpty}`}
+                    key={index}
                 >
                     ★
                 </span>
@@ -225,26 +228,30 @@ export const ProductDetails: ComponentConfig<ProductDetailsProps> = {
                                 <div className={styles.mainImage}>
                                     {images && images.length > 0 && (
                                         <img
-                                            src={images[activeImageIndex]?.src}
                                             alt={images[activeImageIndex]?.alt}
                                             className={styles.productImage}
+                                            src={images[activeImageIndex]?.src}
                                         />
                                     )}
                                 </div>
-                                
+
                                 {images && images.length > 1 && (
                                     <div className={styles.thumbnails}>
                                         {images.map((image, index) => (
                                             <button
-                                                key={index}
-                                                className={`${styles.thumbnail} ${index === activeImageIndex ? styles.active : ''}`}
-                                                onClick={() => setActiveImageIndex(index)}
+                                                className={`${styles.thumbnail} ${index === activeImageIndex ? styles.active : ""}`}
                                                 disabled={puck?.isEditing}
+                                                key={index}
+                                                onClick={() =>
+                                                    setActiveImageIndex(index)
+                                                }
                                             >
                                                 <img
-                                                    src={image.src}
                                                     alt={image.alt}
-                                                    className={styles.thumbnailImage}
+                                                    className={
+                                                        styles.thumbnailImage
+                                                    }
+                                                    src={image.src}
                                                 />
                                             </button>
                                         ))}
@@ -260,22 +267,34 @@ export const ProductDetails: ComponentConfig<ProductDetailsProps> = {
 
                                 {showManufacturer && manufacturer && (
                                     <div className={styles.infoRow}>
-                                        <span className={styles.label}>Manufacturer:</span>
-                                        <span className={styles.value}>{manufacturer}</span>
+                                        <span className={styles.label}>
+                                            Manufacturer:
+                                        </span>
+                                        <span className={styles.value}>
+                                            {manufacturer}
+                                        </span>
                                     </div>
                                 )}
 
                                 {showVendor && vendor && (
                                     <div className={styles.infoRow}>
-                                        <span className={styles.label}>Vendor:</span>
-                                        <span className={styles.value}>{vendor}</span>
+                                        <span className={styles.label}>
+                                            Vendor:
+                                        </span>
+                                        <span className={styles.value}>
+                                            {vendor}
+                                        </span>
                                     </div>
                                 )}
 
                                 {showAvailability && availability && (
                                     <div className={styles.infoRow}>
-                                        <span className={styles.label}>Availability:</span>
-                                        <span className={styles.value}>{availability}</span>
+                                        <span className={styles.label}>
+                                            Availability:
+                                        </span>
+                                        <span className={styles.value}>
+                                            {availability}
+                                        </span>
                                     </div>
                                 )}
 
@@ -285,7 +304,9 @@ export const ProductDetails: ComponentConfig<ProductDetailsProps> = {
                                             {renderStars(rating)}
                                         </div>
                                         {reviewsCount > 0 && (
-                                            <span className={styles.reviewsLink}>
+                                            <span
+                                                className={styles.reviewsLink}
+                                            >
                                                 ({reviewsCount} reviews)
                                             </span>
                                         )}
@@ -294,11 +315,23 @@ export const ProductDetails: ComponentConfig<ProductDetailsProps> = {
 
                                 <div className={styles.priceSection}>
                                     <div className={styles.priceRow}>
-                                        <span className={styles.currentPrice}>{price}</span>
+                                        <span className={styles.currentPrice}>
+                                            {price}
+                                        </span>
                                         {originalPrice && discount && (
                                             <>
-                                                <span className={styles.originalPrice}>{originalPrice}</span>
-                                                <span className={styles.discount}>{discount}% Off</span>
+                                                <span
+                                                    className={
+                                                        styles.originalPrice
+                                                    }
+                                                >
+                                                    {originalPrice}
+                                                </span>
+                                                <span
+                                                    className={styles.discount}
+                                                >
+                                                    {discount}% Off
+                                                </span>
                                             </>
                                         )}
                                     </div>
@@ -311,39 +344,56 @@ export const ProductDetails: ComponentConfig<ProductDetailsProps> = {
 
                                 <div className={styles.actionsSection}>
                                     <div className={styles.quantitySection}>
-                                        <div className={styles.quantityControls}>
-                                            <button 
+                                        <div
+                                            className={styles.quantityControls}
+                                        >
+                                            <button
                                                 className={styles.quantityBtn}
-                                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                                 disabled={puck?.isEditing}
+                                                onClick={() =>
+                                                    setQuantity(
+                                                        Math.max(
+                                                            1,
+                                                            quantity - 1
+                                                        )
+                                                    )
+                                                }
                                             >
                                                 -
                                             </button>
                                             <input
+                                                className={styles.quantityInput}
+                                                disabled={puck?.isEditing}
+                                                min="1"
+                                                onChange={(e) =>
+                                                    setQuantity(
+                                                        parseInt(
+                                                            e.target.value
+                                                        ) || 1
+                                                    )
+                                                }
                                                 type="number"
                                                 value={quantity}
-                                                onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                                                className={styles.quantityInput}
-                                                min="1"
-                                                disabled={puck?.isEditing}
                                             />
-                                            <button 
+                                            <button
                                                 className={styles.quantityBtn}
-                                                onClick={() => setQuantity(quantity + 1)}
                                                 disabled={puck?.isEditing}
+                                                onClick={() =>
+                                                    setQuantity(quantity + 1)
+                                                }
                                             >
                                                 +
                                             </button>
                                         </div>
 
-                                        <button 
+                                        <button
                                             className={`${styles.btn} ${styles.btnPrimary}`}
                                             disabled={puck?.isEditing}
                                         >
                                             🛒 {addToCartText}
                                         </button>
 
-                                        <button 
+                                        <button
                                             className={`${styles.btn} ${styles.btnSecondary}`}
                                             disabled={puck?.isEditing}
                                         >
@@ -352,13 +402,13 @@ export const ProductDetails: ComponentConfig<ProductDetailsProps> = {
                                     </div>
 
                                     <div className={styles.secondaryActions}>
-                                        <button 
+                                        <button
                                             className={styles.actionBtn}
                                             disabled={puck?.isEditing}
                                         >
                                             ♡ {wishlistText}
                                         </button>
-                                        <button 
+                                        <button
                                             className={styles.actionBtn}
                                             disabled={puck?.isEditing}
                                         >

@@ -1,5 +1,7 @@
 import type { PayloadRequest } from "payload";
+
 import type { AccountInfo, OAuthProviderConfig } from "../../types";
+
 import {
     InvalidOAuthResource,
     InvalidProvider,

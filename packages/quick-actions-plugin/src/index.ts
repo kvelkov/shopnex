@@ -1,20 +1,22 @@
 import type { Config } from "payload";
-import { QuickAction, QuickActionsPluginConfig } from "./types";
+
+import type { QuickAction, QuickActionsPluginConfig } from "./types";
+
+import pkg from "../package.json";
 import { buildActions } from "./utils/build-actions";
 import { iconMap } from "./utils/icon-map";
 import { validateConfig } from "./utils/validate-config";
-import pkg from "../package.json";
 
 export type {
+    PluginHooks,
     QuickAction,
     QuickActionsPluginConfig,
-    PluginHooks,
 } from "./types";
-export { QuickActionBuilder, createAction } from "./utils/action-builder";
+export { createAction, QuickActionBuilder } from "./utils/action-builder";
 export {
     filterActions,
-    sortActionsByPriority,
     groupActionsByCategory,
+    sortActionsByPriority,
 } from "./utils/action-filters";
 export { iconMap } from "./utils/icon-map";
 
@@ -25,13 +27,13 @@ export const quickActionsPlugin = (
         const validatedConfig = validateConfig(pluginConfig);
 
         const {
-            position = "actions",
             defaultCreateActions = true,
             enableDefaultActions = true,
-            overrideIconsMap = iconMap,
-            hooks,
             excludeCollections = [],
             excludeGlobals = [],
+            hooks,
+            overrideIconsMap = iconMap,
+            position = "actions",
         } = validatedConfig;
 
         hooks?.beforeActionsGenerated?.(config);
@@ -45,11 +47,11 @@ export const quickActionsPlugin = (
         } else {
             actions = buildActions({
                 config,
-                iconMap: overrideIconsMap,
                 defaultCreateActions,
                 enableDefaultActions,
                 excludeCollections,
                 excludeGlobals,
+                iconMap: overrideIconsMap,
             });
         }
 
@@ -77,36 +79,36 @@ export const quickActionsPlugin = (
         ensureComponentsExist(config);
 
         config.admin!.components!.providers!.push({
-            path: "@shopnex/quick-actions-plugin/client#CommandBar",
             clientProps: {
                 actions,
-                kbarOptions: validatedConfig.kbarOptions,
                 hooks,
+                kbarOptions: validatedConfig.kbarOptions,
             },
+            path: "@shopnex/quick-actions-plugin/client#CommandBar",
         });
 
         const quickActionsClientProps = {
-            position,
             kbarOptions: validatedConfig.kbarOptions,
+            position,
         };
 
         switch (position) {
             case "actions":
                 config.admin!.components!.actions!.push({
-                    path: "@shopnex/quick-actions-plugin/client#QuickActions",
                     clientProps: quickActionsClientProps,
-                });
-                break;
-            case "before-nav-links":
-                config.admin!.components!.beforeNavLinks!.unshift({
                     path: "@shopnex/quick-actions-plugin/client#QuickActions",
-                    clientProps: quickActionsClientProps,
                 });
                 break;
             case "after-nav-links":
                 config.admin!.components!.afterNavLinks!.push({
-                    path: "@shopnex/quick-actions-plugin/client#QuickActions",
                     clientProps: quickActionsClientProps,
+                    path: "@shopnex/quick-actions-plugin/client#QuickActions",
+                });
+                break;
+            case "before-nav-links":
+                config.admin!.components!.beforeNavLinks!.unshift({
+                    clientProps: quickActionsClientProps,
+                    path: "@shopnex/quick-actions-plugin/client#QuickActions",
                 });
                 break;
         }
@@ -119,12 +121,12 @@ export const quickActionsPlugin = (
             }
             await config.custom?.syncPlugin?.(payload, {
                 name: pkg.name,
-                version: pkg.version,
-                description: pkg.description,
-                license: pkg.license,
                 author: pkg.author,
-                icon: pkg.icon,
                 category: pkg.category,
+                description: pkg.description,
+                icon: pkg.icon,
+                license: pkg.license,
+                version: pkg.version,
             });
         };
 

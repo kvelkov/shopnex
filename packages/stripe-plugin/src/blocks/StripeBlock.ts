@@ -1,5 +1,6 @@
+import type { Block, FieldAccess } from "payload";
+
 import { EncryptedField } from "@shopnex/utils";
-import { Block, FieldAccess } from "payload";
 
 export type SecretAccess = {
     create?: FieldAccess;
@@ -33,6 +34,7 @@ export const StripeBlock = ({
             admin: {
                 readOnly: true,
             },
+            defaultValue: "auto",
             options: [
                 {
                     label: "Credit Card",
@@ -47,7 +49,6 @@ export const StripeBlock = ({
                     value: "auto",
                 },
             ],
-            defaultValue: "auto",
         },
         {
             type: "row",
@@ -55,22 +56,22 @@ export const StripeBlock = ({
                 EncryptedField({
                     name: "stripeSecretKey",
                     type: "text",
-                    required: true,
                     access: secretAccess,
+                    required: true,
                 }),
                 EncryptedField({
                     name: "stripeWebhooksEndpointSecret",
                     type: "text",
-                    required: true,
                     access: secretAccess,
+                    required: true,
                 }),
             ],
         },
         EncryptedField({
             name: "publishableKey",
             type: "text",
-            required: true,
             access: secretAccess,
+            required: true,
         }),
     ],
     imageURL: "https://cdn.shopnex.ai/shopnex-images/media/stripe.png",

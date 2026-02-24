@@ -84,7 +84,7 @@ export async function getProductDetails(queryParams: {
     productSku?: string;
     variantSku?: string;
 }): Promise<APIResponse<ProductDetails>> {
-    const { pid, productSku, variantSku, accessToken } = queryParams;
+    const { accessToken, pid, productSku, variantSku } = queryParams;
     if (!pid && !productSku && !variantSku) {
         return {
             error: "One of pid, productSku, or variantSku must be provided.",
@@ -121,18 +121,18 @@ export async function getProductDetails(queryParams: {
 }
 
 export async function getProductStockByVid({
-    vid,
     accessToken,
+    vid,
 }: {
-    vid: string;
     accessToken: string;
+    vid: string;
 }): Promise<APIResponse<StockInfo[]>> {
     try {
         const response = await cjApiClient.get<{
             code: number;
-            result: boolean;
-            message: string;
             data: StockInfo[];
+            message: string;
+            result: boolean;
         }>("/product/stock/queryByVid", {
             headers: {
                 "CJ-Access-Token": accessToken,
@@ -164,9 +164,9 @@ export async function getProductStockBySku(
     try {
         const response = await cjApiClient.get<{
             code: number;
-            result: boolean;
-            message: string;
             data: StockInfo[];
+            message: string;
+            result: boolean;
         }>("/product/stock/queryBySku", {
             headers: {
                 "CJ-Access-Token": accessToken,

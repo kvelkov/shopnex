@@ -1,6 +1,7 @@
-import { SOURCE_BUILDER_IO_PUBLIC_KEY } from "../constants";
-import { builder } from "@builder.io/sdk";
 import { createAdminApiClient } from "@builder.io/admin-sdk";
+import { builder } from "@builder.io/sdk";
+
+import { SOURCE_BUILDER_IO_PUBLIC_KEY } from "../constants";
 import { modelSchema } from "./schema";
 
 export const importPageHook = async (
@@ -43,10 +44,10 @@ export const importSymbolsInit = async (privateApiKey: string) => {
     builder.init(sourceApiKey);
 
     const allSymbols = await builder.getAll(modelName, {
+        limit: 100,
         userAttributes: {
             urlPath: "/",
         },
-        limit: 100,
     });
 
     await createSymbolModel({ privateKey: privateApiKey });
@@ -87,26 +88,26 @@ async function importPage(
         const response = await fetch(
             `https://builder.io/api/v1/write/${modelName}`,
             {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${privateApiKey}`,
-                },
                 body: JSON.stringify({
-                    data: pageContent.data,
                     name: pageContent.name,
+                    data: pageContent.data,
                     model: modelName,
                     published: pageContent.published ?? true,
                     query: pageContent.data?.url
                         ? [
                               {
-                                  property: "urlPath",
                                   operator: "is",
+                                  property: "urlPath",
                                   value: pageContent.data.url,
                               },
                           ]
                         : [],
                 }),
+                headers: {
+                    Authorization: `Bearer ${privateApiKey}`,
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
             }
         );
 
@@ -131,19 +132,19 @@ async function createEmptyPage(
         const response = await fetch(
             `https://builder.io/api/v1/write/${modelName}`,
             {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${privateApiKey}`,
-                },
                 body: JSON.stringify({
+                    name: pageName,
                     data: {
                         url: pageName,
                     },
-                    name: pageName,
                     model: modelName,
                     published: true,
                 }),
+                headers: {
+                    Authorization: `Bearer ${privateApiKey}`,
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
             }
         );
 

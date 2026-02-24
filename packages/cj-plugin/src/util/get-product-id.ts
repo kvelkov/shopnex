@@ -1,4 +1,4 @@
-export function getProductId(url: string): string | null {
+export function getProductId(url: string): null | string {
     try {
         const match = url.match(/(?<=-p-)([0-9A-Fa-f-]+)(?=\.html)/);
         return match ? match[0] : null;

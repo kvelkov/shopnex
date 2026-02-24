@@ -25,8 +25,23 @@ export const defaultESLintIgnores = [
     "src/app/(frontend)/*",
 ];
 
-export default [
-    // ...payloadEsLintConfig,
+export const rootParserOptions = {
+    sourceType: "module",
+    ecmaVersion: "latest",
+    projectService: {
+        maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 40,
+        allowDefaultProject: [
+            "scripts/*.ts",
+            "*.js",
+            "*.mjs",
+            "*.spec.ts",
+            "*.d.ts",
+        ],
+    },
+};
+
+export const rootEslintConfig = [
+    ...payloadEsLintConfig,
     {
         ignores: defaultESLintIgnores,
     },
@@ -36,20 +51,33 @@ export default [
         },
     },
     {
+        files: ["packages/puck-editor-plugin/src/**"],
+        rules: {
+            // @next/next plugin is not installed in this package
+            "@next/next/no-img-element": "off",
+            // Emojis are intentional in UI blocks
+            "jsx-a11y/accessible-emoji": "off",
+            // Puck uses render() callbacks that are valid React components
+            "react-hooks/rules-of-hooks": "off",
+        },
+    },
+    {
+        files: ["packages/auth-plugin/src/**"],
+        rules: {
+            // Auth plugin throws Response subclasses (not Error) by design
+            "@typescript-eslint/only-throw-error": "off",
+            // Config is guaranteed non-null at call sites
+            "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+        },
+    },
+];
+
+export default [
+    ...rootEslintConfig,
+    {
         languageOptions: {
             parserOptions: {
-                sourceType: "module",
-                ecmaVersion: "latest",
-                projectService: {
-                    maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 40,
-                    allowDefaultProject: [
-                        "scripts/*.ts",
-                        "*.js",
-                        "*.mjs",
-                        "*.spec.ts",
-                        "*.d.ts",
-                    ],
-                },
+                ...rootParserOptions,
                 // projectService: true,
                 tsconfigRootDir: import.meta.dirname,
             },

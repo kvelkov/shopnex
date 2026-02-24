@@ -1,10 +1,11 @@
 import type { CollectionConfig, Config } from "payload";
-import { EmailTemplates } from "./collections/EmailTemplates";
+
 import pkg from "../package.json";
+import { EmailTemplates } from "./collections/EmailTemplates";
 
 type EmailChannelPluginConfig = {
-    enabled?: boolean;
     collectionOverrides?: Partial<CollectionConfig>;
+    enabled?: boolean;
 };
 
 export const easyEmailPlugin = (pluginConfig: EmailChannelPluginConfig) => {
@@ -22,12 +23,12 @@ export const easyEmailPlugin = (pluginConfig: EmailChannelPluginConfig) => {
             }
             await config.custom?.syncPlugin?.(payload, {
                 name: pkg.name,
-                version: pkg.version,
-                description: pkg.description,
-                license: pkg.license,
                 author: pkg.author,
-                icon: pkg.icon,
                 category: pkg.category,
+                description: pkg.description,
+                icon: pkg.icon,
+                license: pkg.license,
+                version: pkg.version,
             });
         };
         return config;

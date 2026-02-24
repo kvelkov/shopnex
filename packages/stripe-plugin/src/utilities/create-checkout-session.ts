@@ -1,14 +1,14 @@
 import Stripe from "stripe";
 
 export const createCheckoutSession = async ({
+    cancelUrl,
     lineItems,
     orderId,
-    cancelUrl,
     successUrl,
 }: {
+    cancelUrl: string;
     lineItems: Stripe.Checkout.SessionCreateParams.LineItem[];
     orderId: string;
-    cancelUrl: string;
     successUrl: string;
 }) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {

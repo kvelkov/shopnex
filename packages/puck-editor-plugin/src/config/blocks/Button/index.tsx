@@ -1,21 +1,27 @@
+import type { ComponentConfig } from "@puckeditor/core";
+
+import { Button as _Button } from "@puckeditor/core";
 import React from "react";
-import { Button as _Button, ComponentConfig } from "@measured/puck";
 
 export type ButtonProps = {
-    label: string;
     href: string;
+    label: string;
     variant: "primary" | "secondary";
 };
 
 export const Button: ComponentConfig<ButtonProps> = {
-    label: "Button",
+    defaultProps: {
+        href: "#",
+        label: "Button",
+        variant: "primary",
+    },
     fields: {
+        href: { type: "text" },
         label: {
             type: "text",
-            placeholder: "Lorem ipsum...",
             contentEditable: true,
+            placeholder: "Lorem ipsum...",
         },
-        href: { type: "text" },
 
         variant: {
             type: "radio",
@@ -25,19 +31,15 @@ export const Button: ComponentConfig<ButtonProps> = {
             ],
         },
     },
-    defaultProps: {
-        label: "Button",
-        href: "#",
-        variant: "primary",
-    },
-    render: ({ href, variant, label, puck }) => {
+    label: "Button",
+    render: ({ href, label, puck, variant }) => {
         return (
             <div>
                 <_Button
                     href={puck.isEditing ? "#" : href}
-                    variant={variant}
                     size="large"
                     tabIndex={puck.isEditing ? -1 : undefined}
+                    variant={variant}
                 >
                     {label}
                 </_Button>

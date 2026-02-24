@@ -1,15 +1,15 @@
-import { QuickAction } from "../types";
+import type { QuickAction } from "../types";
 
 export interface ActionBuilder {
-    id: string;
-    name: string;
+    custom?: boolean;
+    group?: string;
     icon?: React.ReactElement;
+    id: string;
     keywords?: string;
     link?: string;
+    name: string;
     priority?: number;
-    group?: string;
     subtitle?: string;
-    custom?: boolean;
 }
 
 export class QuickActionBuilder {
@@ -24,36 +24,6 @@ export class QuickActionBuilder {
         return new QuickActionBuilder(id, name);
     }
 
-    withIcon(icon: React.ReactElement): QuickActionBuilder {
-        this.action.icon = icon;
-        return this;
-    }
-
-    withLink(link: string): QuickActionBuilder {
-        this.action.link = link;
-        return this;
-    }
-
-    withKeywords(keywords: string): QuickActionBuilder {
-        this.action.keywords = keywords;
-        return this;
-    }
-
-    withPriority(priority: number): QuickActionBuilder {
-        this.action.priority = priority;
-        return this;
-    }
-
-    withGroup(group: string): QuickActionBuilder {
-        this.action.group = group;
-        return this;
-    }
-
-    withSubtitle(subtitle: string): QuickActionBuilder {
-        this.action.subtitle = subtitle;
-        return this;
-    }
-
     asCustom(): QuickActionBuilder {
         this.action.custom = true;
         return this;
@@ -66,9 +36,39 @@ export class QuickActionBuilder {
         
         return {
             ...this.action,
-            priority: this.action.priority ?? 50,
-            keywords: this.action.keywords ?? this.action.name
+            keywords: this.action.keywords ?? this.action.name,
+            priority: this.action.priority ?? 50
         } as QuickAction;
+    }
+
+    withGroup(group: string): QuickActionBuilder {
+        this.action.group = group;
+        return this;
+    }
+
+    withIcon(icon: React.ReactElement): QuickActionBuilder {
+        this.action.icon = icon;
+        return this;
+    }
+
+    withKeywords(keywords: string): QuickActionBuilder {
+        this.action.keywords = keywords;
+        return this;
+    }
+
+    withLink(link: string): QuickActionBuilder {
+        this.action.link = link;
+        return this;
+    }
+
+    withPriority(priority: number): QuickActionBuilder {
+        this.action.priority = priority;
+        return this;
+    }
+
+    withSubtitle(subtitle: string): QuickActionBuilder {
+        this.action.subtitle = subtitle;
+        return this;
     }
 }
 

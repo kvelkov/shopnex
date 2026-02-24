@@ -1,6 +1,9 @@
-import { passwordSignin, PasswordSigninPayload } from "./password";
-import { oauth, OauthProvider } from "./oauth";
+import type { OauthProvider } from "./oauth";
+import type { PasswordSigninPayload } from "./password";
+
+import { oauth } from "./oauth";
 import { init as passkeyInit } from "./passkey/index";
+import { passwordSignin } from "./password";
 interface BaseOptions {
     name: string;
 }
@@ -20,7 +23,7 @@ export const adminSignin = () => {
         oauth: async (provider: OauthProvider) =>
             await oauth({ name: "admin" }, provider),
         passkey: () => {
-            passkeyInit();
+            void passkeyInit();
         },
     };
 };

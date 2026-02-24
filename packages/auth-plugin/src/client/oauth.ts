@@ -1,22 +1,24 @@
-import { AuthPluginOutput, ErrorKind } from "../types";
+import type { AuthPluginOutput} from "../types";
+
+import { ErrorKind } from "../types";
 
 type BaseOptions = {
     name: string;
 };
 
 export type OauthProvider =
-    | "google"
-    | "github"
     | "apple"
-    | "cognito"
-    | "gitlab"
-    | "msft-entra"
-    | "slack"
     | "atlassian"
     | "auth0"
+    | "cognito"
     | "discord"
     | "facebook"
+    | "github"
+    | "gitlab"
+    | "google"
     | "jumpcloud"
+    | "msft-entra"
+    | "slack"
     | "twitch";
 
 export const oauth = (
@@ -28,11 +30,11 @@ export const oauth = (
         const channel = new BroadcastChannel(channelId);
 
         const defaultOutput: AuthPluginOutput = {
-            message: "Failed to authenticate",
-            kind: ErrorKind.BadRequest,
             data: null,
-            isSuccess: false,
             isError: true,
+            isSuccess: false,
+            kind: ErrorKind.BadRequest,
+            message: "Failed to authenticate",
         };
 
         const base = process.env.NEXT_PUBLIC_SERVER_URL;
@@ -52,7 +54,7 @@ export const oauth = (
         // Listen for messages
         channel.onmessage = (event) => {
             channel.close();
-            if (popup && !popup.closed) popup.close();
+            if (popup && !popup.closed) {popup.close();}
             clearTimeout(timeoutId);
             resolve(event.data as AuthPluginOutput);
         };
@@ -73,7 +75,7 @@ export const oauth = (
                 setTimeout(() => {
                     clearInterval(checkInterval);
                     channel.close();
-                    if (popup && !popup.closed) popup.close();
+                    if (popup && !popup.closed) {popup.close();}
                     resolve(defaultOutput);
                 }, 120000);
             }

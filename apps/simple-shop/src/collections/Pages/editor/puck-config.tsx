@@ -1,4 +1,4 @@
-import { Config } from '@measured/puck'
+import { Config } from '@puckeditor/core'
 import { PuckProps } from './puck-types'
 
 // Import blocks (complex sections/layouts)

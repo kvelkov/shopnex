@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { Render } from '@measured/puck' // or your custom editor
+import { Render } from '@puckeditor/core' // or your custom editor
 import { getPageByHandle } from '@/lib/puck-pages'
 import { config } from '@/collections/Pages/editor/puck-config'
 import { generateMetadata as generateSEOMetadata, generatePageJsonLd } from '@/lib/seo'

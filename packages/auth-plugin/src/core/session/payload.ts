@@ -1,9 +1,11 @@
-import { BasePayload, PayloadRequest } from "payload";
-import { AccountInfo } from "../../types";
-import { hashCode } from "../utils/hash";
-import { createSessionCookies, invalidateOAuthCookies } from "../utils/cookies";
-import { sessionResponse } from "../utils/session";
+import type { BasePayload, PayloadRequest } from "payload";
+
+import type { AccountInfo } from "../../types";
+
 import { UserNotFoundAPIError } from "../errors/apiErrors";
+import { createSessionCookies, invalidateOAuthCookies } from "../utils/cookies";
+import { hashCode } from "../utils/hash";
+import { sessionResponse } from "../utils/session";
 
 type Collections = {
     accountsCollectionSlug: string;
@@ -11,11 +13,25 @@ type Collections = {
 };
 
 export class PayloadSession {
-    readonly #collections: Collections;
     readonly #allowSignUp: boolean;
+    readonly #collections: Collections;
     constructor(collections: Collections, allowSignUp?: boolean) {
         this.#collections = collections;
         this.#allowSignUp = !!allowSignUp;
+    }
+    async #resolveShopID(
+        userID: number | string,
+        payload: BasePayload
+    ): Promise<number | string> {
+        const user = await payload.findByID({
+            id: userID,
+            collection: this.#collections.usersCollectionSlug as any,
+        });
+
+        // assuming shops[0] is the main one and has a `tenant` field
+        const shopID = user.shops?.[0]?.shop?.id;
+
+        return shopID;
     }
     async #upsertAccount(
         accountInfo: AccountInfo,
@@ -23,7 +39,7 @@ export class PayloadSession {
         issuerName: string,
         payload: BasePayload
     ) {
-        let userID: string | number;
+        let userID: number | string;
 
         const userQueryResults = await payload.find({
             collection: this.#collections.usersCollectionSlug as any,
@@ -51,20 +67,20 @@ export class PayloadSession {
             console.log("Creating user", accountInfo);
             const newUser = await payload.create({
                 collection: this.#collections.usersCollectionSlug as any,
-                disableVerificationEmail: true,
                 data: {
-                    email: accountInfo.email,
                     _verified: true,
-                    shops: [
-                        {
-                            shop: newShop.id,
-                            roles: ["shop-admin"],
-                        },
-                    ],
+                    email: accountInfo.email,
                     password: hashCode(
                         accountInfo.email + payload.secret
                     ).toString(),
+                    shops: [
+                        {
+                            roles: ["shop-admin"],
+                            shop: newShop.id,
+                        },
+                    ],
                 },
+                disableVerificationEmail: true,
             });
             console.log("User created", newUser);
             userID = newUser.id;
@@ -79,9 +95,9 @@ export class PayloadSession {
             },
         });
         const data: Record<string, unknown> = {
-            scope,
             name: accountInfo.name,
             picture: accountInfo.picture,
+            scope,
         };
 
         if (issuerName === "Passkey" && accountInfo.passKey) {
@@ -96,12 +112,12 @@ export class PayloadSession {
             data["user"] = userID;
             await payload.update({
                 collection: this.#collections.accountsCollectionSlug as any,
+                data,
                 where: {
                     id: {
                         equals: accounts.docs[0].id,
                     },
                 },
-                data,
             });
         } else {
             const shopId = await this.#resolveShopID(userID as string, payload);
@@ -134,14 +150,14 @@ export class PayloadSession {
 
         const fieldsToSign = {
             id: userID,
-            email: accountInfo.email,
             collection: this.#collections.usersCollectionSlug as any,
+            email: accountInfo.email,
         };
 
         let cookies: string[] = [];
         cookies = [
             ...(await createSessionCookies(
-                `${payload.config.cookiePrefix!}-token`,
+                `${payload.config.cookiePrefix}-token`,
                 payload.secret,
                 fieldsToSign
             )),
@@ -150,36 +166,22 @@ export class PayloadSession {
 
         return sessionResponse(cookies, clientOrigin);
     }
-    async #resolveShopID(
-        userID: string | number,
-        payload: BasePayload
-    ): Promise<string | number> {
-        const user = await payload.findByID({
-            collection: this.#collections.usersCollectionSlug as any,
-            id: userID,
-        });
-
-        // assuming shops[0] is the main one and has a `tenant` field
-        const shopID = user.shops?.[0]?.shop?.id;
-
-        return shopID;
-    }
 
     // In payload.ts, add this method
     async passwordSessionCallback(
-        user: Pick<AccountInfo, "email"> & { id: string },
+        user: { id: string } & Pick<AccountInfo, "email">,
         payload: BasePayload,
         clientOrigin?: string
     ) {
         const fieldsToSign = {
             id: user.id,
-            email: user.email,
             collection: this.#collections.usersCollectionSlug,
+            email: user.email,
         };
 
         let cookies: string[] = [
             ...(await createSessionCookies(
-                `${payload.config.cookiePrefix!}-token`,
+                `${payload.config.cookiePrefix}-token`,
                 payload.secret,
                 fieldsToSign
             )),

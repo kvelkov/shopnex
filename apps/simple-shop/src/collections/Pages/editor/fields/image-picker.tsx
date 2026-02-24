@@ -1,18 +1,18 @@
-"use client";
+'use client'
 
-import { ExternalField } from "@measured/puck";
-import { ImagePickerField } from "../components/ImagePickerField";
+import { ExternalField } from '@puckeditor/core'
+import { ImagePickerField } from '../components/ImagePickerField'
 
 export const imagePickerField: ExternalField<string> = {
-  type: "custom",
+  type: 'external',
   render: ({ field, name, value, onChange }) => {
     return (
       <ImagePickerField
         label={field.label || name}
-        value={value || ""}
+        value={value || ''}
         onChange={onChange}
         placeholder="Choose an image from your media library"
       />
-    );
+    )
   },
-};
+}

@@ -1,11 +1,13 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 
 import fs from 'fs-extra';
 import path from 'path';
+
+import type { CliArgs } from '../types.js';
+
 import { createProject } from '../lib/create-project.js';
 import { getValidTemplates } from '../lib/templates.js';
-import { generateSecret } from '../lib/generate-secret.js';
-import { manageEnvFiles } from '../lib/manage-env-files.js';
 
 const testProjectName = 'simple-test-project';
 const testProjectDir = path.resolve(process.cwd(), testProjectName);
@@ -36,15 +38,15 @@ async function testCreateProject() {
                 '--local-template': 'simple-shop',
                 '--no-deps': true,
                 '--no-git': true
-            } as any,
-            template,
-            packageManager: 'npm',
-            projectDir: testProjectDir,
-            projectName: testProjectName,
+            } as CliArgs,
             dbDetails: {
                 type: 'sqlite',
                 dbUri: `file:./${testProjectName}.db`
-            }
+            },
+            packageManager: 'npm',
+            projectDir: testProjectDir,
+            projectName: testProjectName,
+            template
         });
 
         // Check if project was created
@@ -94,7 +96,7 @@ async function testCreateProject() {
 
 // Run if called directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-    testCreateProject().then(success => {
+    void testCreateProject().then(success => {
         process.exit(success ? 0 : 1);
     });
 }

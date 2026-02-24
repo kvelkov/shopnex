@@ -1,9 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
+import type { ComponentConfig } from "@puckeditor/core";
+
 import React from "react";
-import { ComponentConfig } from "@measured/puck";
-import styles from "./styles.module.css";
+
 import { Section } from "../../components/Section";
 import getClassNameFactory from "../../utils/get-class-name-factory";
+import styles from "./styles.module.css";
 
 const getClassName = getClassNameFactory("Logos", styles);
 
@@ -15,20 +16,6 @@ export type LogosProps = {
 };
 
 export const Logos: ComponentConfig<LogosProps> = {
-    fields: {
-        logos: {
-            type: "array",
-            getItemSummary: (item, i) => item.alt || `Feature #${i}`,
-            defaultItemProps: {
-                alt: "",
-                imageUrl: "",
-            },
-            arrayFields: {
-                alt: { type: "text" },
-                imageUrl: { type: "text" },
-            },
-        },
-    },
     defaultProps: {
         logos: [
             {
@@ -58,17 +45,31 @@ export const Logos: ComponentConfig<LogosProps> = {
             },
         ],
     },
+    fields: {
+        logos: {
+            type: "array",
+            arrayFields: {
+                alt: { type: "text" },
+                imageUrl: { type: "text" },
+            },
+            defaultItemProps: {
+                alt: "",
+                imageUrl: "",
+            },
+            getItemSummary: (item, i) => item.alt || `Feature #${i}`,
+        },
+    },
     render: ({ logos }) => {
         return (
             <Section className={getClassName()}>
                 <div className={getClassName("items")}>
                     {logos.map((item, i) => (
-                        <div key={i} className={getClassName("item")}>
+                        <div className={getClassName("item")} key={i}>
                             <img
-                                className={getClassName("image")}
                                 alt={item.alt}
-                                src={item.imageUrl}
+                                className={getClassName("image")}
                                 height={64}
+                                src={item.imageUrl}
                             ></img>
                         </div>
                     ))}

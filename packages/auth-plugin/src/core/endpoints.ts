@@ -1,12 +1,15 @@
 import type { BasePayload, Endpoint, PayloadRequest } from "payload";
+
+import * as qs from "qs-esm";
+
 import type { AccountInfo, OAuthProviderConfig } from "../types";
+
+import { APP_COOKIE_SUFFIX } from "../constants";
+import { UserSession } from "./protocols/session";
 import { OAuthHandlers } from "./routeHandlers/oauth";
 import { PasskeyHandlers } from "./routeHandlers/passkey";
 import { PasswordAuthHandlers } from "./routeHandlers/password";
 import { SessionHandlers } from "./routeHandlers/session";
-import { UserSession } from "./protocols/session";
-import { APP_COOKIE_SUFFIX } from "../constants";
-import * as qs from "qs-esm";
 /**
  * Base interface for all endpoint strategies. Useful to keep extending for providers with
  * different requirements to interact with
@@ -46,8 +49,6 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
     }): Endpoint[] {
         return [
             {
-                path: `/${pluginType}/oauth/:resource/:provider`,
-                method: "get",
                 handler: (request: PayloadRequest) => {
                     const provider = this.providers[
                         request.routeParams?.provider as string
@@ -73,6 +74,8 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
                         request.searchParams.get("clientOrigin") ?? undefined
                     );
                 },
+                method: "get",
+                path: `/${pluginType}/oauth/:resource/:provider`,
             },
         ];
     }
@@ -103,8 +106,6 @@ export class PasskeyEndpointStrategy implements EndpointStrategy {
     }): Endpoint[] {
         return [
             {
-                path: `/${pluginType}/passkey/:resource`,
-                method: "post",
                 handler: (request: PayloadRequest) => {
                     return PasskeyHandlers(
                         request,
@@ -119,6 +120,8 @@ export class PasskeyEndpointStrategy implements EndpointStrategy {
                         }
                     );
                 },
+                method: "post",
+                path: `/${pluginType}/passkey/:resource`,
             },
         ];
     }
@@ -140,13 +143,12 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
     }: {
         pluginType: string;
         sessionCallback: (user: {
-            id: string;
             email: string;
+            id: string;
         }) => Promise<Response>;
     }): Endpoint[] {
         return [
             {
-                path: `/${pluginType}/auth/:kind`,
                 handler: (request: PayloadRequest) => {
                     const stage =
                         request.searchParams.get("stage") ?? undefined;
@@ -161,6 +163,7 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
                     );
                 },
                 method: "post",
+                path: `/${pluginType}/auth/:kind`,
             },
         ];
     }
@@ -179,7 +182,6 @@ export class SessionEndpointStrategy implements EndpointStrategy {
     createEndpoints({ pluginType }: { pluginType: string }): Endpoint[] {
         return [
             {
-                path: `/${pluginType}/session`,
                 handler: (request: PayloadRequest) => {
                     const query = qs.parse(request.searchParams.toString());
 
@@ -192,9 +194,9 @@ export class SessionEndpointStrategy implements EndpointStrategy {
                     );
                 },
                 method: "get",
+                path: `/${pluginType}/session`,
             },
             {
-                path: `/${pluginType}/session/:kind`,
                 handler: (request: PayloadRequest) => {
                     return SessionHandlers(
                         request,
@@ -204,6 +206,7 @@ export class SessionEndpointStrategy implements EndpointStrategy {
                     );
                 },
                 method: "get",
+                path: `/${pluginType}/session/:kind`,
             },
         ];
     }
@@ -223,13 +226,9 @@ export class EndpointsFactory {
     private strategies: Record<string, EndpointStrategy> = {};
     constructor(private pluginType: string) {}
 
-    registerStrategy(name: Strategies, strategy: EndpointStrategy): void {
-        this.strategies[name] = strategy;
-    }
-
     createEndpoints(
         strategyName: Strategies,
-        config?: any | undefined
+        config?: any  
     ): Endpoint[] {
         const strategy = this.strategies[strategyName];
         if (!strategy) {
@@ -239,5 +238,9 @@ export class EndpointsFactory {
             pluginType: this.pluginType,
             ...config,
         });
+    }
+
+    registerStrategy(name: Strategies, strategy: EndpointStrategy): void {
+        this.strategies[name] = strategy;
     }
 }

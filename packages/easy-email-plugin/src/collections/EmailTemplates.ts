@@ -1,4 +1,6 @@
-import { CollectionConfig, deepMergeWithCombinedArrays } from "payload";
+import type { CollectionConfig} from "payload";
+
+import { deepMergeWithCombinedArrays } from "payload";
 
 type EmailTemplatesProps = {
     overrides?: Partial<CollectionConfig>;
@@ -10,7 +12,6 @@ export const EmailTemplates = ({
     const baseConfig: CollectionConfig = {
         slug: "email-templates",
         admin: {
-            group: "Plugins",
             components: {
                 views: {
                     edit: {
@@ -21,6 +22,7 @@ export const EmailTemplates = ({
                     },
                 },
             },
+            group: "Plugins",
 
             defaultColumns: ["name", "createdAt", "updatedAt"],
             useAsTitle: "name",

@@ -1,5 +1,6 @@
-import { AuthPluginOutput } from "../types";
 import * as qs from "qs-esm";
+
+import type { AuthPluginOutput } from "../types";
 
 interface BaseOptions {
     name: string;
@@ -9,7 +10,7 @@ interface QueryOptions {
 }
 export const getCurrentUser = async (
     options: BaseOptions,
-    queryOpts?: QueryOptions | undefined
+    queryOpts?: QueryOptions  
 ) => {
     const base = process.env.NEXT_PUBLIC_SERVER_URL;
     let query = "";
@@ -20,10 +21,10 @@ export const getCurrentUser = async (
         }
     }
     const response = await fetch(`${base}/api/${options.name}/session${query}`);
-    const { message, kind, data } = (await response.json()) as AuthPluginOutput;
+    const { data, kind, message } = (await response.json()) as AuthPluginOutput;
     return {
-        message,
-        kind,
         data,
+        kind,
+        message,
     };
 };

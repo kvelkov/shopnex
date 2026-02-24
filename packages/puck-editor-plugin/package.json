@@ -56,7 +56,7 @@
         "prepublishOnly": "pnpm clean && pnpm turbo build"
     },
     "dependencies": {
-        "@measured/puck": "^0.20.1",
+        "@puckeditor/core": "^0.21.1",
         "@shopnex/types": "workspace:^",
         "classnames": "^2.5.1",
         "recharts": "^2.15.3"

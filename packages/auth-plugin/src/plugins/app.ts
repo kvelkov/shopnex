@@ -15,33 +15,35 @@
  * @packageDocumentation
  */
 
-import { Config, Endpoint, PayloadRequest, Plugin } from "payload";
-import {
+import type { Config, Endpoint, PayloadRequest, Plugin } from "payload";
+
+import type {
     AccountInfo,
     AuthenticationStrategy,
-    PasswordProviderConfig,
     OAuthProviderConfig,
     PasskeyProviderConfig,
+    PasswordProviderConfig,
 } from "../types";
+
+import {
+    EndpointsFactory,
+    OAuthEndpointStrategy,
+    PasskeyEndpointStrategy,
+    PasswordAuthEndpointStrategy,
+    SessionEndpointStrategy,
+} from "../core/endpoints";
 import {
     InvalidServerURL,
     MissingEmailAdapter,
 } from "../core/errors/consoleErrors";
-import {
-    getPasswordProvider,
-    getOAuthProviders,
-    getPasskeyProvider,
-} from "../providers/utils";
-import {
-    PasswordAuthEndpointStrategy,
-    EndpointsFactory,
-    OAuthEndpointStrategy,
-    PasskeyEndpointStrategy,
-    SessionEndpointStrategy,
-} from "../core/endpoints";
+import { preflightCollectionCheck } from "../core/preflights/collections";
 import { AppSession } from "../core/session/app";
 import { formatSlug } from "../core/utils/slug";
-import { preflightCollectionCheck } from "../core/preflights/collections";
+import {
+    getOAuthProviders,
+    getPasskeyProvider,
+    getPasswordProvider,
+} from "../providers/utils";
 
 /**
  * The App plugin to set up authentication to the intengrated frontend of Payload CMS.
@@ -50,6 +52,31 @@ import { preflightCollectionCheck } from "../core/preflights/collections";
  *
  */
 interface PluginOptions {
+    /**
+     * App user accounts collection slug.
+     *
+     * This collection will be used to store all the app user account records.
+     * Multiple accounts can belong to one user
+     *
+     */
+    accountsCollectionSlug: string;
+
+    /**
+     * Allow auto signup if user doesn't have an account.
+     *
+     * @default false
+     *
+     */
+    allowAutoSignUp?: boolean | undefined;
+
+    /**
+     * Authentication strategies can be either JWT or Cookie based
+     *
+     * @default Cookie
+     *
+     */
+    authenticationStrategy?: AuthenticationStrategy;
+
     /**
      * Enable or disable plugin
      *
@@ -76,6 +103,10 @@ interface PluginOptions {
     )[];
 
     /**
+     * Secret to use for JWT signing and decryption
+     */
+    secret: string;
+    /**
      * @description
      * App users collection slug.
      *
@@ -83,35 +114,6 @@ interface PluginOptions {
      *
      */
     usersCollectionSlug: string;
-
-    /**
-     * App user accounts collection slug.
-     *
-     * This collection will be used to store all the app user account records.
-     * Multiple accounts can belong to one user
-     *
-     */
-    accountsCollectionSlug: string;
-
-    /**
-     * Allow auto signup if user doesn't have an account.
-     *
-     * @default false
-     *
-     */
-    allowAutoSignUp?: boolean | undefined;
-
-    /**
-     * Authentication strategies can be either JWT or Cookie based
-     *
-     * @default Cookie
-     *
-     */
-    authenticationStrategy?: AuthenticationStrategy;
-    /**
-     * Secret to use for JWT signing and decryption
-     */
-    secret: string;
 }
 
 /**
@@ -134,12 +136,12 @@ export const appAuthPlugin =
         // }
 
         const {
-            usersCollectionSlug,
             accountsCollectionSlug,
-            providers,
             allowAutoSignUp,
             authenticationStrategy,
+            providers,
             secret,
+            usersCollectionSlug,
         } = pluginOptions;
 
         preflightCollectionCheck(
@@ -156,8 +158,8 @@ export const appAuthPlugin =
         const session = new AppSession(
             name,
             {
-                usersCollection: usersCollectionSlug,
                 accountsCollection: accountsCollectionSlug,
+                usersCollection: usersCollectionSlug,
             },
             allowAutoSignUp ?? false,
             authenticationStrategy ?? "Cookie",
@@ -202,7 +204,7 @@ export const appAuthPlugin =
         }
 
         if (passwordProvider) {
-            if (!!!config.email) {
+            if (!config.email) {
                 throw new MissingEmailAdapter();
             }
             endpointsFactory.registerStrategy(
@@ -213,7 +215,7 @@ export const appAuthPlugin =
                 )
             );
             passwordEndpoints = endpointsFactory.createEndpoints("password", {
-                sessionCallback: (user: { id: string; email: string }) =>
+                sessionCallback: (user: { email: string; id: string }) =>
                     session.passwordSessionCallback(user),
             });
         }

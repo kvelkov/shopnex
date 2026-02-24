@@ -202,13 +202,13 @@ export type ProductListResponse = CJApiResponse<{
 export type ProductQueryResponse = CJApiResponse<ProductDetails>;
 
 export interface StockInfo {
-    vid?: string;
-    areaId: number;
     areaEn: string;
+    areaId: number;
+    cjInventoryNum: number;
     countryCode: string;
     countryNameEn?: string;
+    factoryInventoryNum: number;
     storageNum?: number;
     totalInventoryNum: number;
-    cjInventoryNum: number;
-    factoryInventoryNum: number;
+    vid?: string;
 }

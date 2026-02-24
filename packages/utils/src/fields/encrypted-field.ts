@@ -16,8 +16,8 @@ export const EncryptedField = (textFieldOverrides: TextField): TextField => {
         },
         hooks: {
             ...(textFieldOverrides?.hooks ?? {}),
-            beforeChange: [encryptKey],
             afterRead: [decryptKey],
+            beforeChange: [encryptKey],
         },
     };
 };

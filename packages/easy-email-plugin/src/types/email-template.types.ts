@@ -1,17 +1,17 @@
 export interface EmailTemplateData {
-    name: string;
     html: string;
     json: any;
+    name: string;
 }
 
 export interface EmailTemplateProps {
     html: string;
-    json: any;
-    serverURL: string;
-    token: string;
-    templateName: string;
     identifier: string;
     iframeOrigin: string;
+    json: any;
+    serverURL: string;
+    templateName: string;
+    token: string;
 }
 
 export interface SaveOutput {
@@ -21,21 +21,21 @@ export interface SaveOutput {
 }
 
 export interface IframeMessageEvent {
-    origin: string;
     data: {
-        type: string;
         payload?: any;
+        type: string;
     };
+    origin: string;
 }
 
 export type MessageType =
-    | "NEW_EMAIL_TEMPLATE"
     | "CURRENT_EMAIL_TEMPLATE"
     | "EDITOR_READY"
     | "EMAIL_TEMPLATE_SAVE"
+    | "NEW_EMAIL_TEMPLATE"
     | "TRIGGER_SAVE";
 
 export interface MessagePayload {
-    type: MessageType;
     payload?: any;
+    type: MessageType;
 }

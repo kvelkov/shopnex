@@ -16,8 +16,8 @@ export const hashPassword = async (password: string) => {
         {
             name: "PBKDF2",
             hash: "SHA-256",
-            salt: salt,
             iterations,
+            salt,
         },
         keyMaterial,
         256
@@ -26,8 +26,8 @@ export const hashPassword = async (password: string) => {
     const saltB64 = jose.base64url.encode(salt);
     return {
         hash: hashB64,
-        salt: saltB64,
         iterations,
+        salt: saltB64,
     };
 };
 
@@ -43,8 +43,8 @@ export const verifyPassword = async (
     const params = {
         name: "PBKDF2",
         hash: "SHA-256",
-        salt,
         iterations,
+        salt,
     };
     const keyMaterial = await crypto.subtle.importKey(
         "raw",

@@ -19,7 +19,8 @@ export function copyRecursiveSync(src: string, dest: string, ignoreRegex?: strin
           return new RegExp(regex).test(childItemName)
         })
       ) {
-        console.log(`Ignoring ${childItemName} due to regex: ${ignoreRegex}`)
+        // eslint-disable-next-line no-console
+        console.log(`Ignoring ${childItemName} due to regex: ${ignoreRegex.join(', ')}`)
         return
       }
       copyRecursiveSync(path.join(src, childItemName), path.join(dest, childItemName), ignoreRegex)

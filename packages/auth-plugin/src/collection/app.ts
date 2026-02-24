@@ -1,4 +1,5 @@
-import { CollectionConfig, Field } from "payload";
+import type { CollectionConfig, Field } from "payload";
+
 import { MissingCollectionSlug } from "../core/errors/consoleErrors";
 
 /**
@@ -7,9 +8,9 @@ import { MissingCollectionSlug } from "../core/errors/consoleErrors";
  * @returns {CollectionConfig}
  */
 export const withAppUsersCollection = (
-    incomingCollection: Omit<CollectionConfig, "fields"> & {
+    incomingCollection: {
         fields?: Field[] | undefined;
-    }
+    } & Omit<CollectionConfig, "fields">
 ): CollectionConfig => {
     if (!incomingCollection.slug) {
         throw new MissingCollectionSlug();
@@ -28,8 +29,8 @@ export const withAppUsersCollection = (
         {
             name: "email",
             type: "email",
-            unique: true,
             required: true,
+            unique: true,
         },
         {
             name: "hashedPassword",
@@ -76,9 +77,9 @@ export const withAppUsersCollection = (
  * @returns {CollectionConfig}
  */
 export const withAppAccountCollection = (
-    incomingCollection: Omit<CollectionConfig, "fields"> & {
+    incomingCollection: {
         fields?: Field[] | undefined;
-    },
+    } & Omit<CollectionConfig, "fields">,
     usersCollectionSlug: string
 ): CollectionConfig => {
     if (!incomingCollection.slug) {
@@ -102,16 +103,16 @@ export const withAppAccountCollection = (
         {
             name: "user",
             type: "relationship",
-            relationTo: usersCollectionSlug as any,
             hasMany: false,
-            required: true,
             label: "User",
+            relationTo: usersCollectionSlug as any,
+            required: true,
         },
         {
             name: "issuerName",
             type: "text",
-            required: true,
             label: "Issuer Name",
+            required: true,
         },
         {
             name: "scope",
@@ -125,6 +126,14 @@ export const withAppAccountCollection = (
         {
             name: "passkey",
             type: "group",
+            admin: {
+                condition: (_data, peerData) => {
+                    if (peerData.issuerName === "Passkey") {
+                        return true;
+                    }
+                    return false;
+                },
+            },
             fields: [
                 {
                     name: "credentialId",
@@ -157,14 +166,6 @@ export const withAppAccountCollection = (
                     required: true,
                 },
             ],
-            admin: {
-                condition: (_data, peerData) => {
-                    if (peerData.issuerName === "Passkey") {
-                        return true;
-                    }
-                    return false;
-                },
-            },
         },
     ];
 
@@ -175,10 +176,10 @@ export const withAppAccountCollection = (
 
     collectionConfig.access = {
         admin: ({ req: { user } }) => Boolean(user),
-        read: ({ req: { user } }) => Boolean(user),
         create: () => false,
-        update: () => false,
         delete: () => true,
+        read: ({ req: { user } }) => Boolean(user),
+        update: () => false,
         ...(incomingCollection.access ?? {}),
     };
     collectionConfig.admin = {

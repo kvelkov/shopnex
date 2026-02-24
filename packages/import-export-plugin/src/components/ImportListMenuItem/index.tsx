@@ -8,12 +8,13 @@ import {
     useTheme,
     useTranslation,
 } from "@payloadcms/ui";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CSVImporter } from "csv-import-react";
-import useThemeEnforcer from "./useThemeEnforcer";
-import { importColumns } from "./importColumns";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+
+import { importColumns } from "./importColumns";
+import useThemeEnforcer from "./useThemeEnforcer";
 
 const baseClass = "export-list-menu-item";
 
@@ -50,6 +51,14 @@ export const ImportListMenuItem = ({ collectionSlug, customColumns }: any) => {
                 {getTranslation(currentCollectionConfig.labels.plural, i18n)}
             </PopupList.Button>
             <CSVImporterDynamic
+                customStyles={{
+                    "border-radius": "var(--style-radius-m)",
+                    "color-background": "var(--external-colors-white)",
+                    "color-background-modal": "var(--external-colors-white)",
+                    "color-primary": "var(--color-success-500)",
+                    "color-primary-hover": "var(--color-success-600)",
+                    "font-size": "13px",
+                }}
                 darkMode={theme === "dark"}
                 modalCloseOnOutsideClick
                 modalIsOpen={isOpen}
@@ -70,14 +79,6 @@ export const ImportListMenuItem = ({ collectionSlug, customColumns }: any) => {
                         }
                     );
                     router.refresh();
-                }}
-                customStyles={{
-                    "color-primary": "var(--color-success-500)",
-                    "color-primary-hover": "var(--color-success-600)",
-                    "border-radius": "var(--style-radius-m)",
-                    "font-size": "13px",
-                    "color-background": "var(--external-colors-white)",
-                    "color-background-modal": "var(--external-colors-white)",
                 }}
                 template={{
                     // @ts-ignore

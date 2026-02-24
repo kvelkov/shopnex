@@ -17,7 +17,7 @@ import {
 
 type NavProps = {
     groups: NavGroupType[];
-    groupsConfig?: Record<string, { name: string; icon: string }>;
+    groupsConfig?: Record<string, { icon: string; name: string }>;
 };
 
 const baseClass = "nav";

@@ -1,11 +1,12 @@
-import {
-    deepMergeWithCombinedArrays,
-    type CollectionBeforeChangeHook,
-    type CollectionConfig,
-} from "payload";
-import { syncProducts } from "./service/sync-products";
 import { EncryptedField } from "@shopnex/utils";
 import { getTenantFromCookie } from "@shopnex/utils/helpers";
+import {
+    type CollectionBeforeChangeHook,
+    type CollectionConfig,
+    deepMergeWithCombinedArrays,
+} from "payload";
+
+import { syncProducts } from "./service/sync-products";
 import { getProductId } from "./util/get-product-id";
 
 export type CjCollectionProps = {
@@ -13,20 +14,20 @@ export type CjCollectionProps = {
 };
 
 export type CjData = {
-    id: string;
-    emailAddress?: string;
-    apiToken?: string;
-    refreshToken?: string;
-    refreshTokenExpiry?: string | Date;
     accessToken?: string;
-    accessTokenExpiry?: string | Date;
+    accessTokenExpiry?: Date | string;
+    apiToken?: string;
+    emailAddress?: string;
+    id: string;
+    items: {
+        productUrl: string;
+    }[];
     pod?: {
         id: string;
         relationTo: "media";
     };
-    items: {
-        productUrl: string;
-    }[];
+    refreshToken?: string;
+    refreshTokenExpiry?: Date | string;
 };
 
 export const CjCollection = ({
@@ -41,7 +42,6 @@ export const CjCollection = ({
         },
         fields: [
             {
-                label: "Credentials",
                 type: "collapsible",
                 fields: [
                     {
@@ -84,11 +84,12 @@ export const CjCollection = ({
                         ],
                     },
                 ],
+                label: "Credentials",
             },
             {
-                label: "Logo Area POD",
                 name: "pod",
                 type: "upload",
+                label: "Logo Area POD",
                 relationTo: "media",
             },
             {
@@ -121,24 +122,24 @@ export const CjCollection = ({
                         })
                         .filter((productId) => typeof productId === "string");
 
-                    if (!productIds) return;
+                    if (!productIds) {return;}
 
                     const shopId = getTenantFromCookie(req.headers);
 
                     if (productIds.length > 0) {
                         await syncProducts({
-                            productIds,
-                            payload: req.payload,
-                            shopId: shopId as number,
                             data,
+                            payload: req.payload,
+                            productIds,
+                            shopId: shopId as number,
                         });
                     }
                 },
             ] as CollectionBeforeChangeHook<CjData>[],
         },
         labels: {
-            singular: "CJ Dropshipping",
             plural: "CJ Dropshipping",
+            singular: "CJ Dropshipping",
         },
     };
 

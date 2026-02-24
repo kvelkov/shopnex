@@ -8,7 +8,6 @@ import path from "path";
 import type {
     CliArgs,
     DbType,
-    ProjectExample,
     ProjectTemplate,
 } from "../types.js";
 
@@ -95,9 +94,7 @@ describe("createProject", () => {
         });
 
         // Skip example test since we don't have examples directory
-        it.skip("creates example", async () => {
-            // Test skipped - no examples available in current repository structure
-        });
+        it.todo("creates example");
 
         describe("creates project from template", () => {
             const templates = getValidTemplates();
@@ -172,26 +169,26 @@ describe("createProject", () => {
         });
 
         describe("updates package.json", () => {
-            it("updates package name and bumps workspace versions", async () => {
+            it("updates package name and bumps workspace versions", () => {
                 const latestVersion = "3.0.0";
                 const initialJSON = {
                     name: "test-project",
-                    version: "1.0.0",
                     dependencies: {
                         "@payloadcms/db-mongodb": "workspace:*",
-                        payload: "workspace:*",
                         "@payloadcms/ui": "workspace:*",
+                        payload: "workspace:*",
                     },
+                    version: "1.0.0",
                 };
 
                 const correctlyModifiedJSON = {
                     name: "test-project",
-                    version: "1.0.0",
                     dependencies: {
                         "@payloadcms/db-mongodb": `${latestVersion}`,
-                        payload: `${latestVersion}`,
                         "@payloadcms/ui": `${latestVersion}`,
+                        payload: `${latestVersion}`,
                     },
+                    version: "1.0.0",
                 };
 
                 updatePackageJSONDependencies({
@@ -199,7 +196,7 @@ describe("createProject", () => {
                     packageJson: initialJSON,
                 });
 
-                expect(initialJSON).toEqual(correctlyModifiedJSON);
+                expect(initialJSON).toStrictEqual(correctlyModifiedJSON);
             });
         });
     });

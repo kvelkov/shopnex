@@ -1,5 +1,6 @@
+import type { Product } from "@shopnex/types";
 import type { BasePayload, Where } from "payload";
-import { Product } from "@shopnex/types";
+
 import {
     convertHTMLToLexical,
     editorConfigFactory,
@@ -7,24 +8,25 @@ import {
 import decimal from "decimal.js";
 import { JSDOM } from "jsdom";
 
+import type { CjData } from "../CjCollection";
+import type { CjSdk} from "../sdk/cj-sdk";
 import type { ProductDetails } from "../sdk/products/product-types";
 
-import { CjSdk, cjSdk } from "../sdk/cj-sdk";
-import { CjData } from "../CjCollection";
+import { cjSdk } from "../sdk/cj-sdk";
 import { retrieveAccessToken } from "./access-token";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const upsertImage = async ({
-    payload,
-    imageUrl,
-    filename,
     alt,
+    filename,
+    imageUrl,
+    payload,
 }: {
-    payload: BasePayload;
-    imageUrl: string;
-    filename: string;
     alt: string;
+    filename: string;
+    imageUrl: string;
+    payload: BasePayload;
 }) => {
     const whereClause: Where = {
         filename: {
@@ -34,8 +36,8 @@ const upsertImage = async ({
 
     const imageData = await payload.find({
         collection: "media",
-        where: whereClause,
         limit: 1,
+        where: whereClause,
     });
     if (imageData.totalDocs === 0) {
         return payload.create({
@@ -52,15 +54,15 @@ const upsertImage = async ({
 };
 
 async function mapMockProductToSchema({
-    product,
     payload,
-    shopId,
+    product,
     sdk,
+    shopId,
 }: {
-    product: ProductDetails;
     payload: BasePayload;
-    shopId?: number;
+    product: ProductDetails;
     sdk: CjSdk;
+    shopId?: number;
 }) {
     const variants: Product["variants"] = [];
 
@@ -72,10 +74,10 @@ async function mapMockProductToSchema({
         const alt = filename.split(".")[0];
         const imageUrl = variant.variantImage;
         const imageData = await upsertImage({
-            payload,
-            imageUrl,
-            filename,
             alt,
+            filename,
+            imageUrl,
+            payload,
         });
 
         const imageId = imageData.id;
@@ -100,8 +102,8 @@ async function mapMockProductToSchema({
             price: Number(
                 new decimal(variant.variantSellPrice || 0).toNumber().toFixed(2)
             ),
-            vid: variant.vid,
             stockCount: cjInventoryNum,
+            vid: variant.vid,
         });
     }
 
@@ -115,8 +117,8 @@ async function mapMockProductToSchema({
             html: cleanHtml || "<p></p>",
             JSDOM, // Pass in the JSDOM import; it's not bundled to keep package size small
         }) as any,
-        source: "cj" as any,
         pid: product.pid,
+        source: "cj" as any,
         title: product.productNameEn,
         variants,
     };
@@ -131,12 +133,12 @@ const findProductById = async (productId: string, sdk: any) => {
 };
 
 const createOrUpdateProduct = async ({
-    product,
     payload,
+    product,
     shopId,
 }: {
-    product: Omit<Product, "createdAt" | "id" | "updatedAt">;
     payload: BasePayload;
+    product: Omit<Product, "createdAt" | "id" | "updatedAt">;
     shopId?: number;
 }) => {
     const { totalDocs } = await payload.count({
@@ -159,15 +161,15 @@ const createOrUpdateProduct = async ({
 };
 
 export const syncProducts = async ({
-    productIds,
-    payload,
-    shopId,
     data,
+    payload,
+    productIds,
+    shopId,
 }: {
-    productIds: string[];
-    payload: BasePayload;
-    shopId?: number;
     data: Partial<CjData>;
+    payload: BasePayload;
+    productIds: string[];
+    shopId?: number;
 }) => {
     const accessToken = await retrieveAccessToken(data);
     const sdk = cjSdk({ accessToken });
@@ -185,14 +187,14 @@ export const syncProducts = async ({
     // Wait for all async mapping to resolve
     const mappedProducts = await Promise.all(
         fetchedProducts.map((product) =>
-            mapMockProductToSchema({ product, payload, shopId, sdk })
+            mapMockProductToSchema({ payload, product, sdk, shopId })
         )
     );
 
     // Create or update each mapped product
     await Promise.all(
         mappedProducts.map((product) =>
-            createOrUpdateProduct({ product, payload, shopId })
+            createOrUpdateProduct({ payload, product, shopId })
         )
     );
 

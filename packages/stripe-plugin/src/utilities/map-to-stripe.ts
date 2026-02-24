@@ -1,6 +1,7 @@
-import Stripe from "stripe";
+import type { Cart } from "@shopnex/types";
+import type Stripe from "stripe";
+
 import Decimal from "decimal.js";
-import { Cart } from "@shopnex/types";
 
 export const mapToStripeLineItems = (
     cartItems: NonNullable<Cart["cartItems"]>

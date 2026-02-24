@@ -1,4 +1,4 @@
-import { Render } from '@measured/puck'
+import { Render } from '@puckeditor/core'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getPageByHandle } from '@/lib/puck-pages'

@@ -1,77 +1,77 @@
 export interface CJApiResponse<T> {
     code: number;
-    result: boolean;
+    data: null | T;
     message: string;
-    data: T | null;
     requestId: string;
+    result: boolean;
 }
 
 export interface AccessTokenResponse {
     code: number;
-    result: boolean;
-    message: string;
     data: {
         accessToken: string;
-        accessTokenExpiryDate: string | Date;
-        refreshToken: string;
-        refreshTokenExpiryDate: string | Date;
+        accessTokenExpiryDate: Date | string;
         createDate: string;
+        refreshToken: string;
+        refreshTokenExpiryDate: Date | string;
     } | null;
+    message: string;
     requestId: string;
+    result: boolean;
 }
 
 export interface Variant {
-    vid: string;
+    createTime: string;
     pid: string;
-    variantName: string | null;
-    variantNameEn: string | null;
-    variantSku: string;
-    variantImage: string | null;
-    variantStandard: string | null;
-    variantUnit: string | null;
-    variantProperty: string | null;
+    variantHeight: number;
+    variantImage: null | string;
     variantKey: string;
     variantLength: number;
-    variantWidth: number;
-    variantHeight: number;
+    variantName: null | string;
+    variantNameEn: null | string;
+    variantProperty: null | string;
+    variantSellPrice: number;
+    variantSku: string;
+    variantStandard: null | string;
+    variantSugSellPrice: number;
+    variantUnit: null | string;
     variantVolume: number;
     variantWeight: number;
-    variantSellPrice: number;
-    variantSugSellPrice: number;
-    createTime: string;
+    variantWidth: number;
+    vid: string;
 }
 
 export interface ProductDetailResponseData {
-    pid: string;
-    productName: string[];
-    productNameEn: string;
-    productSku: string;
-    productImage: string;
-    productWeight: number;
-    productUnit: string;
-    productType: string;
     categoryId: string;
     categoryName: string;
+    createrTime: string;
+    description: string;
     entryCode: string;
     entryName: string;
     entryNameEn: string;
+    listedNum: number;
+    materialKey: string[];
     materialName: string[];
     materialNameEn: string[];
-    materialKey: string[];
-    packingWeight: number;
+    packingKey: string[];
     packingName: string[];
     packingNameEn: string[];
-    packingKey: string[];
+    packingWeight: number;
+    pid: string;
+    productImage: string;
     productKey: string[];
     productKeyEn: string;
+    productName: string[];
+    productNameEn: string;
+    productSku: string;
+    productType: string;
+    productUnit: string;
+    productWeight: number;
     sellPrice: number;
     sourceFrom: number;
-    description: string;
-    suggestSellPrice: string;
-    listedNum: number;
     status: string;
-    supplierName: string;
+    suggestSellPrice: string;
     supplierId: string;
+    supplierName: string;
     variants: Variant[];
-    createrTime: string;
 }

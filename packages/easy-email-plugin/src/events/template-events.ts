@@ -1,5 +1,6 @@
+import type { IframeMessageEvent, SaveOutput } from "../types/email-template.types";
+
 import { MESSAGE_TYPES } from "../utils/constants";
-import { IframeMessageEvent, SaveOutput } from "../types/email-template.types";
 
 export type TemplateEventHandler = (data: any) => void;
 export type SaveEventHandler = (data: SaveOutput) => void;
@@ -7,14 +8,6 @@ export type SaveEventHandler = (data: SaveOutput) => void;
 export class TemplateEventProcessor {
     private onEditorReady?: TemplateEventHandler;
     private onSaveRequest?: SaveEventHandler;
-
-    setEditorReadyHandler(handler: TemplateEventHandler): void {
-        this.onEditorReady = handler;
-    }
-
-    setSaveRequestHandler(handler: SaveEventHandler): void {
-        this.onSaveRequest = handler;
-    }
 
     processMessage(event: IframeMessageEvent): void {
         const { type, payload } = event.data;
@@ -29,9 +22,9 @@ export class TemplateEventProcessor {
                 console.log("Processing save request:", payload);
                 if (this.onSaveRequest && payload) {
                     this.onSaveRequest({
-                        json: payload.template,
                         name: payload.subject || "Untitled Template",
                         html: payload.html,
+                        json: payload.template,
                     });
                 }
                 break;
@@ -39,5 +32,13 @@ export class TemplateEventProcessor {
             default:
                 console.log(`Unhandled message type: ${type}`);
         }
+    }
+
+    setEditorReadyHandler(handler: TemplateEventHandler): void {
+        this.onEditorReady = handler;
+    }
+
+    setSaveRequestHandler(handler: SaveEventHandler): void {
+        this.onSaveRequest = handler;
     }
 }

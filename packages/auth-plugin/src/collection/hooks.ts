@@ -1,4 +1,4 @@
-import { CollectionAfterDeleteHook } from "payload";
+import type { CollectionAfterDeleteHook } from "payload";
 
 export const deleteLinkedAccounts =
     (accountsSlug: string): CollectionAfterDeleteHook =>

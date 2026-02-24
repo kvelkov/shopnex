@@ -1,9 +1,10 @@
 import type { Config } from "payload";
+
 import pkg from "../package.json";
 
 type SidebarPluginConfig = {
     enabled?: boolean;
-    groups?: Record<string, { name: string; icon: string }>;
+    groups?: Record<string, { icon: string; name: string }>;
 };
 
 export const sidebarPlugin = (pluginConfig: SidebarPluginConfig = {}) => {
@@ -17,10 +18,10 @@ export const sidebarPlugin = (pluginConfig: SidebarPluginConfig = {}) => {
             components: {
                 ...(config.admin?.components ?? {}),
                 Nav: {
-                    path: "@shopnex/sidebar-plugin/rsc#NavWithGroups",
                     clientProps: {
                         groupsConfig: pluginConfig.groups,
                     },
+                    path: "@shopnex/sidebar-plugin/rsc#NavWithGroups",
                 },
             },
         };
@@ -33,12 +34,12 @@ export const sidebarPlugin = (pluginConfig: SidebarPluginConfig = {}) => {
 
             await config.custom?.syncPlugin?.(payload, {
                 name: pkg.name,
-                version: pkg.version,
-                description: pkg.description,
-                license: pkg.license,
                 author: pkg.author,
-                icon: pkg.icon,
                 category: pkg.category,
+                description: pkg.description,
+                icon: pkg.icon,
+                license: pkg.license,
+                version: pkg.version,
             });
         };
 

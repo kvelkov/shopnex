@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck'
+import { ComponentConfig } from '@puckeditor/core'
 import Link from 'next/link'
 import { CartDrawer } from '@/components/cart/cart-drawer'
 import { SearchDialog } from '@/components/search/search-dialog'

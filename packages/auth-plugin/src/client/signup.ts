@@ -1,4 +1,6 @@
-import { PasswordSignupPayload, passwordSignup } from "./password";
+import type { PasswordSignupPayload} from "./password";
+
+import { passwordSignup } from "./password";
 
 interface BaseOptions {
     name: string;

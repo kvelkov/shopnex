@@ -1,47 +1,34 @@
+import type { ComponentConfig } from "@puckeditor/core";
+
 import React from "react";
-import { ComponentConfig } from "@measured/puck";
+
 import styles from "./styles.module.css";
 
 export type Hero3Props = {
-    title: string;
-    subtitle: string;
-    primaryButtonText: string;
-    primaryButtonHref: string;
-    secondaryButtonText: string;
-    secondaryButtonHref: string;
     backgroundImage: string;
     overlayOpacity: number;
+    primaryButtonHref: string;
+    primaryButtonText: string;
+    secondaryButtonHref: string;
+    secondaryButtonText: string;
+    subtitle: string;
+    title: string;
 };
 
 export const Hero3: ComponentConfig<Hero3Props> = {
-    label: "Hero 3 - Centered with Background",
+    defaultProps: {
+        backgroundImage:
+            "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80",
+        overlayOpacity: 0.7,
+        primaryButtonHref: "https://www.vvveb.com",
+        primaryButtonText: "Free Download",
+        secondaryButtonHref: "https://www.vvveb.com",
+        secondaryButtonText: "Live Demo",
+        subtitle:
+            "Powerful and easy to use drag and drop website builder for blogs,\npresentation or ecommerce stores.",
+        title: "The next generation website builder",
+    },
     fields: {
-        title: {
-            type: "text",
-            label: "Title",
-            contentEditable: true,
-        },
-        subtitle: {
-            type: "textarea",
-            label: "Subtitle",
-            contentEditable: true,
-        },
-        primaryButtonText: {
-            type: "text",
-            label: "Primary Button Text",
-        },
-        primaryButtonHref: {
-            type: "text",
-            label: "Primary Button Link",
-        },
-        secondaryButtonText: {
-            type: "text",
-            label: "Secondary Button Text",
-        },
-        secondaryButtonHref: {
-            type: "text",
-            label: "Secondary Button Link",
-        },
         backgroundImage: {
             type: "text",
             label: "Background Image URL",
@@ -49,32 +36,47 @@ export const Hero3: ComponentConfig<Hero3Props> = {
         overlayOpacity: {
             type: "number",
             label: "Overlay Opacity (0-1)",
-            min: 0,
             max: 1,
+            min: 0,
+        },
+        primaryButtonHref: {
+            type: "text",
+            label: "Primary Button Link",
+        },
+        primaryButtonText: {
+            type: "text",
+            label: "Primary Button Text",
+        },
+        secondaryButtonHref: {
+            type: "text",
+            label: "Secondary Button Link",
+        },
+        secondaryButtonText: {
+            type: "text",
+            label: "Secondary Button Text",
+        },
+        subtitle: {
+            type: "textarea",
+            contentEditable: true,
+            label: "Subtitle",
+        },
+        title: {
+            type: "text",
+            contentEditable: true,
+            label: "Title",
         },
     },
-    defaultProps: {
-        title: "The next generation website builder",
-        subtitle:
-            "Powerful and easy to use drag and drop website builder for blogs,\npresentation or ecommerce stores.",
-        primaryButtonText: "Free Download",
-        primaryButtonHref: "https://www.vvveb.com",
-        secondaryButtonText: "Live Demo",
-        secondaryButtonHref: "https://www.vvveb.com",
-        backgroundImage:
-            "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80",
-        overlayOpacity: 0.7,
-    },
+    label: "Hero 3 - Centered with Background",
     render: ({
-        title,
-        subtitle,
-        primaryButtonText,
-        primaryButtonHref,
-        secondaryButtonText,
-        secondaryButtonHref,
         backgroundImage,
         overlayOpacity,
+        primaryButtonHref,
+        primaryButtonText,
         puck,
+        secondaryButtonHref,
+        secondaryButtonText,
+        subtitle,
+        title,
     }) => {
         return (
             <header className={styles.hero3}>
@@ -115,23 +117,23 @@ export const Hero3: ComponentConfig<Hero3Props> = {
 
                             <div className={styles.buttons}>
                                 <a
+                                    className={`${styles.btn} ${styles.btnPrimary} ${styles.textWhite} ${styles.me4}`}
                                     href={
                                         puck?.isEditing
                                             ? "#"
                                             : primaryButtonHref
                                     }
-                                    className={`${styles.btn} ${styles.btnPrimary} ${styles.textWhite} ${styles.me4}`}
                                     tabIndex={puck?.isEditing ? -1 : undefined}
                                 >
                                     {primaryButtonText}
                                 </a>
                                 <a
+                                    className={`${styles.btn} ${styles.btnWhite} ${styles.textWhite}`}
                                     href={
                                         puck?.isEditing
                                             ? "#"
                                             : secondaryButtonHref
                                     }
-                                    className={`${styles.btn} ${styles.btnWhite} ${styles.textWhite}`}
                                     tabIndex={puck?.isEditing ? -1 : undefined}
                                 >
                                     {secondaryButtonText}
@@ -143,12 +145,12 @@ export const Hero3: ComponentConfig<Hero3Props> = {
 
                 <div className={styles.separatorBottom}>
                     <svg
+                        className={styles.separatorSvg}
+                        fill="white"
+                        height="250"
+                        preserveAspectRatio="none"
                         viewBox="0 0 500 41"
                         width="100%"
-                        height="250"
-                        fill="white"
-                        preserveAspectRatio="none"
-                        className={styles.separatorSvg}
                     >
                         <path
                             d="M0,185l125-26,33,17,58-12s54,19,55,19,50-11,50-11l56,6,60-8,63,15v15H0Z"

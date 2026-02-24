@@ -9,6 +9,7 @@
         "dev:cms": "pnpm --filter ./apps/cms dev",
         "dev:shop": "pnpm --filter ./apps/shop dev",
         "build": "turbo run build",
+        "lint": "turbo run lint",
         "format": "prettier --write .",
         "db:seed": "pnpm --filter ./apps/cms db:seed",
         "test:e2e": "pnpm exec playwright test"

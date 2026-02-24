@@ -1,26 +1,28 @@
-import { CSSProperties, forwardRef, ReactNode } from "react";
-import {
+import type {
     ComponentConfig,
     DefaultComponentProps,
     ObjectField,
-} from "@measured/puck";
+} from "@puckeditor/core";
+import type { CSSProperties, ReactNode } from "react";
 
-import styles from "./styles.module.css";
-import getClassNameFactory from "../../utils/get-class-name-factory";
+import { forwardRef } from "react";
+
 import { spacingOptions } from "../../options";
+import getClassNameFactory from "../../utils/get-class-name-factory";
+import styles from "./styles.module.css";
 
 const getClassName = getClassNameFactory("Layout", styles);
 
 type LayoutFieldProps = {
+    grow?: boolean;
     padding?: string;
     spanCol?: number;
     spanRow?: number;
-    grow?: boolean;
 };
 
-export type WithLayout<Props extends DefaultComponentProps> = Props & {
+export type WithLayout<Props extends DefaultComponentProps> = {
     layout?: LayoutFieldProps;
-};
+} & Props;
 
 type LayoutProps = WithLayout<{
     children: ReactNode;
@@ -31,21 +33,9 @@ type LayoutProps = WithLayout<{
 export const layoutField: ObjectField<LayoutFieldProps> = {
     type: "object",
     objectFields: {
-        spanCol: {
-            label: "Grid Columns",
-            type: "number",
-            min: 1,
-            max: 12,
-        },
-        spanRow: {
-            label: "Grid Rows",
-            type: "number",
-            min: 1,
-            max: 12,
-        },
         grow: {
-            label: "Flex Grow",
             type: "radio",
+            label: "Flex Grow",
             options: [
                 { label: "true", value: true },
                 { label: "false", value: false },
@@ -56,33 +46,43 @@ export const layoutField: ObjectField<LayoutFieldProps> = {
             label: "Vertical Padding",
             options: [{ label: "0px", value: "0px" }, ...spacingOptions],
         },
+        spanCol: {
+            type: "number",
+            label: "Grid Columns",
+            max: 12,
+            min: 1,
+        },
+        spanRow: {
+            type: "number",
+            label: "Grid Rows",
+            max: 12,
+            min: 1,
+        },
     },
 };
 
-const Layout = forwardRef<HTMLDivElement, LayoutProps>(
-    ({ children, className, layout, style }, ref) => {
+const Layout = ({ children, className, layout, ref, style }: { ref?: React.RefObject<HTMLDivElement | null> } & LayoutProps) => {
         return (
             <div
                 className={className}
+                ref={ref}
                 style={{
+                    flex: layout?.grow ? "1 1 0" : undefined,
                     gridColumn: layout?.spanCol
                         ? `span ${Math.max(Math.min(layout.spanCol, 12), 1)}`
                         : undefined,
                     gridRow: layout?.spanRow
                         ? `span ${Math.max(Math.min(layout.spanRow, 12), 1)}`
                         : undefined,
-                    paddingTop: layout?.padding,
                     paddingBottom: layout?.padding,
-                    flex: layout?.grow ? "1 1 0" : undefined,
+                    paddingTop: layout?.padding,
                     ...style,
                 }}
-                ref={ref}
             >
                 {children}
             </div>
         );
-    }
-);
+    };
 
 Layout.displayName = "Layout";
 
@@ -93,20 +93,30 @@ export function withLayout<
 >(componentConfig: ThisComponentConfig): ThisComponentConfig {
     return {
         ...componentConfig,
+        defaultProps: {
+            ...componentConfig.defaultProps,
+            layout: {
+                grow: false,
+                padding: "0px",
+                spanCol: 1,
+                spanRow: 1,
+                ...componentConfig.defaultProps?.layout,
+            },
+        },
         fields: {
             ...componentConfig.fields,
             layout: layoutField,
         },
-        defaultProps: {
-            ...componentConfig.defaultProps,
-            layout: {
-                spanCol: 1,
-                spanRow: 1,
-                padding: "0px",
-                grow: false,
-                ...componentConfig.defaultProps?.layout,
-            },
-        },
+        inline: true,
+        render: (props) => (
+            <Layout
+                className={getClassName()}
+                layout={props.layout as LayoutFieldProps}
+                ref={props.puck.dragRef}
+            >
+                {componentConfig.render(props)}
+            </Layout>
+        ),
         resolveFields: (_, params) => {
             if (params.parent?.type === "Grid") {
                 return {
@@ -114,9 +124,9 @@ export function withLayout<
                     layout: {
                         ...layoutField,
                         objectFields: {
+                            padding: layoutField.objectFields.padding,
                             spanCol: layoutField.objectFields.spanCol,
                             spanRow: layoutField.objectFields.spanRow,
-                            padding: layoutField.objectFields.padding,
                         },
                     },
                 };
@@ -144,15 +154,5 @@ export function withLayout<
                 },
             };
         },
-        inline: true,
-        render: (props) => (
-            <Layout
-                className={getClassName()}
-                layout={props.layout as LayoutFieldProps}
-                ref={props.puck.dragRef}
-            >
-                {componentConfig.render(props)}
-            </Layout>
-        ),
     };
 }

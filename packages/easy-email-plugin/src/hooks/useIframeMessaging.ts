@@ -1,7 +1,9 @@
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
+
+import type { IframeMessageEvent } from "../types/email-template.types";
+
 import { IframeEventManager } from "../events/iframe-events";
 import { TemplateEventProcessor } from "../events/template-events";
-import { IframeMessageEvent } from "../types/email-template.types";
 
 export const useIframeMessaging = (iframeOrigin: string) => {
     const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -62,12 +64,12 @@ export const useIframeMessaging = (iframeOrigin: string) => {
     }, [receiveMessage]);
 
     return {
-        iframeRef,
-        iframeLoaded,
         handleIframeLoad,
+        iframeLoaded,
+        iframeRef,
         sendTemplateData,
-        triggerSave,
         setEditorReadyHandler,
         setSaveRequestHandler,
+        triggerSave,
     };
 };

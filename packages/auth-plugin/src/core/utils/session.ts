@@ -4,7 +4,7 @@ export function sessionResponse(cookies: string[], returnURL?: string) {
     // Ensure the return URL is properly formatted
     const redirectURL = `${process.env.NEXT_PUBLIC_SERVER_URL}/admin/`;
 
-    let responseHTML = `
+    const responseHTML = `
     <!DOCTYPE html>
     <html>
       <head>
@@ -26,11 +26,11 @@ export function sessionResponse(cookies: string[], returnURL?: string) {
     </html>
   `;
 
-    let res = new Response(responseHTML, {
-        status: 200,
+    const res = new Response(responseHTML, {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
         },
+        status: 200,
     });
 
     cookies.forEach((cookie) => {
@@ -43,10 +43,10 @@ export function sessionResponse(cookies: string[], returnURL?: string) {
 export const revokeSession = (cookies: string[]) => {
     const res = new Response(
         JSON.stringify({
-            message: "Session revoked",
-            kind: SuccessKind.Deleted,
-            isSuccess: true,
             isError: false,
+            isSuccess: true,
+            kind: SuccessKind.Deleted,
+            message: "Session revoked",
         }),
         {
             status: 200,

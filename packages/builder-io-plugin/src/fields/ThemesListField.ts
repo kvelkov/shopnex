@@ -1,4 +1,4 @@
-import { Field } from "payload";
+import type { Field } from "payload";
 
 export const ThemesListField: Field = {
     // label: "Most Popular and Free",
@@ -26,7 +26,6 @@ export const ThemesListField: Field = {
     // },
     name: "builderIoThemes",
     type: "ui",
-    label: "",
     admin: {
         components: {
             Field: "@shopnex/builder-io-plugin/rsc#ThemeList",
@@ -45,4 +44,5 @@ export const ThemesListField: Field = {
             return isBuilderIoBlock;
         },
     },
+    label: "",
 };

@@ -4,7 +4,7 @@ export function hashCode(s: string) {
     let h = 0;
     const l = s.length;
     let i = 0;
-    if (l > 0) while (i < l) h = ((h << 5) + h + s.charCodeAt(i++)) | 0;
+    if (l > 0) {while (i < l) {h = ((h << 5) + h + s.charCodeAt(i++)) | 0;}}
     return h;
 }
 
@@ -34,16 +34,16 @@ export const ephemeralCode = async (length: number, secret: string) => {
         {
             name: "PBKDF2",
             hash: "SHA-256",
-            salt: salt,
             iterations,
+            salt,
         },
         keyMaterial,
         256
     );
     const hashB64 = jose.base64url.encode(new Uint8Array(hash));
     return {
-        hash: hashB64,
         code: codeStr,
+        hash: hashB64,
     };
 };
 
@@ -58,8 +58,8 @@ export const verifyEphemeralCode = async (
     const params = {
         name: "PBKDF2",
         hash: "SHA-256",
-        salt,
         iterations: 600000,
+        salt,
     };
     const keyMaterial = await crypto.subtle.importKey(
         "raw",

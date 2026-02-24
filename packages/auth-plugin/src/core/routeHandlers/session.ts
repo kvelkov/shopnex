@@ -1,7 +1,8 @@
-import { PayloadRequest } from "payload";
+import type { PayloadRequest } from "payload";
+
+import { APP_COOKIE_SUFFIX } from "../../constants";
 import { InvalidAPIRequest } from "../errors/apiErrors";
 import { SessionRefresh } from "../protocols/session";
-import { APP_COOKIE_SUFFIX } from "../../constants";
 
 export function SessionHandlers(
     request: PayloadRequest,

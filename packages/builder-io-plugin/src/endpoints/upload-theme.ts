@@ -1,4 +1,5 @@
-import { PayloadHandler } from "payload";
+import type { PayloadHandler } from "payload";
+
 import { uploadTheme } from "../utils/theme-management";
 
 export const uploadThemeHandler: PayloadHandler = async (req) => {
@@ -9,9 +10,9 @@ export const uploadThemeHandler: PayloadHandler = async (req) => {
 
     logger.debug(
         {
-            themeName: body.themeName,
-            themeId,
             isSuperAdmin,
+            themeId,
+            themeName: body.themeName,
         },
         "Upload theme request received"
     );
@@ -44,7 +45,7 @@ export const uploadThemeHandler: PayloadHandler = async (req) => {
                 },
                 ...(!isSuperAdmin && {
                     shop: {
-                        equals: (req.user.shops[0]?.shop as any)?.id,
+                        equals: (req.user.shops[0]?.shop)?.id,
                     },
                 }),
             },
@@ -59,19 +60,19 @@ export const uploadThemeHandler: PayloadHandler = async (req) => {
         const themeMode = result.editorMode[0];
         logger.info(
             {
-                themeName: body.themeName,
                 themeId,
+                themeName: body.themeName,
             },
             "Starting theme upload process"
         );
 
         const success = await uploadTheme({
             // @ts-ignore
+            logger,
             privateKey: themeMode.builderIoPrivateKey,
-            themeName: body.themeName,
             sourcePublicKey: process.env
                 .NEXT_PUBLIC_BUILDER_IO_PUBLIC_KEY as string,
-            logger,
+            themeName: body.themeName,
         });
 
         if (success) {

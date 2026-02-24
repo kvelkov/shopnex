@@ -1,10 +1,13 @@
-import { parseCookies, PayloadRequest } from "payload";
+import type { PayloadRequest } from "payload";
+
+import { parseCookies } from "payload";
+
+import { ErrorKind, SuccessKind } from "../../types";
 import {
     UnauthorizedAPIRequest,
     UserNotFoundAPIError,
 } from "../errors/apiErrors";
 import { createSessionCookies, verifySessionCookie } from "../utils/cookies";
-import { ErrorKind, SuccessKind } from "../../types";
 
 export const SessionRefresh = async (
     cookieName: string,
@@ -32,10 +35,10 @@ export const SessionRefresh = async (
 
     const res = new Response(
         JSON.stringify({
-            message: "Session refreshed",
-            kind: SuccessKind.Updated,
-            isSuccess: true,
             isError: false,
+            isSuccess: true,
+            kind: SuccessKind.Updated,
+            message: "Session refreshed",
         }),
         {
             status: 201,
@@ -63,11 +66,11 @@ export const UserSession = async (
     if (!token) {
         return new Response(
             JSON.stringify({
-                message: "Missing user session",
-                kind: ErrorKind.NotAuthenticated,
                 data: {
                     isAuthenticated: false,
                 },
+                kind: ErrorKind.NotAuthenticated,
+                message: "Missing user session",
             }),
             {
                 status: 403,
@@ -79,13 +82,13 @@ export const UserSession = async (
     if (!jwtResponse.payload) {
         return new Response(
             JSON.stringify({
-                message: "Invalid user session",
-                kind: ErrorKind.NotAuthenticated,
                 data: {
                     isAuthenticated: false,
                 },
-                isSuccess: false,
                 isError: true,
+                isSuccess: false,
+                kind: ErrorKind.NotAuthenticated,
+                message: "Invalid user session",
             }),
             {
                 status: 401,
@@ -94,8 +97,8 @@ export const UserSession = async (
     }
 
     const doc = await request.payload.findByID({
-        collection: internal.usersCollectionSlug as any,
         id: jwtResponse.payload.id,
+        collection: internal.usersCollectionSlug as any,
     });
     if (!doc?.id) {
         return new UserNotFoundAPIError();
@@ -110,14 +113,14 @@ export const UserSession = async (
 
     return new Response(
         JSON.stringify({
-            message: "Fetched user session",
-            kind: SuccessKind.Retrieved,
             data: {
                 isAuthenticated: true,
                 ...queryData,
             },
-            isSuccess: true,
             isError: false,
+            isSuccess: true,
+            kind: SuccessKind.Retrieved,
+            message: "Fetched user session",
         }),
         {
             status: 201,

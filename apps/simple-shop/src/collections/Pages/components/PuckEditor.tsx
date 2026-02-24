@@ -1,8 +1,8 @@
 'use client'
 
-import { Puck } from '@measured/puck'
+import { Puck } from '@puckeditor/core'
 import { useField, useForm, useTheme } from '@payloadcms/ui'
-import '@measured/puck/puck.css'
+import '@puckeditor/core/puck.css'
 import { config } from '../editor/puck-config'
 import './PuckEditor.scss'
 import './dark-mode.css'

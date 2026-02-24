@@ -4,8 +4,8 @@ export const registration = async (email: string) => {
         const resp = await fetch(
             "/api/admin/passkey/generate-registration-options",
             {
-                method: "POST",
                 body: JSON.stringify({ data: { email } }),
+                method: "POST",
             }
         );
         const optionsJSON = await resp.json();
@@ -14,14 +14,14 @@ export const registration = async (email: string) => {
             optionsJSON: optionsJSON.options,
         });
         const response = await fetch("/api/admin/passkey/verify-registration", {
-            method: "POST",
+            body: JSON.stringify({
+                data: { email, registration: registrationResp },
+            }),
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                data: { email, registration: registrationResp },
-            }),
+            method: "POST",
         });
         if (response.redirected) {
             window.location.href = response.url;

@@ -1,13 +1,14 @@
 import { createAdminApiClient } from "@builder.io/admin-sdk";
 import { builder } from "@builder.io/sdk";
+
 import { getModelSchema } from "./schema";
 
 const createModel = async ({
-    privateKey,
     modelName,
+    privateKey,
 }: {
-    privateKey: string;
     modelName: string;
+    privateKey: string;
 }) => {
     const adminSDK = createAdminApiClient(privateKey);
     const themeModel = getModelSchema({ name: modelName, subType: "page" });
@@ -18,18 +19,18 @@ const createModel = async ({
 };
 
 const isModelExists = async ({
-    privateKey,
     modelName,
+    privateKey,
 }: {
-    privateKey: string;
     modelName: string;
+    privateKey: string;
 }) => {
     const adminSDK = createAdminApiClient(privateKey);
     const models = await adminSDK.query({
         models: {
             id: true,
-            fields: true,
             name: true,
+            fields: true,
         },
     });
     if (!models.data || !models.data.models) {
@@ -56,26 +57,26 @@ async function importThemePage(
         const response = await fetch(
             `https://builder.io/api/v1/write/${modelName}`,
             {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${privateKey}`,
-                },
                 body: JSON.stringify({
-                    data: pageContent.data,
                     name: pageContent.name,
+                    data: pageContent.data,
                     model: modelName,
                     published: pageContent.published ?? true,
                     query: pageContent.data?.url
                         ? [
                               {
-                                  property: "urlPath",
                                   operator: "is",
+                                  property: "urlPath",
                                   value: pageContent.data.url,
                               },
                           ]
                         : [],
                 }),
+                headers: {
+                    Authorization: `Bearer ${privateKey}`,
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
             }
         );
 
@@ -89,9 +90,9 @@ async function importThemePage(
             return result;
         } else {
             logger.error("Error importing theme page", {
+                error: result,
                 modelName,
                 pageName: pageContent.name,
-                error: result,
             });
             return null;
         }
@@ -114,13 +115,13 @@ const fetchPages = async ({
 }) => {
     try {
         const pages = await builder.getAll(themeName, {
-            userAttributes: {
-                urlPath: "/",
-            },
-            limit: 100,
             apiKey: publicKey,
+            limit: 100,
             options: {
                 noTargeting: true,
+            },
+            userAttributes: {
+                urlPath: "/",
             },
         });
         return pages;
@@ -131,50 +132,50 @@ const fetchPages = async ({
 };
 
 export const uploadTheme = async ({
-    privateKey,
-    themeName,
-    sourcePublicKey,
     logger,
+    privateKey,
+    sourcePublicKey,
+    themeName,
 }: {
-    privateKey: string;
-    themeName: string;
-    sourcePublicKey: string;
     logger: any;
+    privateKey: string;
+    sourcePublicKey: string;
+    themeName: string;
 }) => {
     try {
         logger.debug("Starting theme upload process", { themeName });
 
         const themeModelExists = await isModelExists({
-            privateKey,
             modelName: themeName,
+            privateKey,
         });
         logger.debug("Theme model existence checked", {
-            themeName,
             exists: themeModelExists,
+            themeName,
         });
 
         if (!themeModelExists) {
             logger.info("Creating new theme model", { themeName });
             await createModel({
-                privateKey,
                 modelName: themeName,
+                privateKey,
             });
         }
 
         const symbolModelExists = await isModelExists({
-            privateKey,
             modelName: "symbol",
+            privateKey,
         });
         logger.debug("Symbol model existence checked", {
-            themeName: "symbol",
             exists: symbolModelExists,
+            themeName: "symbol",
         });
 
         if (!symbolModelExists) {
             logger.info("Creating new symbol model", { themeName: "symbol" });
             await createModel({
-                privateKey,
                 modelName: "symbol",
+                privateKey,
             });
         }
 
@@ -190,15 +191,15 @@ export const uploadTheme = async ({
             }),
         ]);
         logger.info("Retrieved theme content", {
-            themeName,
             pageCount: pages.length,
             symbolCount: symbols.length,
+            themeName,
         });
 
         const symbolImportPromises = symbols.map((symbol) => {
             logger.debug("Importing symbol", {
-                themeName,
                 symbolName: symbol.name,
+                themeName,
             });
             return importThemePage("symbol", privateKey, symbol, logger);
         });
@@ -210,8 +211,8 @@ export const uploadTheme = async ({
 
         const pageImportPromises = pages.map((page) => {
             logger.debug("Importing theme page", {
-                themeName,
                 pageName: page.name,
+                themeName,
             });
             return importThemePage(themeName, privateKey, page, logger);
         });

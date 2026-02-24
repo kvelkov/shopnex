@@ -79,7 +79,7 @@ export const getExportCollection = ({
                 userCollection: "users",
             };
             await req.payload.jobs.queue({
-                input: input,
+                input,
                 task: "createCollectionExport",
             } as any);
         });

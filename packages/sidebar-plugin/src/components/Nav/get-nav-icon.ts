@@ -1,10 +1,11 @@
 import type { LucideProps } from "lucide-react";
 import type { ExoticComponent } from "react";
+
 import * as LucideIcons from "lucide-react";
 
 export const getNavIcon = (
     slug: string,
-    groupsConfig?: Record<string, { name: string; icon: string }>
+    groupsConfig?: Record<string, { icon: string; name: string }>
 ): ExoticComponent<LucideProps> | undefined => {
     if (groupsConfig && groupsConfig[slug]) {
         const iconName = groupsConfig[slug].icon;

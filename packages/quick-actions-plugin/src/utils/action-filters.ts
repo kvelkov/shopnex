@@ -1,9 +1,9 @@
-import { QuickAction } from "../types";
+import type { QuickAction } from "../types";
 
 export interface ActionFilter {
     byGroup?: string;
-    byPriority?: number;
     byKeyword?: string;
+    byPriority?: number;
     customOnly?: boolean;
     excludeGroups?: string[];
 }

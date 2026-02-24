@@ -33,7 +33,7 @@ export const WhereField: React.FC = () => {
         }
 
         if (selectionToUseValue === "currentSelection" && selected) {
-            const ids: (string | number)[] = [];
+            const ids: (number | string)[] = [];
 
             for (const [key, value] of selected) {
                 if (value) {
