@@ -19,7 +19,7 @@ type InputProps = {
 >;
 
 const Input = (
-        { name, type, className, error, label, ref, required, topLabel, ...props }: { ref?: React.RefObject<HTMLInputElement | null> } & InputProps
+        { name, type, className, error, label, ref, required, topLabel, ...props }: InputProps
     ) => {
         const inputRef = React.useRef<HTMLInputElement>(null);
         const [showPassword, setShowPassword] = React.useState(false);
