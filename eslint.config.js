@@ -62,6 +62,13 @@ export const rootEslintConfig = [
         },
     },
     {
+        // Nextra _meta.ts files define navigation order — sorting would break it
+        files: ["apps/shopnex-docs/**"],
+        rules: {
+            "perfectionist/sort-objects": "off",
+        },
+    },
+    {
         files: ["apps/shop/src/**"],
         rules: {
             "no-empty-pattern": "off",
