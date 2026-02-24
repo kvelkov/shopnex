@@ -1,7 +1,7 @@
-import _ from "lodash";
-
 import { getTopCollections } from "@/services/collections";
 import { getProducts } from "@/services/products";
+import _ from "lodash";
+
 import { BuilderPage } from "./components/BuilderPage";
 
 export const revalidate = 60;
