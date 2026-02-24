@@ -9,7 +9,7 @@ import decimal from "decimal.js";
 import { JSDOM } from "jsdom";
 
 import type { CjData } from "../CjCollection";
-import type { CjSdk} from "../sdk/cj-sdk";
+import type { CjSdk } from "../sdk/cj-sdk";
 import type { ProductDetails } from "../sdk/products/product-types";
 
 import { cjSdk } from "../sdk/cj-sdk";
@@ -153,9 +153,7 @@ const createOrUpdateProduct = async ({
     if (totalDocs === 0) {
         return payload.create({
             collection: "products",
-            data: {
-                ...product,
-            },
+            data: product as any,
         });
     }
 };
