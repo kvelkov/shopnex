@@ -1,10 +1,11 @@
+import type { Product } from "@shopnex/types";
+
+import { getVariantImage } from "@/utils/get-variant-image";
 import { Text } from "@medusajs/ui";
 import Link from "next/link";
 
 import PreviewPrice from "./price";
 import Thumbnail from "./thumbnail";
-import { Product } from "@shopnex/types";
-import { getVariantImage } from "@/utils/get-variant-image";
 
 export default function ProductPreview({
     isFeatured,

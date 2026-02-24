@@ -1,9 +1,9 @@
 const ErrorMessage = ({
-    error,
     "data-testid": dataTestid,
+    error,
 }: {
-    error?: string | null;
     "data-testid"?: string;
+    error?: null | string;
 }) => {
     if (!error) {
         return null;

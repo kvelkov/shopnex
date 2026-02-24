@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import OrderCompletedTemplate from "@/templates/order-completed-template";
 import { getOrder } from "@/services/orders";
+import OrderCompletedTemplate from "@/templates/order-completed-template";
 import { notFound } from "next/navigation";
 
 type Props = {

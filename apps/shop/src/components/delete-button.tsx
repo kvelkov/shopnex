@@ -8,9 +8,9 @@ import Trash from "./icons/trash";
 
 const DeleteButton = ({
     id,
-    productId,
     children,
     className,
+    productId,
 }: {
     children?: React.ReactNode;
     className?: string;

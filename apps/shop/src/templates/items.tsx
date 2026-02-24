@@ -1,9 +1,8 @@
 "use client";
 
+import Item from "@/components/item";
 import { Heading, Table } from "@medusajs/ui";
 import { useCart } from "react-use-cart";
-
-import Item from "@/components/item";
 
 const ItemsTemplate = () => {
     const { items } = useCart();

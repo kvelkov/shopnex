@@ -1,6 +1,5 @@
-import { clx } from "@medusajs/ui";
-
 import { convertToLocale } from "@/utils/money";
+import { clx } from "@medusajs/ui";
 
 type LineItemUnitPriceProps = {
     currencyCode: string;

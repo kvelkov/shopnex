@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import type { CheckoutSession } from "@shopnex/types";
+
 import { payloadSdk } from "@/utils/payload-sdk";
-import { CheckoutSession } from "@shopnex/types";
+import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export const useCheckoutSession = () => {
     const [session, setSession] = useState<CheckoutSession | null>(null);
@@ -76,5 +77,5 @@ export const useCheckoutSession = () => {
         fetchSession();
     }, []);
 
-    return { session, loading, error };
+    return { error, loading, session };
 };

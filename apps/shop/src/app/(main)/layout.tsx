@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { getStoreSettings } from "@/services/store-settings";
-
 import Footer from "@/templates/footer";
 import Nav from "@/templates/nav";
 

@@ -9,9 +9,9 @@ import OrderDetails from "@/components/order/order-details/order-details";
 import PaymentDetails from "@/components/order/payment-details/payment-details";
 import ShippingDetails from "@/components/order/shipping-details/shipping-details";
 import { Heading } from "@medusajs/ui";
+import Cookies from "js-cookie";
 import { useLayoutEffect } from "react";
 import { useCart } from "react-use-cart";
-import Cookies from "js-cookie";
 
 type OrderCompletedTemplateProps = {
     order: Order;

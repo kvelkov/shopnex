@@ -1,5 +1,6 @@
+import type { Cart } from "@shopnex/types";
+
 import { payloadSdk } from "@/utils/payload-sdk";
-import { Cart } from "@shopnex/types";
 import Cookies from "js-cookie";
 
 export const setAddresses = (cartId: string, addresses: any) => {
@@ -7,12 +8,12 @@ export const setAddresses = (cartId: string, addresses: any) => {
 };
 
 const emptyCart: Cart = {
+    id: 0,
     cartItems: [],
     completed: false,
-    id: 0,
+    createdAt: "",
     sessionId: "",
     updatedAt: "",
-    createdAt: "",
 };
 
 export const getCart = async () => {
@@ -121,31 +122,31 @@ export async function updateCart(item: {
 
 export async function syncCartWithBackend(
     item: {
+        action?: "update";
         id: string;
         product: number;
-        variantId: string;
         quantity: number;
-        action?: "update";
+        variantId: string;
     },
     sessionId: string
 ) {
     if (sessionId) {
         await fetch(`/api/carts/session/${sessionId}`, {
-            method: "PATCH",
-            credentials: "include",
             body: JSON.stringify({
-                item,
                 action: item.action,
+                item,
             }),
+            credentials: "include",
+            method: "PATCH",
         });
     } else {
         await fetch("/api/carts/session", {
-            method: "POST",
-            credentials: "include",
             body: JSON.stringify({
-                item,
                 action: item.action,
+                item,
             }),
+            credentials: "include",
+            method: "POST",
         });
     }
 }

@@ -1,6 +1,6 @@
+import { useAuth } from "@/providers/auth";
 import { useRouter } from "next/navigation";
 
-import { useAuth } from "@/providers/auth";
 import Input from "./input";
 import { SubmitButton } from "./submit-button";
 

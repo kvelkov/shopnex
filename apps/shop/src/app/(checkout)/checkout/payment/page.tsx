@@ -1,21 +1,21 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { payloadSdk } from "@/utils/payload-sdk";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Button, Label } from "@medusajs/ui";
-import { updateCheckoutSession } from "@/services/checkout-session";
 import { useCheckoutSession } from "@/hooks/use-checkout-session";
+import { updateCheckoutSession } from "@/services/checkout-session";
+import { payloadSdk } from "@/utils/payload-sdk";
+import { Button, Label } from "@medusajs/ui";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 interface PaymentMethod {
     details?: string;
-    paymentId: number;
     id: string;
     instructions?: string;
     label: string;
+    paymentId: number;
     type: string;
 }
 
@@ -30,11 +30,11 @@ export default function PaymentPage() {
     const {} = useCheckoutSession();
 
     const {
-        register,
-        handleSubmit,
-        watch,
-        setValue,
         formState: { errors },
+        handleSubmit,
+        register,
+        setValue,
+        watch,
     } = useForm<PaymentFormData>();
 
     const selectedPaymentMethod = watch("paymentMethod");
@@ -51,11 +51,11 @@ export default function PaymentPage() {
                     (doc) =>
                         doc.providers?.map((provider: any) => ({
                             id: provider.id,
-                            paymentId: doc.id,
                             type: provider.blockType,
                             details: provider.details,
                             instructions: provider.instructions,
                             label: doc.name,
+                            paymentId: doc.id,
                         })) || []
                 );
 
@@ -115,7 +115,7 @@ export default function PaymentPage() {
     const selectedMethodDetails = getSelectedMethodDetails();
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <h2 className="text-2xl font-semibold mb-6">Payment</h2>
 
             <div className="space-y-6">
@@ -160,15 +160,15 @@ export default function PaymentPage() {
 
             <div className="flex space-x-4">
                 <Button
+                    onClick={() => router.push("/checkout/shipping")}
                     type="button"
                     variant="secondary"
-                    onClick={() => router.push("/checkout/shipping")}
                 >
                     Back to delivery
                 </Button>
                 <Button
-                    type="submit"
                     disabled={!selectedPaymentMethod || isLoading}
+                    type="submit"
                 >
                     {isLoading ? "Saving..." : "Review order"}
                 </Button>

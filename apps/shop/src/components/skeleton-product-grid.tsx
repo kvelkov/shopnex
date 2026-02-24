@@ -1,4 +1,5 @@
 import repeat from "@/utils/repeat";
+
 import SkeletonProductPreview from "./skeleton-product-preview";
 
 const SkeletonProductGrid = ({

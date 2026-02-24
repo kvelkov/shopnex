@@ -1,10 +1,9 @@
 import type { SortOptions } from "@/utils/sort-options";
+import type { Metadata } from "next";
 
 import CollectionTemplate from "@/templates/collections";
-import { notFound } from "next/navigation";
 import { payloadSdk } from "@/utils/payload-sdk";
-
-import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 type CollectionsPageProps = {
     params: Promise<{ handle: string }>;
@@ -24,16 +23,16 @@ export async function generateMetadata(
     const result = await payloadSdk.find({
         collection: "collections",
         limit: 1,
+        select: {
+            meta: {
+                description: true,
+                title: true,
+            },
+            title: true,
+        },
         where: {
             handle: {
                 equals: handle,
-            },
-        },
-        select: {
-            title: true,
-            meta: {
-                title: true,
-                description: true,
             },
         },
     });
@@ -47,8 +46,8 @@ export async function generateMetadata(
     return {
         description: collection.meta?.description || `${collection.title}`, // Fallback to title if no meta description
         openGraph: {
-            title: collection.meta?.title || `${collection.title} | ShopNex`, // Fallback if no meta title
             description: collection.meta?.description || `${collection.title}`,
+            title: collection.meta?.title || `${collection.title} | ShopNex`, // Fallback if no meta title
             // images: collection.thumbnail ? [collection.thumbnail] : [],
         },
         title: collection.meta?.title || `${collection.title} | ShopNex`,
@@ -62,13 +61,13 @@ export default async function CollectionPage(props: CollectionsPageProps) {
 
     const collectionData = await payloadSdk.find({
         collection: "collections",
+        depth: 10,
         sort: "createdAt",
         where: {
             handle: {
                 equals: params.handle,
             },
         },
-        depth: 10,
     });
 
     const collection = collectionData.docs[0];

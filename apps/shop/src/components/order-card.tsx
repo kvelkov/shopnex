@@ -1,5 +1,6 @@
 import type { Order } from "@shopnex/types";
 
+import { getVariantImage } from "@/utils/get-variant-image";
 import { isExpandedDoc } from "@/utils/is-expanded-doc";
 import { convertToLocale } from "@/utils/money";
 import { Button } from "@medusajs/ui";
@@ -7,7 +8,6 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 import Thumbnail from "./thumbnail";
-import { getVariantImage } from "@/utils/get-variant-image";
 
 type OrderCardProps = {
     order: Order;

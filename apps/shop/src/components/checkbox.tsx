@@ -1,5 +1,7 @@
+import type { MouseEventHandler } from "react";
+
 import { Checkbox, Label } from "@medusajs/ui";
-import React, { MouseEventHandler } from "react";
+import React from "react";
 
 type CheckboxProps = {
     checked?: boolean;

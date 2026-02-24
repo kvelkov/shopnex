@@ -4,10 +4,10 @@ import { usePathname } from "next/navigation";
 
 type StepProps = {
     steps: {
+        description: string;
         id: number;
         name: string;
         route: string;
-        description: string;
     }[];
 };
 

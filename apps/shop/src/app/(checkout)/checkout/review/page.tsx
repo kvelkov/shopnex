@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@medusajs/ui";
 import { useCheckoutSession } from "@/hooks/use-checkout-session";
+import { Button } from "@medusajs/ui";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function ReviewPage() {
     const router = useRouter();
@@ -88,13 +88,13 @@ export default function ReviewPage() {
 
             <div className="flex space-x-4">
                 <Button
+                    onClick={() => router.push("/checkout/payment")}
                     type="button"
                     variant="secondary"
-                    onClick={() => router.push("/checkout/payment")}
                 >
                     Back to payment
                 </Button>
-                <Button onClick={handlePlaceOrder} disabled={isLoading}>
+                <Button disabled={isLoading} onClick={handlePlaceOrder}>
                     {isLoading ? "Placing order..." : "Place order"}
                 </Button>
             </div>

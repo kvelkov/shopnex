@@ -2,6 +2,7 @@
 
 import type { Product } from "@shopnex/types";
 
+import { syncCartWithBackend } from "@/services/cart";
 import { Button } from "@medusajs/ui";
 import Cookies from "js-cookie";
 import { useMemo, useState } from "react";
@@ -10,7 +11,6 @@ import { useCart } from "react-use-cart";
 import Divider from "../../divider";
 import ProductPrice from "../product-price/product-price";
 import OptionSelect from "./option-select";
-import { syncCartWithBackend } from "@/services/cart";
 
 type ProductActionsProps = {
     product: Product;
@@ -74,8 +74,8 @@ export default function ProductActions({
                 {
                     id: newItem.id,
                     product: newItem.productId,
-                    variantId: newItem.id,
                     quantity: 1,
+                    variantId: newItem.id,
                 },
                 sessionId
             );

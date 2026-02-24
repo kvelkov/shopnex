@@ -1,7 +1,6 @@
-import { notFound } from "next/navigation";
-
 import PolicyTemplate from "@/templates/policy";
 import { payloadSdk } from "@/utils/payload-sdk";
+import { notFound } from "next/navigation";
 
 type PolicyPageProps = {
     params: Promise<{ policy: string }>;

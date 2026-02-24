@@ -1,16 +1,17 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import type { Shipping } from "@shopnex/types";
+
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useCheckoutSession } from "@/hooks/use-checkout-session";
+import { updateCheckoutSession } from "@/services/checkout-session";
+import { payloadSdk } from "@/utils/payload-sdk";
 import { Button, Label } from "@medusajs/ui";
 import { Truck } from "lucide-react";
-import { payloadSdk } from "@/utils/payload-sdk";
-import type { Shipping } from "@shopnex/types";
-import { updateCheckoutSession } from "@/services/checkout-session";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useCart } from "react-use-cart";
-import { useCheckoutSession } from "@/hooks/use-checkout-session";
 
 interface ShippingFormData {
     shippingMethod: string;
@@ -24,11 +25,11 @@ export default function ShippingPage() {
     const {} = useCheckoutSession();
 
     const {
-        register,
-        handleSubmit,
-        watch,
-        setValue,
         formState: { errors },
+        handleSubmit,
+        register,
+        setValue,
+        watch,
     } = useForm<ShippingFormData>();
 
     const selectedMethod = watch("shippingMethod");
@@ -110,11 +111,11 @@ export default function ShippingPage() {
             return method.shippingProvider.map(
                 (providerBlock: any, idx: number) => {
                     const {
+                        id,
                         baseRate,
                         estimatedDeliveryDays,
                         label,
                         notes,
-                        id,
                     } = providerBlock;
 
                     const value = `${method.id}:${idx}`;
@@ -163,7 +164,7 @@ export default function ShippingPage() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
                 <h2 className="text-2xl font-semibold mb-6">Delivery</h2>
                 <RadioGroup
@@ -182,13 +183,13 @@ export default function ShippingPage() {
             </div>
             <div className="flex space-x-4">
                 <Button
+                    onClick={() => router.push("/checkout/address")}
                     type="button"
                     variant="secondary"
-                    onClick={() => router.push("/checkout/address")}
                 >
                     Back to address
                 </Button>
-                <Button type="submit" disabled={isLoading}>
+                <Button disabled={isLoading} type="submit">
                     {isLoading ? "Saving..." : "Continue to payment"}
                 </Button>
             </div>

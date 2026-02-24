@@ -1,5 +1,6 @@
 "use client";
 
+import { convertToLocale } from "@/utils/money";
 import {
     Popover,
     PopoverButton,
@@ -12,7 +13,6 @@ import { usePathname } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useCart } from "react-use-cart";
 
-import { convertToLocale } from "@/utils/money";
 import DeleteButton from "./delete-button";
 import LineItemOptions from "./line-item-options";
 import LineItemPrice from "./line-item-price";
@@ -183,10 +183,10 @@ const CartDropdown = () => {
                                                     </div>
                                                 </div>
                                                 <DeleteButton
-                                                    productId={item.productId}
                                                     className="mt-1"
                                                     data-testid="cart-item-remove-button"
                                                     id={item.id}
+                                                    productId={item.productId}
                                                 >
                                                     Remove
                                                 </DeleteButton>

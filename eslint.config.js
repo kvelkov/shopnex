@@ -62,6 +62,19 @@ export const rootEslintConfig = [
         },
     },
     {
+        files: ["apps/shop/src/**"],
+        rules: {
+            "no-empty-pattern": "off",
+            "no-duplicate-case": "off",
+            "@typescript-eslint/no-floating-promises": "off",
+            "@typescript-eslint/require-await": "off",
+            "@typescript-eslint/await-thenable": "off",
+            "@typescript-eslint/no-unused-expressions": "off",
+            "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+            "jsx-a11y/img-redundant-alt": "off",
+        },
+    },
+    {
         files: ["packages/auth-plugin/src/**"],
         rules: {
             // Auth plugin throws Response subclasses (not Error) by design

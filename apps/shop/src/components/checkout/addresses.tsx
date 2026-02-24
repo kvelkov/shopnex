@@ -1,12 +1,12 @@
 "use client";
 
 import { setAddresses } from "@/services/cart";
+import compareAddresses from "@/utils/compare-addresses";
 import { CheckCircleSolid, Spinner } from "@medusajs/icons";
 import { Divider, Heading, Text, useToggleState } from "@medusajs/ui";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useActionState } from "react";
 
-import compareAddresses from "@/utils/compare-addresses";
 import { SubmitButton } from "../submit-button";
 import BillingAddress from "./billing-address";
 import ErrorMessage from "./error-message";

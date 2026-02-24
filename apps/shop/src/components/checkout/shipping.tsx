@@ -2,16 +2,16 @@
 
 import { setShippingMethod } from "@/services/cart";
 import { calculatePriceForShippingOption } from "@/services/fulfillment";
+import { convertToLocale } from "@/utils/money";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { CheckCircleSolid, Loader } from "@medusajs/icons";
 import { Button, clx, Heading, Text } from "@medusajs/ui";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import MedusaRadio from "../radio";
 
 import Divider from "../divider";
+import MedusaRadio from "../radio";
 import ErrorMessage from "./error-message";
-import { convertToLocale } from "@/utils/money";
 
 const PICKUP_OPTION_ON = "__PICKUP_ON";
 const PICKUP_OPTION_OFF = "__PICKUP_OFF";

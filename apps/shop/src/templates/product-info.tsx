@@ -28,8 +28,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                 {product.description && (
                     <div
                         className="text-medium text-ui-fg-subtle prose prose-sm max-w-none"
-                        data-testid="product-description"
                         dangerouslySetInnerHTML={{ __html: product.description }}
+                        data-testid="product-description"
                     />
                 )}
             </div>

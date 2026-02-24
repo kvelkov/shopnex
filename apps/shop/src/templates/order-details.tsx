@@ -3,14 +3,13 @@
 import type { Order } from "@shopnex/types";
 import type React from "react";
 
-import { XMark } from "@medusajs/icons";
-import Link from "next/link";
-
 import Help from "@/components/help";
 import Items from "@/components/order/items/items";
 import OrderDetails from "@/components/order/order-details/order-details";
 import OrderSummary from "@/components/order/order-summary/order-summary";
 import ShippingDetails from "@/components/order/shipping-details/shipping-details";
+import { XMark } from "@medusajs/icons";
+import Link from "next/link";
 
 type OrderDetailsTemplateProps = {
     order: Order;
