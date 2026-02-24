@@ -1,10 +1,10 @@
 'use client'
 
-import { ExternalField } from '@puckeditor/core'
+import { CustomField } from '@puckeditor/core'
 import { ImagePickerField } from '../components/ImagePickerField'
 
-export const imagePickerField: ExternalField<string> = {
-  type: 'external',
+export const imagePickerField: CustomField<string> = {
+  type: 'custom',
   render: ({ field, name, value, onChange }) => {
     return (
       <ImagePickerField

@@ -219,8 +219,8 @@ export function getCartItemsFromCart(cart: Cart): CartItem[] {
           : item.product?.id?.toString() || '',
       variantId: item.variantId,
       quantity: item.quantity,
-      name: item.name || product?.title || 'Unknown Product',
-      price: item.price || variant?.price || 0,
+      name: product?.title || 'Unknown Product',
+      price: variant?.price || 0,
       image: typeof variant?.gallery?.[0] === 'object' ? variant.gallery[0]?.url || '' : '',
       variant: variant?.options?.map((opt) => `${opt.option}: ${opt.value}`).join(', ') || '',
     }
