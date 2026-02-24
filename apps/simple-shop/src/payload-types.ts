@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     orders: Order;
+    carts: Cart;
     collections: Collection;
     products: Product;
     users: User;
@@ -92,6 +93,7 @@ export interface Config {
   };
   collectionsSelect: {
     orders: OrdersSelect<false> | OrdersSelect<true>;
+    carts: CartsSelect<false> | CartsSelect<true>;
     collections: CollectionsSelect<false> | CollectionsSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -155,6 +157,7 @@ export interface Order {
   orderId: string;
   totalAmount: number;
   user?: (number | null) | User;
+  cart?: (number | null) | Cart;
   source?: 'manual' | null;
   currency: string;
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
@@ -262,6 +265,144 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "carts".
+ */
+export interface Cart {
+  id: number;
+  sessionId?: string | null;
+  customer?: (number | null) | User;
+  cartItems?:
+    | {
+        variantId: string;
+        product: number | Product;
+        quantity: number;
+        id?: string | null;
+      }[]
+    | null;
+  completed?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  pid?: string | null;
+  title: string;
+  currency?: string | null;
+  visible?: boolean | null;
+  featured?: boolean | null;
+  inStock?: boolean | null;
+  /**
+   * Choose where this product should be available to customers.
+   */
+  salesChannels?: ('all' | 'onlineStore' | 'pos' | 'mobileApp')[] | null;
+  source?: 'manual' | null;
+  description?: string | null;
+  collections?: (number | Collection)[] | null;
+  handle?: string | null;
+  /**
+   * Choose the options for this product.
+   */
+  variantOptions?:
+    | {
+        option: string;
+        /**
+         * (press enter to add multiple values)
+         */
+        value: string[];
+        id?: string | null;
+      }[]
+    | null;
+  variants: {
+    vid?: string | null;
+    sku?: string | null;
+    gallery?: (number | Media)[] | null;
+    price: number;
+    originalPrice?: number | null;
+    stockCount?: number | null;
+    options?:
+      | {
+          option: string;
+          value: string;
+          id?: string | null;
+        }[]
+      | null;
+    id?: string | null;
+  }[];
+  /**
+   * Add additional product info such as care instructions, materials, or sizing notes.
+   */
+  customFields?:
+    | {
+        name: string;
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "collections".
+ */
+export interface Collection {
+  id: number;
+  title: string;
+  description?: string | null;
+  /**
+   * Category image for display in shop
+   */
+  image?: (number | null) | Media;
+  /**
+   * Display this category prominently on the homepage
+   */
+  featured?: boolean | null;
+  /**
+   * Show this category in the shop navigation
+   */
+  visible?: boolean | null;
+  handle?: string | null;
+  products?: {
+    docs?: (number | Product)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payments".
  */
 export interface Payment {
@@ -358,124 +499,6 @@ export interface Location {
   hours?: string | null;
   enabled?: boolean | null;
   isPickupLocation?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "collections".
- */
-export interface Collection {
-  id: number;
-  title: string;
-  description?: string | null;
-  /**
-   * Category image for display in shop
-   */
-  image?: (number | null) | Media;
-  /**
-   * Display this category prominently on the homepage
-   */
-  featured?: boolean | null;
-  /**
-   * Show this category in the shop navigation
-   */
-  visible?: boolean | null;
-  handle?: string | null;
-  products?: {
-    docs?: (number | Product)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products".
- */
-export interface Product {
-  id: number;
-  pid?: string | null;
-  title: string;
-  currency?: string | null;
-  visible?: boolean | null;
-  featured?: boolean | null;
-  inStock?: boolean | null;
-  /**
-   * Choose where this product should be available to customers.
-   */
-  salesChannels?: ('all' | 'onlineStore' | 'pos' | 'mobileApp')[] | null;
-  source?: 'manual' | null;
-  description?: string | null;
-  collections?: (number | Collection)[] | null;
-  handle?: string | null;
-  /**
-   * Choose the options for this product.
-   */
-  variantOptions?:
-    | {
-        option: string;
-        /**
-         * (press enter to add multiple values)
-         */
-        value: string[];
-        id?: string | null;
-      }[]
-    | null;
-  variants: {
-    vid?: string | null;
-    sku?: string | null;
-    gallery?: (number | Media)[] | null;
-    price: number;
-    originalPrice?: number | null;
-    stockCount?: number | null;
-    options?:
-      | {
-          option: string;
-          value: string;
-          id?: string | null;
-        }[]
-      | null;
-    id?: string | null;
-  }[];
-  /**
-   * Add additional product info such as care instructions, materials, or sizing notes.
-   */
-  customFields?:
-    | {
-        name: string;
-        value?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-  };
   updatedAt: string;
   createdAt: string;
 }
@@ -684,6 +707,10 @@ export interface PayloadLockedDocument {
         value: number | Order;
       } | null)
     | ({
+        relationTo: 'carts';
+        value: number | Cart;
+      } | null)
+    | ({
         relationTo: 'collections';
         value: number | Collection;
       } | null)
@@ -777,6 +804,7 @@ export interface OrdersSelect<T extends boolean = true> {
   orderId?: T;
   totalAmount?: T;
   user?: T;
+  cart?: T;
   source?: T;
   currency?: T;
   paymentStatus?: T;
@@ -801,6 +829,25 @@ export interface OrdersSelect<T extends boolean = true> {
         details?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "carts_select".
+ */
+export interface CartsSelect<T extends boolean = true> {
+  sessionId?: T;
+  customer?: T;
+  cartItems?:
+    | T
+    | {
+        variantId?: T;
+        product?: T;
+        quantity?: T;
+        id?: T;
+      };
+  completed?: T;
   updatedAt?: T;
   createdAt?: T;
 }

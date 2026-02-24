@@ -17,6 +17,7 @@ import { Payments } from './collections/Payments'
 import { Locations } from './collections/Locations'
 import { Shipping } from './collections/Shipping'
 import { Pages } from './collections/Pages/Pages'
+import { Carts } from './collections/Carts/Carts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -33,6 +34,7 @@ export default buildConfig({
   },
   collections: [
     Orders,
+    Carts,
     Collections,
     Products,
     Users,

@@ -63,6 +63,7 @@ export const getExportCollection = ({
                 return;
             }
             const { user } = req;
+            // @ts-ignore
             await createExport({ input: { ...args.data, user }, req });
         });
     } else {

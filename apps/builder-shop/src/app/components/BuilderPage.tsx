@@ -29,9 +29,12 @@ const getCachedBuilderPage = (urlPath: string) => {
 };
 
 export const BuilderPage = async ({ data, page }: BuilderPageProps) => {
-    builder.init(process.env.NEXT_PUBLIC_BUILDER_IO_PUBLIC_KEY!);
+    const apiKey = process.env.NEXT_PUBLIC_BUILDER_IO_PUBLIC_KEY;
+    if (apiKey) builder.init(apiKey);
 
-    const content = await getCachedBuilderPage("/" + (page?.join("/") || ""))();
+    const content = apiKey
+        ? await getCachedBuilderPage("/" + (page?.join("/") || ""))().catch(() => null)
+        : null;
     return (
         <>
             <>

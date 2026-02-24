@@ -101,7 +101,7 @@ export const PasswordSignup = async (
         return new EmailAlreadyExistError();
     }
 
-    logger.info("Creating shop", "My Shop");
+    logger.info({ name: "My Shop" }, "Creating shop");
     const newShop = await payload.create({
         collection: "shops" as any,
         data: {
@@ -110,9 +110,9 @@ export const PasswordSignup = async (
         },
         req: request,
     });
-    logger.debug("New shop created", newShop);
+    logger.debug({ newShop }, "New shop created");
 
-    logger.info("Creating user", body.email);
+    logger.info({ email: body.email }, "Creating user");
     const user = await payload.create({
         collection: internal.usersCollectionSlug as any,
         data: {
@@ -129,7 +129,7 @@ export const PasswordSignup = async (
         showHiddenFields: true,
         req: request,
     });
-    logger.debug("User created", user);
+    logger.debug({ user }, "User created");
 
     logger.info("Creating account entry");
     await payload.create({
