@@ -1,6 +1,7 @@
+import type { Order } from "@shopnex/types";
 import type { BasePayload, CollectionAfterChangeHook, Document } from "payload";
+
 import { cjSdk } from "../sdk/cj-sdk";
-import { Order } from "@shopnex/types";
 
 export const createOrderHook: CollectionAfterChangeHook<Order> = async ({
     doc,
@@ -17,10 +18,10 @@ export const createOrderHook: CollectionAfterChangeHook<Order> = async ({
     const podProperties = cjConfig?.pod?.url
         ? [
               {
-                  areaName: "LogoArea",
-                  links: [cjConfig?.pod?.url],
                   type: "1",
+                  areaName: "LogoArea",
                   layer: [],
+                  links: [cjConfig?.pod?.url],
               },
           ]
         : [];

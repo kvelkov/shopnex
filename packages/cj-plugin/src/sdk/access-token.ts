@@ -1,10 +1,10 @@
 import { getAccessToken, refreshAccessToken } from "./auth";
 
 type Credentials = {
+    accessToken?: string;
     emailAddress: string;
     password: string;
     refreshToken?: string;
-    accessToken?: string;
 };
 
 const tenantCredentialsMap = new Map<string, Credentials>();

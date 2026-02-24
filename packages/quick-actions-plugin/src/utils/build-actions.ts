@@ -1,24 +1,28 @@
-import { Config, formatLabels } from "payload";
-import { QuickAction } from "../types";
+import type { Config} from "payload";
+import type { JSX } from "react";
+
+import { formatLabels } from "payload";
+
+import type { QuickAction } from "../types";
+
 import { defaultActions as getDefaultActions } from "../default-actions";
-import { JSX } from "react";
 
 interface BuildActionsParams {
     config: Config;
-    iconMap: Record<string, JSX.Element>;
     defaultCreateActions: boolean;
     enableDefaultActions: boolean;
     excludeCollections: string[];
     excludeGlobals: string[];
+    iconMap: Record<string, JSX.Element>;
 }
 
 export const buildActions = ({
     config,
-    iconMap,
     defaultCreateActions,
     enableDefaultActions,
     excludeCollections,
-    excludeGlobals
+    excludeGlobals,
+    iconMap
 }: BuildActionsParams): QuickAction[] => {
     const collections = config.collections || [];
     const globals = config.globals || [];
@@ -37,22 +41,22 @@ export const buildActions = ({
         actions.push({
             id: `${collection.slug}-quick-actions`,
             name: plural,
+            group: "collections",
             icon: iconMap[collection.slug],
             keywords: `${collection.slug} ${plural}`,
             link: `${adminRoute}/collections/${collection.slug}`,
-            priority: 80,
-            group: "collections"
+            priority: 80
         });
         
         if (defaultCreateActions) {
             createActions.push({
                 id: `${collection.slug}-quick-actions-create`,
                 name: `Create ${singular}`,
+                group: "create",
                 icon: iconMap[collection.slug],
                 keywords: `create ${collection.slug} ${singular}`,
                 link: `${adminRoute}/collections/${collection.slug}/create`,
-                priority: 20,
-                group: "create"
+                priority: 20
             });
         }
     }
@@ -67,11 +71,11 @@ export const buildActions = ({
         actions.push({
             id: `${global.slug}-quick-actions`,
             name: plural,
+            group: "globals",
             icon: iconMap[global.slug],
             keywords: `${global.slug} ${plural}`,
             link: `${adminRoute}/globals/${global.slug}`,
-            priority: 80,
-            group: "globals"
+            priority: 80
         });
     }
     

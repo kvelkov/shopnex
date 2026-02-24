@@ -1,9 +1,9 @@
+import compareAddresses from "@/utils/compare-addresses";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronUpDown } from "@medusajs/icons";
 import { clx } from "@medusajs/ui";
 import { Fragment, useMemo } from "react";
 
-import compareAddresses from "@/utils/compare-addresses";
 import Radio from "../radio";
 
 type AddressSelectProps = {
@@ -20,7 +20,7 @@ const AddressSelect = ({
     const handleSelect = (id: string) => {
         const savedAddress = addresses.find((a: any) => a.id === id);
         if (savedAddress) {
-            onSelect(savedAddress as any);
+            onSelect(savedAddress);
         }
     };
 

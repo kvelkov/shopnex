@@ -1,11 +1,9 @@
+import type { SortOptions } from "@/utils/sort-options";
 import type { Metadata } from "next";
 
 import { getPaginatedProducts } from "@/services/products";
-import decimal from "decimal.js";
-
-import type { SortOptions } from "@/utils/sort-options";
-
 import StoreTemplate from "@/templates/store";
+import decimal from "decimal.js";
 
 export const metadata: Metadata = {
     description: "Explore all of our products.",

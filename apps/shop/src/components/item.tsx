@@ -2,6 +2,7 @@
 
 import { syncCartWithBackend, updateCart } from "@/services/cart";
 import { clx, Table, Text } from "@medusajs/ui";
+import Cookies from "js-cookie";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "react-use-cart";
@@ -14,7 +15,6 @@ import LineItemOptions from "./line-item-options";
 import LineItemPrice from "./line-item-price";
 import LineItemUnitPrice from "./line-item-unit-price";
 import Thumbnail from "./thumbnail";
-import Cookies from "js-cookie";
 
 type ItemProps = {
     currencyCode: string;
@@ -43,10 +43,10 @@ const Item = ({ type = "full", currencyCode, item }: ItemProps) => {
                 await syncCartWithBackend(
                     {
                         id: item.id,
-                        product: item.productId,
-                        variantId: item.id,
-                        quantity,
                         action: "update",
+                        product: item.productId,
+                        quantity,
+                        variantId: item.id,
                     },
                     sessionId
                 );

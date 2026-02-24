@@ -11,13 +11,14 @@ import { NavWrapper } from "./NavWrapper";
 
 const baseClass = "nav";
 
-type NavProps = ServerProps & {
-    groupsConfig?: Record<string, { name: string; icon: string }>;
-};
+type NavProps = {
+    groupsConfig?: Record<string, { icon: string; name: string }>;
+} & ServerProps;
 
 const Nav = (props: NavProps) => {
     const {
         documentSubViewType,
+        groupsConfig,
         i18n,
         locale,
         params,
@@ -27,7 +28,6 @@ const Nav = (props: NavProps) => {
         user,
         viewType,
         visibleEntities,
-        groupsConfig,
     } = props;
     const {
         admin: {

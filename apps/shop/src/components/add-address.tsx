@@ -1,10 +1,10 @@
 "use client";
 
+import useToggleState from "@/hooks/use-toggle-state";
 import { Plus } from "@medusajs/icons";
 import { Button, Heading } from "@medusajs/ui";
 import { useEffect, useState } from "react";
 
-import useToggleState from "@/hooks/use-toggle-state";
 import Input from "./input";
 import Modal from "./modal";
 import { SubmitButton } from "./submit-button";

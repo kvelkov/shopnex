@@ -1,14 +1,19 @@
-import { parseCookies, PayloadRequest } from "payload";
-import {
+import type {
     AuthenticationResponseJSON,
     AuthenticatorTransportFuture,
+    GenerateAuthenticationOptionsOpts} from "@simplewebauthn/server";
+import type { PayloadRequest } from "payload";
+
+import {
     generateAuthenticationOptions,
-    GenerateAuthenticationOptionsOpts,
     verifyAuthenticationResponse,
 } from "@simplewebauthn/server";
+import { parseCookies } from "payload";
+
+import type { AccountInfo } from "../../../types";
+
 import { PasskeyVerificationAPIError } from "../../errors/apiErrors";
 import { MissingOrInvalidSession } from "../../errors/consoleErrors";
-import { AccountInfo } from "../../../types";
 import { hashCode } from "../../utils/hash";
 
 export async function GeneratePasskeyAuthentication(
@@ -29,14 +34,14 @@ export async function GeneratePasskeyAuthentication(
     };
 
     const registrationOptions: GenerateAuthenticationOptionsOpts = {
-        rpID,
-        timeout: 60000,
         allowCredentials: [
             {
                 id: data.passkey.credentialId,
                 transports: data.passkey.transports,
             },
         ],
+        rpID,
+        timeout: 60000,
         userVerification: "required",
     };
     const options = await generateAuthenticationOptions(registrationOptions);
@@ -66,8 +71,8 @@ export async function VerifyPasskeyAuthentication(
         }
         const { data } = (await request.json?.()) as {
             data: {
-                email: string;
                 authentication: AuthenticationResponseJSON;
+                email: string;
                 passkey: {
                     backedUp: boolean;
                     counter: 0;
@@ -80,39 +85,39 @@ export async function VerifyPasskeyAuthentication(
         };
 
         const verification = await verifyAuthenticationResponse({
-            response: data.authentication,
-            expectedChallenge: challenge,
-            expectedOrigin: request.payload.config.serverURL,
-            expectedRPID: rpID,
             credential: {
                 id: data.passkey.credentialId,
+                counter: data.passkey.counter,
                 publicKey: new Uint8Array(
                     Object.values(data.passkey.publicKey)
                 ),
-                counter: data.passkey.counter,
                 transports: data.passkey.transports,
             },
+            expectedChallenge: challenge,
+            expectedOrigin: request.payload.config.serverURL,
+            expectedRPID: rpID,
+            response: data.authentication,
         });
         if (!verification.verified) {
             throw new PasskeyVerificationAPIError();
         }
         const {
-            credentialID,
-            credentialDeviceType,
             credentialBackedUp,
+            credentialDeviceType,
+            credentialID,
             newCounter,
-        } = verification.authenticationInfo!;
+        } = verification.authenticationInfo;
         return await session_callback({
-            sub: hashCode(data.email + request.payload.secret).toString(),
             name: "",
-            picture: "",
             email: data.email,
             passKey: {
-                credentialId: credentialID,
-                counter: newCounter,
-                deviceType: credentialDeviceType,
                 backedUp: credentialBackedUp,
+                counter: newCounter,
+                credentialId: credentialID,
+                deviceType: credentialDeviceType,
             },
+            picture: "",
+            sub: hashCode(data.email + request.payload.secret).toString(),
         });
     } catch (error) {
         console.error(error);

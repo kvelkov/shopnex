@@ -1,4 +1,4 @@
-import { PayloadRequest } from "payload";
+import type { PayloadRequest } from "payload";
 
 interface CartItem {
     id: string;
@@ -6,11 +6,11 @@ interface CartItem {
 }
 
 export const getVariants = async ({
-    variantIds,
     req,
+    variantIds,
 }: {
-    variantIds: string[];
     req: PayloadRequest;
+    variantIds: string[];
 }) => {
     const products = await req.payload.find({
         collection: "products",
@@ -56,7 +56,7 @@ export const validateCartItems = async ({
     req: PayloadRequest;
 }) => {
     const variantIds = cartItems.map((item) => item.id);
-    const variants = await getVariants({ variantIds, req });
+    const variants = await getVariants({ req, variantIds });
 
     if (!variants.length) {
         req.payload.logger.error("No valid variants found for checkout");

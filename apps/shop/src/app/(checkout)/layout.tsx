@@ -1,10 +1,11 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
+
+import { ShopNexIcon } from "@/components/icons/shopnex-icon";
 import { Card, CardContent } from "@/components/ui/card";
 import { OrderSummery } from "@/templates/checkout/order-summary";
-import { ShopNexIcon } from "@/components/icons/shopnex-icon";
-import Link from "next/link";
-import { ChevronDown } from "lucide-react";
 import { Steps } from "@/templates/checkout/steps";
+import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -12,26 +13,26 @@ export const steps = [
     {
         id: 1,
         name: "Shipping Address",
-        route: "/checkout/address",
         description: "Enter your shipping details",
+        route: "/checkout/address",
     },
     {
         id: 2,
         name: "Delivery",
-        route: "/checkout/shipping",
         description: "Choose delivery method",
+        route: "/checkout/shipping",
     },
     {
         id: 3,
         name: "Payment",
-        route: "/checkout/payment",
         description: "Enter payment details",
+        route: "/checkout/payment",
     },
     {
         id: 4,
         name: "Review",
-        route: "/checkout/review",
         description: "Review your order",
+        route: "/checkout/review",
     },
 ];
 

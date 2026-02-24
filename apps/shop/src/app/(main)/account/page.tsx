@@ -1,6 +1,5 @@
-import { getOrders } from "@/services/orders";
-
 import Overview from "@/components/overview";
+import { getOrders } from "@/services/orders";
 
 export const dynamic = "force-dynamic";
 

@@ -1,25 +1,27 @@
-import React from "react";
-import "./ThemeList.scss";
-import "./ThemeList.scss";
 import Image from "next/image";
+
+import "./ThemeList.scss";
+
+import React from "react";
+
 import { ThemeActions } from "./ThemeActions";
 
 const themes = [
     {
         id: 1,
         name: "furniro",
-        dateAdded: "Added by Shopnex",
-        version: "15.3.0",
         availableUpdate: true,
+        dateAdded: "Added by Shopnex",
         preview: "/furniro-theme-preview.png",
+        version: "15.3.0",
     },
     {
         id: 2,
         name: "freebie",
-        dateAdded: "Added by Shopnex",
-        version: "15.3.0",
         availableUpdate: false,
+        dateAdded: "Added by Shopnex",
         preview: "/freebie-theme-preview.png",
+        version: "15.3.0",
     },
 ];
 
@@ -33,11 +35,11 @@ export const ThemeList = ({ data }: any) => {
             {themes.map((theme) => (
                 <div className="theme-card" key={theme.id}>
                     <Image
-                        src={theme.preview}
                         alt={theme.name}
                         className="theme-preview"
-                        width={500}
                         height={500}
+                        src={theme.preview}
+                        width={500}
                     />
                     <div className="theme-info">
                         <h2>{theme.name}</h2>

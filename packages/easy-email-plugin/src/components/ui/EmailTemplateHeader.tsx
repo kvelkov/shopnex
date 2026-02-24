@@ -1,14 +1,14 @@
+import { Button, RenderTitle } from "@payloadcms/ui";
 import React from "react";
-import { RenderTitle, Button } from "@payloadcms/ui";
 
 interface EmailTemplateHeaderProps {
-    templateName: string;
     onSave: () => void;
+    templateName: string;
 }
 
 export const EmailTemplateHeader: React.FC<EmailTemplateHeaderProps> = ({
-    templateName,
     onSave,
+    templateName,
 }) => {
     return (
         <div className="header">

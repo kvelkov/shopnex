@@ -1,40 +1,40 @@
 export interface OrderProduct {
     quantity: number;
-    vid: string;
     unitPrice?: number;
+    vid: string;
 }
 
 export interface CreateOrderPayload {
-    orderNumber: string;
-    shippingZip: string;
-    shippingCountryCode: string;
-    shippingCountry: string;
-    shippingProvince: string;
-    shippingCity: string;
-    shippingCounty?: string;
-    shippingPhone: string;
-    shippingCustomerName: string;
-    shippingAddress: string;
-    shippingAddress2?: string;
-    houseNumber?: string;
-    email?: string;
-    taxId?: string;
-    remark?: string;
     consigneeID?: string;
-    payType?: 2 | 3;
-    shopAmount?: number;
-    logisticName: string;
+    email?: string;
     fromCountryCode: string;
-    platform?: string;
-    iossType?: 1 | 2 | 3;
+    houseNumber?: string;
     iossNumber?: string;
-    products: OrderProduct[];
+    iossType?: 1 | 2 | 3;
+    logisticName: string;
+    orderNumber: string;
+    payType?: 2 | 3;
+    platform?: string;
     podProperties?: {
         areaName: string;
+        layer?: unknown[];
         links: string[];
         type: string;
-        layer?: unknown[];
     }[];
+    products: OrderProduct[];
+    remark?: string;
+    shippingAddress: string;
+    shippingAddress2?: string;
+    shippingCity: string;
+    shippingCountry: string;
+    shippingCountryCode: string;
+    shippingCounty?: string;
+    shippingCustomerName: string;
+    shippingPhone: string;
+    shippingProvince: string;
+    shippingZip: string;
+    shopAmount?: number;
+    taxId?: string;
 }
 
 interface ProductInfo {

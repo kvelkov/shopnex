@@ -1,4 +1,6 @@
-import { CollectionConfig, deepMergeWithCombinedArrays } from "payload";
+import type { CollectionConfig} from "payload";
+
+import { deepMergeWithCombinedArrays } from "payload";
 
 export const PuckPages = ({
     overrides = {},
@@ -8,9 +10,9 @@ export const PuckPages = ({
     const baseConfig: CollectionConfig = {
         slug: "puck-pages",
         admin: {
+            defaultColumns: ["title", "handle", "createdAt", "updatedAt"],
             group: "Plugins",
             useAsTitle: "title",
-            defaultColumns: ["title", "handle", "createdAt", "updatedAt"],
         },
         fields: [
             {
@@ -19,26 +21,26 @@ export const PuckPages = ({
                     {
                         name: "title",
                         type: "text",
-                        required: true,
                         defaultValue: "New Page",
+                        required: true,
                     },
                     {
                         name: "handle",
                         type: "text",
-                        required: true,
                         defaultValue: "new-page",
+                        required: true,
                     },
                 ],
             },
             {
                 name: "page",
                 type: "json",
-                required: true,
                 admin: {
                     components: {
                         Field: "@shopnex/puck-editor-plugin/client#PuckEditor",
                     },
                 },
+                required: true,
             },
         ],
     };

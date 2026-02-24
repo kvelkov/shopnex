@@ -7,5 +7,6 @@ interface EmailTemplateIframeProps {
 export const EmailTemplateIframe: React.FC<EmailTemplateIframeProps> = ({
     iframeOrigin,
 }) => {
-    return <iframe src={iframeOrigin} className="email-template-iframe" />;
+    // eslint-disable-next-line @eslint-react/dom/no-missing-iframe-sandbox
+    return <iframe className="email-template-iframe" src={iframeOrigin} title="Email Template Editor" />;
 };

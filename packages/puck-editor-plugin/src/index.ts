@@ -1,10 +1,11 @@
 import type { Config } from "payload";
+
 import pkg from "../package.json";
 import { PuckPages } from "./collections/PuckPages";
 
 type PuckEditorPluginConfig = {
-    enabled?: boolean;
     collectionOverrides?: any;
+    enabled?: boolean;
 };
 
 export const puckEditorPlugin = (pluginConfig: PuckEditorPluginConfig = {}) => {
@@ -25,12 +26,12 @@ export const puckEditorPlugin = (pluginConfig: PuckEditorPluginConfig = {}) => {
 
             await config.custom?.syncPlugin?.(payload, {
                 name: pkg.name,
-                version: pkg.version,
-                description: pkg.description,
-                license: pkg.license,
                 author: pkg.author,
-                icon: pkg.icon,
                 category: pkg.category,
+                description: pkg.description,
+                icon: pkg.icon,
+                license: pkg.license,
+                version: pkg.version,
             });
         };
 

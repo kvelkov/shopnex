@@ -1,14 +1,14 @@
 "use client";
 
-import React from "react";
 import { PasswordField } from "@payloadcms/ui";
+import React from "react";
 
 interface ApiTokenProps {
-    path: string;
     field: any;
+    path: string;
 }
 
-export function ApiToken({ path, field }: ApiTokenProps) {
+export function ApiToken({ field, path }: ApiTokenProps) {
     return (
         <PasswordField
             autoComplete="new-password"

@@ -1,36 +1,39 @@
+import type { ComponentConfig } from "@puckeditor/core";
+
 import React from "react";
-import { ComponentConfig } from "@measured/puck";
+
 import styles from "./styles.module.css";
 
 export type BreadcrumbItem = {
+    isActive?: boolean;
     text: string;
     url?: string;
-    isActive?: boolean;
 };
 
 export type BreadcrumbProps = {
     items: BreadcrumbItem[];
-    textSize: "small" | "normal" | "large";
-    textColor: string;
-    showSeparator: boolean;
     separatorIcon: string;
+    showSeparator: boolean;
+    textColor: string;
+    textSize: "large" | "normal" | "small";
 };
 
 export const Breadcrumb: ComponentConfig<BreadcrumbProps> = {
-    label: "Breadcrumb",
+    defaultProps: {
+        items: [
+            { text: "Home", url: "/" },
+            { text: "Library", url: "/library" },
+            { isActive: true, text: "Data" },
+        ],
+        separatorIcon: "/",
+        showSeparator: true,
+        textColor: "#6c757d",
+        textSize: "small",
+    },
     fields: {
         items: {
             type: "array",
-            label: "Breadcrumb Items",
             arrayFields: {
-                text: {
-                    type: "text",
-                    label: "Text",
-                },
-                url: {
-                    type: "text",
-                    label: "URL (leave empty for active item)",
-                },
                 isActive: {
                     type: "radio",
                     label: "Is Active Item",
@@ -39,7 +42,32 @@ export const Breadcrumb: ComponentConfig<BreadcrumbProps> = {
                         { label: "No", value: false },
                     ],
                 },
+                text: {
+                    type: "text",
+                    label: "Text",
+                },
+                url: {
+                    type: "text",
+                    label: "URL (leave empty for active item)",
+                },
             },
+            label: "Breadcrumb Items",
+        },
+        separatorIcon: {
+            type: "text",
+            label: "Separator Icon",
+        },
+        showSeparator: {
+            type: "radio",
+            label: "Show Separator",
+            options: [
+                { label: "Yes", value: true },
+                { label: "No", value: false },
+            ],
+        },
+        textColor: {
+            type: "text",
+            label: "Text Color",
         },
         textSize: {
             type: "select",
@@ -50,86 +78,75 @@ export const Breadcrumb: ComponentConfig<BreadcrumbProps> = {
                 { label: "Large", value: "large" },
             ],
         },
-        textColor: {
-            type: "text",
-            label: "Text Color",
-        },
-        showSeparator: {
-            type: "radio",
-            label: "Show Separator",
-            options: [
-                { label: "Yes", value: true },
-                { label: "No", value: false },
-            ],
-        },
-        separatorIcon: {
-            type: "text",
-            label: "Separator Icon",
-        },
     },
-    defaultProps: {
-        items: [
-            { text: "Home", url: "/" },
-            { text: "Library", url: "/library" },
-            { text: "Data", isActive: true },
-        ],
-        textSize: "small",
-        textColor: "#6c757d",
-        showSeparator: true,
-        separatorIcon: "/",
-    },
-    render: ({ items, textSize, textColor, showSeparator, separatorIcon, puck }) => {
+    label: "Breadcrumb",
+    render: ({
+        items,
+        puck,
+        separatorIcon,
+        showSeparator,
+        textColor,
+        textSize,
+    }) => {
         const getSizeClass = (size: string) => {
             const sizeMap = {
-                small: styles.textSmall,
-                normal: styles.textNormal,
                 large: styles.textLarge,
+                normal: styles.textNormal,
+                small: styles.textSmall,
             };
             return sizeMap[size as keyof typeof sizeMap] || styles.textSmall;
         };
 
         return (
-            <nav 
+            <nav
                 aria-label="breadcrumb"
                 className={`${styles.breadcrumbNav} ${getSizeClass(textSize)}`}
                 style={{ color: textColor }}
             >
                 <ol className={styles.breadcrumb}>
-                    {items && items.length > 0 && items.map((item, index) => {
-                        const isLast = index === items.length - 1;
-                        const isActive = item.isActive || isLast;
-                        
-                        return (
-                            <li 
-                                key={index}
-                                className={`${styles.breadcrumbItem} ${isActive ? styles.active : ''}`}
-                                {...(isActive ? { 'aria-current': 'page' } : {})}
-                            >
-                                {item.url && !isActive ? (
-                                    <a 
-                                        href={puck?.isEditing ? "#" : item.url}
-                                        className={styles.breadcrumbLink}
-                                        tabIndex={puck?.isEditing ? -1 : undefined}
-                                    >
-                                        {item.text}
-                                    </a>
-                                ) : (
-                                    <span className={styles.breadcrumbText}>
-                                        {item.text}
-                                    </span>
-                                )}
-                                
-                                {!isLast && showSeparator && (
-                                    <span 
-                                        className={styles.separator}
-                                        aria-hidden="true"
-                                    >
-                                        {separatorIcon}
-                                    </span>
-                                )}
-                            </li>
-                        );
-                    })}
+                    {items &&
+                        items.length > 0 &&
+                        items.map((item, index) => {
+                            const isLast = index === items.length - 1;
+                            const isActive = item.isActive || isLast;
+
+                            return (
+                                <li
+                                    className={`${styles.breadcrumbItem} ${isActive ? styles.active : ""}`}
+                                    key={index}
+                                    {...(isActive
+                                        ? { "aria-current": "page" }
+                                        : {})}
+                                >
+                                    {item.url && !isActive ? (
+                                        <a
+                                            className={styles.breadcrumbLink}
+                                            href={
+                                                puck?.isEditing ? "#" : item.url
+                                            }
+                                            tabIndex={
+                                                puck?.isEditing ? -1 : undefined
+                                            }
+                                        >
+                                            {item.text}
+                                        </a>
+                                    ) : (
+                                        <span className={styles.breadcrumbText}>
+                                            {item.text}
+                                        </span>
+                                    )}
+
+                                    {!isLast && showSeparator && (
+                                        <span
+                                            aria-hidden="true"
+                                            className={styles.separator}
+                                        >
+                                            {separatorIcon}
+                                        </span>
+                                    )}
+                                </li>
+                            );
+                        })}
                 </ol>
             </nav>
         );

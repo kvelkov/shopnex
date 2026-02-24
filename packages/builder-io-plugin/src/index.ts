@@ -1,27 +1,28 @@
 import type { BlocksField, Config } from "payload";
-import { ThemesListField } from "./fields/ThemesListField";
+
+import pkg from "../package.json";
 import { BuilderIoBlock } from "./blocks/builder-io-block";
 import { uploadThemeHandler } from "./endpoints/upload-theme";
-import pkg from "../package.json";
+import { ThemesListField } from "./fields/ThemesListField";
 
 export { importSymbolsInit } from "./hooks/import-page";
 
 export interface BuilderIoConfig {
-    enabled?: boolean;
-    publicKey?: string;
-    privateKey?: string;
     collectionDesignSlug?: string;
-    collectionPagesSlug?: string;
     collectionOverrides?: any;
+    collectionPagesSlug?: string;
+    enabled?: boolean;
+    privateKey?: string;
+    publicKey?: string;
 }
 
 export const defaultConfig: BuilderIoConfig = {
-    enabled: true,
-    publicKey: process.env.BUILDER_IO_PUBLIC_KEY,
-    privateKey: process.env.BUILDER_IO_PRIVATE_KEY,
     collectionDesignSlug: undefined,
-    collectionPagesSlug: "pages",
     collectionOverrides: {},
+    collectionPagesSlug: "pages",
+    enabled: true,
+    privateKey: process.env.BUILDER_IO_PRIVATE_KEY,
+    publicKey: process.env.BUILDER_IO_PUBLIC_KEY,
 };
 
 export const builderIoPlugin =
@@ -58,9 +59,9 @@ export const builderIoPlugin =
             }
 
             designCollection.endpoints.push({
+                handler: uploadThemeHandler,
                 method: "post",
                 path: "/upload-theme/:themeId",
-                handler: uploadThemeHandler,
             });
         }
 
@@ -103,12 +104,12 @@ export const builderIoPlugin =
             }
             await config.custom?.syncPlugin?.(payload, {
                 name: pkg.name,
-                version: pkg.version,
-                description: pkg.description,
-                license: pkg.license,
                 author: pkg.author,
-                icon: pkg.icon,
                 category: pkg.category,
+                description: pkg.description,
+                icon: pkg.icon,
+                license: pkg.license,
+                version: pkg.version,
             });
         };
 

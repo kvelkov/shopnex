@@ -40,6 +40,9 @@
         "lint:fix": "eslint . --fix",
         "prepublishOnly": "pnpm clean && pnpm turbo build"
     },
+    "peerDependencies": {
+        "payload": ">=3.0.0"
+    },
     "dependencies": {
         "qs-esm": "7.0.2",
         "ts-essentials": "10.0.3"

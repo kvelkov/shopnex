@@ -1,4 +1,5 @@
-import { PayloadHandler } from "payload";
+import type { PayloadHandler } from "payload";
+
 import { uploadTheme } from "../utils/theme-management";
 
 export const uploadThemeHandler: PayloadHandler = async (req) => {
@@ -7,16 +8,22 @@ export const uploadThemeHandler: PayloadHandler = async (req) => {
     const themeId = req.routeParams?.themeId;
     const isSuperAdmin = req.user?.roles?.includes("super-admin");
 
-    logger.debug("Upload theme request received", {
-        themeName: body.themeName,
-        themeId,
-        isSuperAdmin,
-    });
+    logger.debug(
+        {
+            isSuperAdmin,
+            themeId,
+            themeName: body.themeName,
+        },
+        "Upload theme request received"
+    );
 
     if (!req.user?.shops?.length) {
-        logger.warn("Upload theme attempt without associated shops", {
-            userId: req.user?.id,
-        });
+        logger.warn(
+            {
+                userId: req.user?.id,
+            },
+            "Upload theme attempt without associated shops"
+        );
         return Response.json({ error: "User not found" }, { status: 400 });
     }
 
@@ -29,7 +36,7 @@ export const uploadThemeHandler: PayloadHandler = async (req) => {
     }
 
     try {
-        logger.debug("Fetching theme details", { themeId });
+        logger.debug({ themeId }, "Fetching theme details");
         const theme = await req.payload.find({
             collection: "themes",
             where: {
@@ -38,7 +45,7 @@ export const uploadThemeHandler: PayloadHandler = async (req) => {
                 },
                 ...(!isSuperAdmin && {
                     shop: {
-                        equals: (req.user.shops[0]?.shop as any)?.id,
+                        equals: (req.user.shops[0]?.shop)?.id,
                     },
                 }),
             },
@@ -46,42 +53,51 @@ export const uploadThemeHandler: PayloadHandler = async (req) => {
 
         const result = theme.docs[0];
         if (!result) {
-            logger.warn("Theme not found", { themeId });
+            logger.warn({ themeId }, "Theme not found");
             return Response.json({ error: "Theme not found" }, { status: 404 });
         }
 
         const themeMode = result.editorMode[0];
-        logger.info("Starting theme upload process", {
-            themeName: body.themeName,
-            themeId,
-        });
+        logger.info(
+            {
+                themeId,
+                themeName: body.themeName,
+            },
+            "Starting theme upload process"
+        );
 
         const success = await uploadTheme({
             // @ts-ignore
+            logger,
             privateKey: themeMode.builderIoPrivateKey,
-            themeName: body.themeName,
             sourcePublicKey: process.env
                 .NEXT_PUBLIC_BUILDER_IO_PUBLIC_KEY as string,
-            logger,
+            themeName: body.themeName,
         });
 
         if (success) {
-            logger.info("Theme upload completed successfully", {
-                themeName: body.themeName,
-            });
+            logger.info(
+                {
+                    themeName: body.themeName,
+                },
+                "Theme upload completed successfully"
+            );
             return Response.json({ success: true });
         } else {
-            logger.error("Theme upload failed", { themeName: body.themeName });
+            logger.error({ themeName: body.themeName }, "Theme upload failed");
             return Response.json(
                 { error: "Failed to upload theme" },
                 { status: 500 }
             );
         }
     } catch (error) {
-        logger.error("Error in upload theme handler", {
-            error,
-            themeName: body.themeName,
-        });
+        logger.error(
+            {
+                error,
+                themeName: body.themeName,
+            },
+            "Error in upload theme handler"
+        );
         return Response.json(
             { error: "Internal server error" },
             { status: 500 }

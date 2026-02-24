@@ -1,22 +1,22 @@
 import { ErrorKind } from "../../types";
 
 const statusByKind = {
-    [ErrorKind.NotFound]: 404,
     [ErrorKind.BadRequest]: 400,
+    [ErrorKind.Conflict]: 409,
     [ErrorKind.InternalServer]: 500,
     [ErrorKind.NotAuthenticated]: 401,
     [ErrorKind.NotAuthorized]: 403,
-    [ErrorKind.Conflict]: 409,
+    [ErrorKind.NotFound]: 404,
 };
 export class AuthAPIError extends Response {
     constructor(message: string, kind: ErrorKind) {
         super(
             JSON.stringify({
-                message,
-                kind,
                 data: null,
-                isSuccess: false,
                 isError: true,
+                isSuccess: false,
+                kind,
+                message,
             }),
             {
                 status: statusByKind[kind],

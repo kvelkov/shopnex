@@ -2,9 +2,9 @@ import crypto from "crypto";
 
 type TokenPayload = string;
 type EncryptedData = {
+    content: string;
     iv: string;
     tag: string;
-    content: string;
 };
 
 const getKey = (rawKey: string): Buffer => {
@@ -24,9 +24,9 @@ export const encryptToken = (token: TokenPayload): string => {
     const tag = cipher.getAuthTag();
 
     const result: EncryptedData = {
+        content: encrypted.toString("hex"),
         iv: iv.toString("hex"),
         tag: tag.toString("hex"),
-        content: encrypted.toString("hex"),
     };
 
     return Buffer.from(JSON.stringify(result)).toString("base64");

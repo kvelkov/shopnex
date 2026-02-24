@@ -1,14 +1,14 @@
-import _ from "lodash";
-
 import { getTopCollections } from "@/services/collections";
 import { getProducts } from "@/services/products";
+import _ from "lodash";
+
 import { BuilderPage } from "./components/BuilderPage";
 
 export const revalidate = 60;
 
 const HomePage = async () => {
-    const products = await getProducts();
-    const collections = await getTopCollections();
+    const products = await getProducts().catch(() => []);
+    const collections = await getTopCollections().catch(() => []);
     const mappedCollections = collections.map((collection) => ({
         imageUrl: `${process.env.NEXT_PUBLIC_SERVER_URL}${collection.imageUrl}`,
         ...collection,

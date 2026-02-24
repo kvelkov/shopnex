@@ -41,9 +41,7 @@ describe('createProject', () => {
   it('generates .env using defaults (not from .env.example)', async () => {
     // ensure no .env.example exists so that the default values are used
     // the `manageEnvFiles` function will look for .env.example in the file system
-    if (fse.existsSync(envExampleFilePath)) {
-      fse.removeSync(envExampleFilePath)
-    }
+    fse.removeSync(envExampleFilePath)
 
     await manageEnvFiles({
       cliArgs: {

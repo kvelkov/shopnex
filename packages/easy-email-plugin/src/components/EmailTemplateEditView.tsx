@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+
 import { EmailTemplate } from "./EmailTemplate.client";
 import { emptyTemplate } from "./templates/empty-template";
 
@@ -19,14 +20,14 @@ export const EmailTemplateEditView = ({
     return (
         <EmailTemplate
             html={doc?.html || ""}
-            json={templateJson}
-            serverURL={payload.config.serverURL}
-            templateName={doc?.name || ""}
             identifier={identifier}
-            token={token}
             iframeOrigin={
                 process.env.EASY_EMAIL_IFRAME_ORIGIN || "http://localhost:3040"
             }
+            json={templateJson}
+            serverURL={payload.config.serverURL}
+            templateName={doc?.name || ""}
+            token={token}
         />
     );
 };

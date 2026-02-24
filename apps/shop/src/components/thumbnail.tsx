@@ -50,10 +50,10 @@ const ImageOrPlaceholder = ({
     return image ? (
         <img
             alt="Product image"
-            src={image}
             className="absolute inset-0 rounded-rounded object-cover h-full"
-            loading="lazy"
             decoding="async"
+            loading="lazy"
+            src={image}
         />
     ) : (
         <div className="w-full h-full absolute inset-0 flex items-center justify-center">

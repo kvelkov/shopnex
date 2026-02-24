@@ -1,4 +1,5 @@
-import { PayloadRequest } from "payload";
+import type { PayloadRequest } from "payload";
+
 import { MissingEmailAPIError } from "../../errors/apiErrors";
 import { hashCode } from "../../utils/hash";
 

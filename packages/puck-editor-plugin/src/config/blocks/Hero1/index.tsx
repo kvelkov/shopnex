@@ -1,77 +1,79 @@
+import type { ComponentConfig } from "@puckeditor/core";
+
 import React from "react";
-import { ComponentConfig } from "@measured/puck";
+
 import styles from "./styles.module.css";
 
 export type Hero1Props = {
-    mainTitle: string;
-    subtitle: string;
-    primaryButtonText: string;
-    primaryButtonHref: string;
-    secondaryButtonText: string;
-    secondaryButtonHref: string;
-    disclaimerText: string;
     backgroundColor: string;
+    disclaimerText: string;
+    mainTitle: string;
+    primaryButtonHref: string;
+    primaryButtonText: string;
+    secondaryButtonHref: string;
+    secondaryButtonText: string;
+    subtitle: string;
 };
 
 export const Hero1: ComponentConfig<Hero1Props> = {
-    label: "Hero 1 - Simple CTA",
+    defaultProps: {
+        backgroundColor: "#f8f9fa",
+        disclaimerText: "* Note: Early Alpha Preview",
+        mainTitle: "Open Source CMS\nReinvented",
+        primaryButtonHref: "/download.php",
+        primaryButtonText: "⚡ Free download ›",
+        secondaryButtonHref: "//demo.vvveb.com",
+        secondaryButtonText: "Live demo →",
+        subtitle:
+            "Powerful and easy to use drag and drop builder for blogs, websites or ecommerce stores.",
+    },
     fields: {
-        mainTitle: {
-            type: "textarea",
-            label: "Main Title",
-            contentEditable: true,
-        },
-        subtitle: {
-            type: "textarea",
-            label: "Subtitle",
-            contentEditable: true,
-        },
-        primaryButtonText: {
+        backgroundColor: {
             type: "text",
-            label: "Primary Button Text",
-        },
-        primaryButtonHref: {
-            type: "text",
-            label: "Primary Button Link",
-        },
-        secondaryButtonText: {
-            type: "text",
-            label: "Secondary Button Text",
-        },
-        secondaryButtonHref: {
-            type: "text",
-            label: "Secondary Button Link",
+            label: "Background Color",
         },
         disclaimerText: {
             type: "text",
             label: "Disclaimer Text",
         },
-        backgroundColor: {
+        mainTitle: {
+            type: "textarea",
+            contentEditable: true,
+            label: "Main Title",
+        },
+        primaryButtonHref: {
             type: "text",
-            label: "Background Color",
+            label: "Primary Button Link",
+        },
+        primaryButtonText: {
+            type: "text",
+            label: "Primary Button Text",
+        },
+        secondaryButtonHref: {
+            type: "text",
+            label: "Secondary Button Link",
+        },
+        secondaryButtonText: {
+            type: "text",
+            label: "Secondary Button Text",
+        },
+        subtitle: {
+            type: "textarea",
+            contentEditable: true,
+            label: "Subtitle",
         },
     },
-    defaultProps: {
-        mainTitle: "Open Source CMS\nReinvented",
-        subtitle:
-            "Powerful and easy to use drag and drop builder for blogs, websites or ecommerce stores.",
-        primaryButtonText: "⚡ Free download ›",
-        primaryButtonHref: "/download.php",
-        secondaryButtonText: "Live demo →",
-        secondaryButtonHref: "//demo.vvveb.com",
-        disclaimerText: "* Note: Early Alpha Preview",
-        backgroundColor: "#f8f9fa",
-    },
+    label: "Hero 1 - Simple CTA",
     render: ({
-        mainTitle,
-        subtitle,
-        primaryButtonText,
-        primaryButtonHref,
-        secondaryButtonText,
-        secondaryButtonHref,
-        disclaimerText,
         backgroundColor,
+        disclaimerText,
+        mainTitle,
+        primaryButtonHref,
+        primaryButtonText,
         puck,
+        secondaryButtonHref,
+        secondaryButtonText,
+        subtitle,
     }) => {
         return (
             <header className={styles.hero1} style={{ backgroundColor }}>

@@ -1,29 +1,31 @@
-import { DefaultRootProps, RootConfig } from "@measured/puck";
+import type { RootConfig } from "@puckeditor/core";
+
+import { DefaultRootProps } from "@puckeditor/core";
 
 export type RootProps = {
+    description: string;
     handle: string;
     title: string;
-    description: string;
 };
 
 export const Root: RootConfig<{
-    props: RootProps;
     fields: {
-        userField: { type: "userField"; option: boolean };
-        handle: { type: "text"; label: string };
-        title: { type: "text"; label: string };
-        description: { type: "text"; label: string };
+        description: { label: string; type: "text" };
+        handle: { label: string; type: "text" };
+        title: { label: string; type: "text" };
+        userField: { option: boolean; type: "userField" };
     };
+    props: RootProps;
 }> = {
-    fields: {
-        handle: { type: "text" },
-        title: { type: "text" },
-        description: { type: "textarea" },
-    },
     defaultProps: {
+        description: "Meta description",
         handle: "hello-world",
         title: "Meta title",
-        description: "Meta description",
+    },
+    fields: {
+        description: { type: "textarea" },
+        handle: { type: "text" },
+        title: { type: "text" },
     },
     render: ({ children }) => {
         return <div>{children}</div>;

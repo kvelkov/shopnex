@@ -1,6 +1,7 @@
 import { browserSupportsWebAuthn } from "@simplewebauthn/browser";
-import { registration } from "./registration";
+
 import { authentication } from "./authentication";
+import { registration } from "./registration";
 
 //NOTE: EXPERIMENTAL
 
@@ -21,8 +22,8 @@ export const init = async () => {
         return;
     }
     const response = await fetch("/api/admin/passkey/init", {
-        method: "POST",
         body: JSON.stringify({ data: { email: emailInput.value } }),
+        method: "POST",
     });
     if (response.ok) {
         const { data } = await response.json();

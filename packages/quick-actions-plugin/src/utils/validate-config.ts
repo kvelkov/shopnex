@@ -1,9 +1,9 @@
-import { QuickActionsPluginConfig } from "../types";
+import type { QuickActionsPluginConfig } from "../types";
 
 export const validateConfig = (config: QuickActionsPluginConfig): QuickActionsPluginConfig => {
     const validatedConfig = { ...config };
 
-    if (validatedConfig.position && !["actions", "before-nav-links", "after-nav-links"].includes(validatedConfig.position)) {
+    if (validatedConfig.position && !["actions", "after-nav-links", "before-nav-links"].includes(validatedConfig.position)) {
         console.warn(`Invalid position "${validatedConfig.position}". Defaulting to "actions".`);
         validatedConfig.position = "actions";
     }

@@ -1,28 +1,32 @@
 "use client";
 
+import type {
+    KBarOptions} from "kbar";
+
 import {
-    KBarProvider,
+    KBarAnimator,
     KBarPortal,
     KBarPositioner,
-    KBarAnimator,
-    KBarSearch,
+    KBarProvider,
     KBarResults,
-    useMatches,
-    KBarOptions,
+    KBarSearch,
+    useMatches
 } from "kbar";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
 import "./CommandBar.scss";
-import { QuickAction, PluginHooks } from "../../types";
+
+import type { PluginHooks, QuickAction } from "../../types";
 
 function RenderResults() {
     const { results } = useMatches();
     return (
         <div className={"popup-button-list action-button-list"}>
             <KBarResults
-                onRender={({ item, active }) => {
+                items={results}
+                onRender={({ active, item }) => {
                     if (typeof item === "string") {
                         return (
                             <div className="group-title" key={item}>
@@ -33,15 +37,15 @@ function RenderResults() {
 
                     return (
                         <div
+                            aria-selected={active}
                             className={`action-button ${active ? "active" : ""}`}
                             key={item.id}
                             role="option"
-                            aria-selected={active}
                         >
                             {item.icon && (
                                 <span
-                                    className="action-icon"
                                     aria-hidden="true"
+                                    className="action-icon"
                                 >
                                     {item.icon}
                                 </span>
@@ -55,26 +59,25 @@ function RenderResults() {
                         </div>
                     );
                 }}
-                items={results}
             />
         </div>
     );
 }
 
 type CommandBarProps = {
-    children: React.ReactNode;
     actions: QuickAction[];
-    kbarOptions?: KBarOptions;
+    children: React.ReactNode;
     hooks?: PluginHooks;
+    kbarOptions?: KBarOptions;
 };
 
 const baseClass = "CommandBar";
 
 export function CommandBar({
-    children,
     actions,
-    kbarOptions,
+    children,
     hooks,
+    kbarOptions,
 }: CommandBarProps) {
     const router = useRouter();
 

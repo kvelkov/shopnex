@@ -3,14 +3,14 @@
 import type { Product } from "@shopnex/types";
 import type React from "react";
 
-import { notFound } from "next/navigation";
-import { useState } from "react";
-
 import ImageGallery from "@/components/products/image-gallery/image-gallery";
 import ProductActions from "@/components/products/product-actions/product-actions";
 import ProductTabs from "@/components/products/product-tabs/product-tabs";
-import ProductInfo from "./product-info";
 import { getVariantImage } from "@/utils/get-variant-image";
+import { notFound } from "next/navigation";
+import { useState } from "react";
+
+import ProductInfo from "./product-info";
 
 type ProductTemplateProps = {
     product: Product;

@@ -1,4 +1,4 @@
-import { Cart } from "@shopnex/types";
+import type { Cart } from "@shopnex/types";
 
 export const mapCartItems = (cartItems: Cart["cartItems"]) => {
     return cartItems?.map((item) => {

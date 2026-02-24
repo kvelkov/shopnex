@@ -1,26 +1,29 @@
+import type { ComponentConfig } from "@puckeditor/core";
+
 import React from "react";
 
-import { ComponentConfig } from "@measured/puck";
-import { Heading as _Heading } from "./Heading";
+import type { WithLayout} from "../../components/Layout";
 import type { HeadingProps as _HeadingProps } from "./Heading";
+
+import { withLayout } from "../../components/Layout";
 import { Section } from "../../components/Section";
-import { WithLayout, withLayout } from "../../components/Layout";
+import { Heading as _Heading } from "./Heading";
 
 export type HeadingProps = WithLayout<{
-    align: "left" | "center" | "right";
-    text?: string;
+    align: "center" | "left" | "right";
     level?: _HeadingProps["rank"];
     size: _HeadingProps["size"];
+    text?: string;
 }>;
 
 const sizeOptions = [
-    { value: "xxxl", label: "XXXL" },
-    { value: "xxl", label: "XXL" },
-    { value: "xl", label: "XL" },
-    { value: "l", label: "L" },
-    { value: "m", label: "M" },
-    { value: "s", label: "S" },
-    { value: "xs", label: "XS" },
+    { label: "XXXL", value: "xxxl" },
+    { label: "XXL", value: "xxl" },
+    { label: "XL", value: "xl" },
+    { label: "L", value: "l" },
+    { label: "M", value: "m" },
+    { label: "S", value: "s" },
+    { label: "XS", value: "xs" },
 ];
 
 const levelOptions = [
@@ -34,19 +37,15 @@ const levelOptions = [
 ];
 
 const HeadingInternal: ComponentConfig<HeadingProps> = {
+    defaultProps: {
+        align: "left",
+        layout: {
+            padding: "8px",
+        },
+        size: "m",
+        text: "Heading",
+    },
     fields: {
-        text: {
-            type: "textarea",
-            contentEditable: true,
-        },
-        size: {
-            type: "select",
-            options: sizeOptions,
-        },
-        level: {
-            type: "select",
-            options: levelOptions,
-        },
         align: {
             type: "radio",
             options: [
@@ -55,19 +54,23 @@ const HeadingInternal: ComponentConfig<HeadingProps> = {
                 { label: "Right", value: "right" },
             ],
         },
-    },
-    defaultProps: {
-        align: "left",
-        text: "Heading",
-        size: "m",
-        layout: {
-            padding: "8px",
+        level: {
+            type: "select",
+            options: levelOptions,
+        },
+        size: {
+            type: "select",
+            options: sizeOptions,
+        },
+        text: {
+            type: "textarea",
+            contentEditable: true,
         },
     },
-    render: ({ align, text, size, level }) => {
+    render: ({ align, level, size, text }) => {
         return (
             <Section>
-                <_Heading size={size} rank={level as any}>
+                <_Heading rank={level as any} size={size}>
                     <span
                         style={{
                             display: "block",

@@ -2,8 +2,8 @@ import type { BlocksField, Config, Endpoint } from "payload";
 
 import type { SanitizedStripePluginConfig, StripePluginConfig } from "./types";
 
-import { stripeWebhooks } from "./routes/webhooks";
 import { StripeBlock } from "./blocks/StripeBlock";
+import { stripeWebhooks } from "./routes/webhooks";
 
 export { stripeCheckout } from "./services/stripe-checkout";
 import pkg from "../package.json";
@@ -58,12 +58,12 @@ export const stripePlugin =
             }
             await config.custom?.syncPlugin?.(payload, {
                 name: pkg.name,
-                version: pkg.version,
-                description: pkg.description,
-                license: pkg.license,
                 author: pkg.author,
-                icon: pkg.icon,
                 category: pkg.category,
+                description: pkg.description,
+                icon: pkg.icon,
+                license: pkg.license,
+                version: pkg.version,
             });
         };
 

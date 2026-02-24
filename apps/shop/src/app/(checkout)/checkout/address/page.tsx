@@ -1,8 +1,5 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Checkbox from "@/components/checkbox";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,25 +9,28 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Button, Label } from "@medusajs/ui";
 import { useCheckoutSession } from "@/hooks/use-checkout-session";
 import {
     createCheckoutSession,
     updateCheckoutSession,
 } from "@/services/checkout-session";
+import { Button, Label } from "@medusajs/ui";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 interface AddressFormData {
+    address: string;
+    billingAddressSame: boolean;
+    city: string;
+    company?: string;
+    country: string;
+    email: string;
     firstName: string;
     lastName: string;
-    address: string;
-    company?: string;
-    postalCode: string;
-    city: string;
-    country: string;
-    state?: string;
-    email: string;
     phone?: string;
-    billingAddressSame: boolean;
+    postalCode: string;
+    state?: string;
 }
 
 export default function Address() {
@@ -41,28 +41,28 @@ export default function Address() {
     const defaultValues =
         process.env.NODE_ENV === "development"
             ? {
+                  address: "123 Testing Lane",
+                  billingAddressSame: true,
+                  city: "Testville",
+                  company: "Test Corp",
+                  country: "us",
+                  email: "john.doe@example.com",
                   firstName: "John",
                   lastName: "Doe",
-                  address: "123 Testing Lane",
-                  company: "Test Corp",
-                  postalCode: "12345",
-                  city: "Testville",
-                  country: "us",
-                  state: "Test State",
-                  email: "john.doe@example.com",
                   phone: "1234567890",
-                  billingAddressSame: true,
+                  postalCode: "12345",
+                  state: "Test State",
               }
             : {
                   billingAddressSame: true,
               };
 
     const {
-        register,
-        handleSubmit,
-        watch,
-        setValue,
         formState: { errors },
+        handleSubmit,
+        register,
+        setValue,
+        watch,
     } = useForm<AddressFormData>({
         defaultValues,
     });
@@ -73,22 +73,22 @@ export default function Address() {
         setIsLoading(true);
         try {
             const shippingAddress = {
+                address_1: data.address,
+                city: data.city,
+                company: data.company,
+                country_code: data.country,
                 first_name: data.firstName,
                 last_name: data.lastName,
-                address_1: data.address,
-                company: data.company,
-                postal_code: data.postalCode,
-                city: data.city,
-                country_code: data.country,
-                province: data.state,
                 phone: data.phone,
+                postal_code: data.postalCode,
+                province: data.state,
             };
 
             const updateData = {
-                shippingAddress,
                 billingAddress: data.billingAddressSame
                     ? shippingAddress
                     : undefined,
+                shippingAddress,
             };
 
             await createCheckoutSession(updateData);
@@ -102,7 +102,7 @@ export default function Address() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
                 <h2 className="text-2xl font-semibold mb-6">
                     Shipping Address
@@ -160,10 +160,10 @@ export default function Address() {
                     </div>
                     <div className="space-y-2">
                         <Select
+                            defaultValue="us"
                             onValueChange={(value) =>
                                 setValue("country", value)
                             }
-                            defaultValue="us"
                         >
                             <SelectTrigger className="bg-gray-50">
                                 <SelectValue placeholder="Country*" />
@@ -195,14 +195,14 @@ export default function Address() {
                         <div className="flex items-center space-x-2">
                             <Checkbox
                                 checked={billingAddressSame}
+                                id="billingAddressSame"
+                                label="Billing address same as shipping address"
                                 onChange={(checked: any) => {
                                     setValue(
                                         "billingAddressSame",
                                         checked.target.value
                                     );
                                 }}
-                                id="billingAddressSame"
-                                label="Billing address same as shipping address"
                             />
                             <Label htmlFor="billingAddressSame">
                                 Billing address same as shipping address
@@ -214,11 +214,11 @@ export default function Address() {
                             label="Email*"
                             type="email"
                             {...register("email", {
-                                required: "Email is required",
                                 pattern: {
-                                    value: /^\S+@\S+$/i,
                                     message: "Invalid email address",
+                                    value: /^\S[^\s@]*@\S+$/,
                                 },
+                                required: "Email is required",
                             })}
                             error={errors.email?.message}
                         />
@@ -233,7 +233,7 @@ export default function Address() {
                     </div>
                 </div>
             </div>
-            <Button type="submit" disabled={isLoading}>
+            <Button disabled={isLoading} type="submit">
                 {isLoading ? "Saving..." : "Continue to delivery"}
             </Button>
         </form>

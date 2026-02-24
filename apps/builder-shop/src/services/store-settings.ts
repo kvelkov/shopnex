@@ -1,4 +1,4 @@
-export const getStoreSettings = async () => {
+export const getStoreSettings = () => {
     // const payload = await getPayload({ config });
     // const storeSettings = await payload.findGlobal({
     //     slug: "store-settings",
@@ -9,9 +9,9 @@ export const getStoreSettings = async () => {
         currency: "USD",
         currencyFormat: "symbol",
         currencySymbol: "$",
-        locale: "en-US",
-        timezone: "America/Los_Angeles",
-        timeFormat: "H:mm",
         dateFormat: "MMMM d, yyyy",
+        locale: "en-US",
+        timeFormat: "H:mm",
+        timezone: "America/Los_Angeles",
     };
 };

@@ -17,7 +17,6 @@ import type {
     RichTextCustomLeaf,
 } from "../types";
 
-// eslint-disable-next-line payload/no-imports-from-exports-dir
 import { RichTextField } from "../exports/client/index";
 import { elements as elementTypes } from "../field/elements/index";
 import { defaultLeaves as leafTypes } from "../field/leaves/index";

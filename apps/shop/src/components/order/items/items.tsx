@@ -1,5 +1,4 @@
-import type { Order, Product } from "@shopnex/types";
-import type { Cart } from "@shopnex/types";
+import type { Cart, Order, Product  } from "@shopnex/types";
 
 import { isExpandedDoc } from "@/utils/is-expanded-doc";
 import { Table } from "@medusajs/ui";

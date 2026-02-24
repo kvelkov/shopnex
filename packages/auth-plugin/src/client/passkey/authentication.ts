@@ -1,5 +1,6 @@
+import type { AuthenticatorTransportFuture } from "@simplewebauthn/server";
+
 import { startAuthentication } from "@simplewebauthn/browser";
-import { AuthenticatorTransportFuture } from "@simplewebauthn/server";
 
 export const authentication = async (
     passkey: {
@@ -15,31 +16,31 @@ export const authentication = async (
     const resp = await fetch(
         "/api/admin/passkey/generate-authentication-options",
         {
-            method: "POST",
             body: JSON.stringify({ data: { passkey } }),
+            method: "POST",
         }
     );
     const optionsJSON = await resp.json();
     try {
         const authenticationResp = await startAuthentication({
             // @ts-ignore
-            optionsJSON: optionsJSON.options as any,
+            optionsJSON: optionsJSON.options,
         });
         const response = await fetch(
             "/api/admin/passkey/verify-authentication",
             {
-                method: "POST",
+                body: JSON.stringify({
+                    data: {
+                        authentication: authenticationResp,
+                        email,
+                        passkey,
+                    },
+                }),
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    data: {
-                        email,
-                        authentication: authenticationResp,
-                        passkey,
-                    },
-                }),
+                method: "POST",
             }
         );
 

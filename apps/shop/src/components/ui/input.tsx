@@ -6,8 +6,8 @@ import * as React from "react";
 import { Label } from "./label";
 
 type InputProps = {
-    errors?: Record<string, unknown>;
     error?: string;
+    errors?: Record<string, unknown>;
     label: string;
     name: string;
     ref?: React.Ref<HTMLInputElement>;
@@ -18,10 +18,8 @@ type InputProps = {
     "placeholder"
 >;
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    (
-        { name, type, className, label, required, topLabel, error, ...props },
-        ref
+const Input = (
+        { name, type, className, error, label, ref, required, topLabel, ...props }: InputProps
     ) => {
         const inputRef = React.useRef<HTMLInputElement>(null);
         const [showPassword, setShowPassword] = React.useState(false);
@@ -92,8 +90,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
             </div>
         );
-    }
-);
+    };
 
 Input.displayName = "Input"; // Required for dev-friendly name in React dev tools
 

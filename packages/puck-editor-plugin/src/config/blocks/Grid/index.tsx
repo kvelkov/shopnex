@@ -1,47 +1,48 @@
-import React from "react";
-import { ComponentConfig, Slot } from "@measured/puck";
-import styles from "./styles.module.css";
+import type { ComponentConfig, Slot } from "@puckeditor/core";
 
-import { Section } from "../../components/Section";
+import React from "react";
+
 import { withLayout } from "../../components/Layout";
+import { Section } from "../../components/Section";
 import getClassNameFactory from "../../utils/get-class-name-factory";
+import styles from "./styles.module.css";
 
 const getClassName = getClassNameFactory("Grid", styles);
 
 export type GridProps = {
-    numColumns: number;
     gap: number;
     items: Slot;
+    numColumns: number;
 };
 
 export const GridInternal: ComponentConfig<GridProps> = {
+    defaultProps: {
+        gap: 24,
+        items: [],
+        numColumns: 4,
+    },
     fields: {
-        numColumns: {
-            type: "number",
-            label: "Number of columns",
-            min: 1,
-            max: 12,
-        },
         gap: {
-            label: "Gap",
             type: "number",
+            label: "Gap",
             min: 0,
         },
         items: {
             type: "slot",
         },
+        numColumns: {
+            type: "number",
+            label: "Number of columns",
+            max: 12,
+            min: 1,
+        },
     },
-    defaultProps: {
-        numColumns: 4,
-        gap: 24,
-        items: [],
-    },
-    render: ({ gap, numColumns, items: Items }) => {
+    render: ({ gap, items: Items, numColumns }) => {
         return (
             <Section>
                 <Items
-                    disallow={["Hero", "Stats"]}
                     className={getClassName()}
+                    disallow={["Hero", "Stats"]}
                     style={{
                         gap,
                         gridTemplateColumns: `repeat(${numColumns}, 1fr)`,

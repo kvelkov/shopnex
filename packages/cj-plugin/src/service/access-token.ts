@@ -1,4 +1,5 @@
-import { CjData } from "../CjCollection";
+import type { CjData } from "../CjCollection";
+
 import { getAccessToken, refreshAccessToken } from "../sdk/auth";
 
 interface TokenResponse {
@@ -13,7 +14,7 @@ const TOKEN_EXPIRY = {
     REFRESH: 180 * ONE_DAY_MS, // 180 days
 };
 
-const isTokenExpiring = async (expiryDate: string | Date): Promise<boolean> => {
+const isTokenExpiring = async (expiryDate: Date | string): Promise<boolean> => {
     const now = new Date();
     const oneHourFromNow = new Date(now.getTime() + ONE_HOUR_MS);
     const expiryDateTime = new Date(expiryDate);

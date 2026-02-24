@@ -1,6 +1,7 @@
 import { Home, LogOut } from "lucide-react";
-import { QuickAction } from "./types";
 import React from "react";
+
+import type { QuickAction } from "./types";
 
 export const defaultActions = ({
     adminRoute,

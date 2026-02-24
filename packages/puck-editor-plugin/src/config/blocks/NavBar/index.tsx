@@ -1,27 +1,47 @@
+import type { ComponentConfig } from "@puckeditor/core";
+
 import React from "react";
-import { ComponentConfig } from "@measured/puck";
+
 import styles from "./styles.module.css";
 
 export type MenuItem = {
-    label: string;
-    href: string;
     hasDropdown?: boolean;
+    href: string;
+    label: string;
 };
 
 export type NavBarProps = {
+    backgroundColor: string;
     logo: string;
     logoText: string;
     menuItems: MenuItem[];
+    showCart: boolean;
     showSearch: boolean;
     showUserAccount: boolean;
-    showCart: boolean;
-    backgroundColor: string;
     textColor: string;
 };
 
 export const NavBar: ComponentConfig<NavBarProps> = {
-    label: "Navigation Bar",
+    defaultProps: {
+        backgroundColor: "#ffffff",
+        logo: "",
+        logoText: "web",
+        menuItems: [
+            { hasDropdown: true, href: "#", label: "Mega menu" },
+            { hasDropdown: true, href: "#", label: "Blog" },
+            { hasDropdown: false, href: "#", label: "Contact" },
+            { hasDropdown: false, href: "#", label: "About us" },
+        ],
+        showCart: true,
+        showSearch: true,
+        showUserAccount: true,
+        textColor: "#333333",
+    },
     fields: {
+        backgroundColor: {
+            type: "text",
+            label: "Background Color",
+        },
         logo: {
             type: "text",
             label: "Logo URL",
@@ -32,16 +52,7 @@ export const NavBar: ComponentConfig<NavBarProps> = {
         },
         menuItems: {
             type: "array",
-            label: "Menu Items",
             arrayFields: {
-                label: {
-                    type: "text",
-                    label: "Menu Label",
-                },
-                href: {
-                    type: "text",
-                    label: "Link URL",
-                },
                 hasDropdown: {
                     type: "radio",
                     label: "Has Dropdown",
@@ -50,7 +61,24 @@ export const NavBar: ComponentConfig<NavBarProps> = {
                         { label: "No", value: false },
                     ],
                 },
+                href: {
+                    type: "text",
+                    label: "Link URL",
+                },
+                label: {
+                    type: "text",
+                    label: "Menu Label",
+                },
             },
+            label: "Menu Items",
+        },
+        showCart: {
+            type: "radio",
+            label: "Show Cart",
+            options: [
+                { label: "Yes", value: true },
+                { label: "No", value: false },
+            ],
         },
         showSearch: {
             type: "radio",
@@ -68,43 +96,27 @@ export const NavBar: ComponentConfig<NavBarProps> = {
                 { label: "No", value: false },
             ],
         },
-        showCart: {
-            type: "radio",
-            label: "Show Cart",
-            options: [
-                { label: "Yes", value: true },
-                { label: "No", value: false },
-            ],
-        },
-        backgroundColor: {
-            type: "text",
-            label: "Background Color",
-        },
         textColor: {
             type: "text",
             label: "Text Color",
         },
     },
-    defaultProps: {
-        logo: "",
-        logoText: "web",
-        menuItems: [
-            { label: "Mega menu", href: "#", hasDropdown: true },
-            { label: "Blog", href: "#", hasDropdown: true },
-            { label: "Contact", href: "#", hasDropdown: false },
-            { label: "About us", href: "#", hasDropdown: false },
-        ],
-        showSearch: true,
-        showUserAccount: true,
-        showCart: true,
-        backgroundColor: "#ffffff",
-        textColor: "#333333",
-    },
-    render: ({ logo, logoText, menuItems, showSearch, showUserAccount, showCart, backgroundColor, textColor, puck }) => {
+    label: "Navigation Bar",
+    render: ({
+        backgroundColor,
+        logo,
+        logoText,
+        menuItems,
+        puck,
+        showCart,
+        showSearch,
+        showUserAccount,
+        textColor,
+    }) => {
         return (
-            <nav 
+            <nav
                 className={styles.navbar}
-                style={{ 
+                style={{
                     backgroundColor,
                     color: textColor,
                 }}
@@ -113,49 +125,75 @@ export const NavBar: ComponentConfig<NavBarProps> = {
                     <div className={styles.leftSection}>
                         <div className={styles.logo}>
                             {logo ? (
-                                <img src={logo} alt={logoText} className={styles.logoImage} />
+                                <img
+                                    alt={logoText}
+                                    className={styles.logoImage}
+                                    src={logo}
+                                />
                             ) : (
-                                <span className={styles.logoText}>{logoText}</span>
+                                <span className={styles.logoText}>
+                                    {logoText}
+                                </span>
                             )}
                         </div>
                     </div>
-                    
+
                     <div className={styles.centerSection}>
                         <ul className={styles.menuList}>
                             {menuItems.map((item, index) => (
-                                <li key={index} className={styles.menuItem}>
-                                    <a 
-                                        href={puck?.isEditing ? "#" : item.href}
+                                <li className={styles.menuItem} key={index}>
+                                    <a
                                         className={styles.menuLink}
-                                        tabIndex={puck?.isEditing ? -1 : undefined}
+                                        href={puck?.isEditing ? "#" : item.href}
+                                        tabIndex={
+                                            puck?.isEditing ? -1 : undefined
+                                        }
                                     >
                                         {item.label}
-                                        {item.hasDropdown && <span className={styles.dropdownIcon}>▼</span>}
+                                        {item.hasDropdown && (
+                                            <span
+                                                className={styles.dropdownIcon}
+                                            >
+                                                ▼
+                                            </span>
+                                        )}
                                     </a>
                                 </li>
                             ))}
                         </ul>
                     </div>
-                    
+
                     <div className={styles.rightSection}>
                         {showSearch && (
-                            <button className={styles.iconButton} aria-label="Search">
+                            <button
+                                aria-label="Search"
+                                className={styles.iconButton}
+                            >
                                 🔍
                             </button>
                         )}
                         {showUserAccount && (
-                            <button className={styles.iconButton} aria-label="User Account">
+                            <button
+                                aria-label="User Account"
+                                className={styles.iconButton}
+                            >
                                 👤
                             </button>
                         )}
                         {showCart && (
-                            <button className={styles.iconButton} aria-label="Shopping Cart">
+                            <button
+                                aria-label="Shopping Cart"
+                                className={styles.iconButton}
+                            >
                                 🛒
                             </button>
                         )}
                     </div>
-                    
-                    <button className={styles.mobileMenuButton} aria-label="Mobile Menu">
+
+                    <button
+                        aria-label="Mobile Menu"
+                        className={styles.mobileMenuButton}
+                    >
                         ☰
                     </button>
                 </div>

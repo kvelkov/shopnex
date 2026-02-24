@@ -29,11 +29,11 @@ export async function createSessionCookies(
 export async function verifySessionCookie(token: string, secret: string) {
     const secretKey = new TextEncoder().encode(secret);
     return await jwt.jwtVerify<{
-        id: string;
-        email: string;
         collection: string;
-        iat: number;
+        email: string;
         exp: number;
+        iat: number;
+        id: string;
     }>(token, secretKey);
 }
 

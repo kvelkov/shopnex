@@ -1,26 +1,26 @@
 import type { AuthorizationServer } from "oauth4webapi";
 
 export enum ErrorKind {
-    NotFound = "NotFound",
-    InternalServer = "InternalServer",
     BadRequest = "BadRequest",
-    NotAuthorized = "NotAuthorized",
-    NotAuthenticated = "NotAuthenticated",
     Conflict = "Conflict",
+    InternalServer = "InternalServer",
+    NotAuthenticated = "NotAuthenticated",
+    NotAuthorized = "NotAuthorized",
+    NotFound = "NotFound",
 }
 
 export enum SuccessKind {
     Created = "Created",
-    Updated = "Updated",
-    Retrieved = "Retrieved",
     Deleted = "Deleted",
+    Retrieved = "Retrieved",
+    Updated = "Updated",
 }
 export interface AuthPluginOutput {
-    message: string;
-    kind: ErrorKind | SuccessKind;
     data: any;
-    isSuccess: boolean;
     isError: boolean;
+    isSuccess: boolean;
+    kind: ErrorKind | SuccessKind;
+    message: string;
 }
 
 /**
@@ -43,13 +43,6 @@ interface OAuthProviderOutput {
      */
     name: string;
     /**
-     * Scope of account attributes to request from the provider
-     *
-     * @type {string}
-     */
-    scope: string;
-
-    /**
      * Profile callback that returns account information requried to link with users
      *
      * @type {(
@@ -57,17 +50,24 @@ interface OAuthProviderOutput {
      *   ) => AccountInfo}
      */
     profile: (
-        profile: Record<string, string | number | boolean | object>
+        profile: Record<string, boolean | number | object | string>
     ) => AccountInfo;
+
+    /**
+     * Scope of account attributes to request from the provider
+     *
+     * @type {string}
+     */
+    scope: string;
 }
 
 export interface OAuthBaseProviderConfig {
-    client_id: string;
-    client_secret?: string;
     /*
      * Oauth provider Client Type
      */
     client_auth_type?: "client_secret_basic" | "client_secret_post";
+    client_id: string;
+    client_secret?: string;
     /*
      * Additional parameters you would like to add to query for the provider
      */
@@ -78,24 +78,24 @@ export interface OAuthProviderConfig
     extends OAuthProviderOutput,
         OAuthBaseProviderConfig {
     algorithm: "oauth2" | "oidc";
-    kind: "oauth";
-    issuer?: string;
     authorization_server?: AuthorizationServer;
+    issuer?: string;
+    kind: "oauth";
 }
 
 export interface AccountInfo {
-    sub: string;
-    name: string;
-    picture: string;
     email: string;
+    name: string;
     passKey?: {
-        credentialId: string;
-        publicKey?: Uint8Array;
-        counter: number;
-        transports?: string[];
-        deviceType: string;
         backedUp: boolean;
+        counter: number;
+        credentialId: string;
+        deviceType: string;
+        publicKey?: Uint8Array;
+        transports?: string[];
     };
+    picture: string;
+    sub: string;
 }
 
 export type PasswordProviderConfig = {
@@ -110,8 +110,8 @@ export type PasswordProviderConfig = {
 };
 
 export interface CredentialsAccountInfo {
-    name: string;
     email: string;
+    name: string;
 }
 
 export type PasskeyProviderConfig = {

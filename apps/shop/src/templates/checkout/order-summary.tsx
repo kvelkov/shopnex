@@ -2,14 +2,14 @@
 
 import type { Item } from "react-use-cart";
 
+import Thumbnail from "@/components/thumbnail";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Info } from "lucide-react";
-import { useCart } from "react-use-cart";
-import { useEffect, useState } from "react";
 import { payloadSdk } from "@/utils/payload-sdk";
-import Thumbnail from "@/components/thumbnail";
+import { Info } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useCart } from "react-use-cart";
 
 export const OrderSummery = () => {
     const { cartTotal, items, metadata } = useCart();

@@ -1,8 +1,10 @@
-import { parseCookies, type PayloadRequest } from "payload";
 import * as oauth from "oauth4webapi";
+import { parseCookies, type PayloadRequest } from "payload";
+
 import type { AccountInfo, OAuthProviderConfig } from "../../../types";
-import { getCallbackURL } from "../../utils/cb";
+
 import { MissingOrInvalidSession } from "../../errors/consoleErrors";
+import { getCallbackURL } from "../../utils/cb";
 
 export async function UnifiedOAuthCallback(
     pluginType: string,
@@ -23,7 +25,7 @@ export async function UnifiedOAuthCallback(
         throw new MissingOrInvalidSession();
     }
 
-    const { client_id, client_secret, algorithm, profile, client_auth_type } = providerConfig;
+    const { algorithm, client_auth_type, client_id, client_secret, profile } = providerConfig;
     const client: oauth.Client = { client_id };
 
     let as: oauth.AuthorizationServer;
@@ -56,7 +58,7 @@ export async function UnifiedOAuthCallback(
         params = oauth.validateAuthResponse(as, client, current_url);
     } else {
         const state = parsedCookies.get("__session-oauth-state");
-        params = oauth.validateAuthResponse(as, client, current_url, state!);
+        params = oauth.validateAuthResponse(as, client, current_url, state);
     }
 
     const grantResponse = await oauth.authorizationCodeGrantRequest(
@@ -68,7 +70,7 @@ export async function UnifiedOAuthCallback(
         code_verifier
     );
 
-    let body = (await grantResponse.json()) as { scope: string | string[] };
+    const body = (await grantResponse.json()) as { scope: string | string[] };
     let response = new Response(JSON.stringify(body), grantResponse);
     
     if (Array.isArray(body.scope)) {
@@ -102,10 +104,10 @@ export async function UnifiedOAuthCallback(
             userInfoResponse
         );
         userInfo = {
-            sub: result.sub,
             name: result.name as string,
             email: result.email as string,
             picture: result.picture as string,
+            sub: result.sub,
         };
     } else {
         const userInfoResponse = await oauth.userInfoRequest(
@@ -118,15 +120,15 @@ export async function UnifiedOAuthCallback(
         if (providerConfig.id === "github" && !userInfo.email) {
             const emailResponse = await fetch("https://api.github.com/user/emails", {
                 headers: {
-                    Authorization: `Bearer ${token_result.access_token}`,
                     Accept: "application/vnd.github+json",
+                    Authorization: `Bearer ${token_result.access_token}`,
                 },
             });
             const emails = (await emailResponse.json()) as {
                 email: string;
                 primary: boolean;
                 verified: boolean;
-                visibility: string | null;
+                visibility: null | string;
             }[];
 
             const primaryEmail = emails.find((e) => e.primary && e.verified);

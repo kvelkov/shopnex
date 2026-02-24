@@ -1,16 +1,18 @@
-import { BasePayload, JsonObject, PayloadRequest, TypeWithID } from "payload";
-import { AccountInfo, AuthenticationStrategy } from "../../types";
+import type { BasePayload, JsonObject, PayloadRequest, TypeWithID } from "payload";
+
+import type { AccountInfo, AuthenticationStrategy } from "../../types";
+
+import { APP_COOKIE_SUFFIX } from "../../constants";
 import { UserNotFoundAPIError } from "../errors/apiErrors";
 import { createSessionCookies, invalidateOAuthCookies } from "../utils/cookies";
 import { sessionResponse } from "../utils/session";
-import { APP_COOKIE_SUFFIX } from "../../constants";
 
 export class AppSession {
     constructor(
         private appName: string,
         private collections: {
-            usersCollection: string;
             accountsCollection: string;
+            usersCollection: string;
         },
         private allowAutoSignUp: boolean,
         private authenticationStrategy: AuthenticationStrategy,
@@ -25,10 +27,10 @@ export class AppSession {
         payload: BasePayload
     ): Promise<JsonObject & TypeWithID> {
         const data: Record<string, unknown> = {
-            scope,
             name: oauthAccountInfo.name,
-            picture: oauthAccountInfo.picture,
             issuerName,
+            picture: oauthAccountInfo.picture,
+            scope,
         };
 
         const accountRecords = await payload.find({
@@ -40,8 +42,8 @@ export class AppSession {
 
         if (accountRecords.docs && accountRecords.docs.length === 1) {
             return await payload.update({
-                collection: this.collections.accountsCollection as any,
                 id: accountRecords.docs[0].id,
+                collection: this.collections.accountsCollection as any,
                 data,
             });
         } else {
@@ -101,8 +103,8 @@ export class AppSession {
                     this.secret,
                     {
                         id: userRecord["id"],
-                        email: oauthAccountInfo.email,
                         collection: this.collections.usersCollection,
+                        email: oauthAccountInfo.email,
                     }
                 )),
             ];
@@ -113,7 +115,7 @@ export class AppSession {
     }
 
     async passwordSessionCallback(
-        user: Pick<AccountInfo, "email"> & { id: string }
+        user: { id: string } & Pick<AccountInfo, "email">
     ) {
         let cookies: string[] = [];
 
@@ -124,8 +126,8 @@ export class AppSession {
                     this.secret,
                     {
                         id: user.id,
-                        email: user.email,
                         collection: this.collections.usersCollection,
+                        email: user.email,
                     }
                 )),
             ];

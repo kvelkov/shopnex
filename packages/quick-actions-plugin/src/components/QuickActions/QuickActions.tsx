@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
-import "./QuickActions.scss";
 import { Button, Pill } from "@payloadcms/ui";
 import { useKBar } from "kbar";
+
+import "./QuickActions.scss";
+
+import { Search } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const baseClass = "quick-actions";
 
@@ -20,16 +22,16 @@ export const QuickActions = ({ position }: { position: "actions" }) => {
 
     return (
         <Button
-            className={`${baseClass} position-${position}`}
             buttonStyle="none"
+            className={`${baseClass} position-${position}`}
             onClick={() => query.toggle()}
         >
             <div className="quick-actions__wrap">
                 <Search size={24} />
                 <input
-                    type="text"
-                    placeholder="Search..."
                     className="search-filter__input"
+                    placeholder="Search..."
+                    type="text"
                 />
                 <Pill className="shortcut-key">{shortcutKey} + K</Pill>
             </div>

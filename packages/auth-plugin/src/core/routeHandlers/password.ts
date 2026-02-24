@@ -1,4 +1,7 @@
 import type { PayloadRequest } from "payload";
+
+import { APP_COOKIE_SUFFIX } from "../../constants";
+import { InvalidAPIRequest } from "../errors/apiErrors";
 import {
     ForgotPasswordInit,
     ForgotPasswordVerify,
@@ -6,8 +9,6 @@ import {
     PasswordSignup,
     ResetPassword,
 } from "../protocols/password";
-import { InvalidAPIRequest } from "../errors/apiErrors";
-import { APP_COOKIE_SUFFIX } from "../../constants";
 
 export function PasswordAuthHandlers(
     request: PayloadRequest,
@@ -16,9 +17,9 @@ export function PasswordAuthHandlers(
     internal: {
         usersCollectionSlug: string;
     },
-    sessionCallBack: (user: { id: string; email: string }) => Promise<Response>,
+    sessionCallBack: (user: { email: string; id: string }) => Promise<Response>,
     secret: string,
-    stage?: string | undefined
+    stage?: string
 ): Promise<Response> {
     switch (kind) {
         case "signin":
@@ -32,6 +33,7 @@ export function PasswordAuthHandlers(
                 case "verify":
                     return ForgotPasswordVerify(request, internal);
                 default:
+                    // eslint-disable-next-line @typescript-eslint/only-throw-error
                     throw new InvalidAPIRequest();
             }
         case "reset-password":
@@ -42,6 +44,7 @@ export function PasswordAuthHandlers(
                 request
             );
         default:
+            // eslint-disable-next-line @typescript-eslint/only-throw-error
             throw new InvalidAPIRequest();
     }
 }

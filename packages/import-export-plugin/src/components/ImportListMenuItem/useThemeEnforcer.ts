@@ -26,8 +26,8 @@ const useThemeEnforcer = (preferredTheme: string) => {
         });
 
         observer.observe(htmlEl, {
-            attributes: true,
             attributeFilter: ["data-theme"],
+            attributes: true,
         });
 
         // Initial enforcement

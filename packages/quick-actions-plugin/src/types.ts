@@ -1,7 +1,6 @@
-import { KBarOptions } from "kbar";
-
-import { Command } from "kbar/lib/action/Command";
-import { JSX } from "react";
+import type { KBarOptions } from "kbar";
+import type { Command } from "kbar/lib/action/Command";
+import type { JSX } from "react";
 
 /**
  * Represents a quick action that can be triggered in the UI.
@@ -22,12 +21,12 @@ import { JSX } from "react";
  */
 export interface QuickAction {
     /**
-     * Optional link to navigate to when the action is executed.
+     * Marks whether the action is custom-defined.
      *
      * @example
-     * link: "/admin/dashboard"
+     * custom: true
      */
-    link?: string;
+    custom?: boolean;
 
     /**
      * Optional group name to categorize the action.
@@ -38,12 +37,12 @@ export interface QuickAction {
     group?: string;
 
     /**
-     * Marks whether the action is custom-defined.
+     * Icon displayed alongside the action name.
      *
      * @example
-     * custom: true
+     * icon: <PlusIcon />
      */
-    custom?: boolean;
+    icon?: React.ReactElement | React.ReactNode | string;
 
     /**
      * Unique identifier for the action.
@@ -54,6 +53,22 @@ export interface QuickAction {
     id: string;
 
     /**
+     * Searchable keywords for the action.
+     *
+     * @example
+     * keywords: "new create post blog article"
+     */
+    keywords?: string;
+
+    /**
+     * Optional link to navigate to when the action is executed.
+     *
+     * @example
+     * link: "/admin/dashboard"
+     */
+    link?: string;
+
+    /**
      * Display name of the action.
      *
      * @example
@@ -62,20 +77,28 @@ export interface QuickAction {
     name: string;
 
     /**
-     * Keyboard shortcut to trigger the action.
+     * Optional ID of the parent action if this is a sub-action.
      *
      * @example
-     * shortcut: ["c", "p"]
+     * parent: "posts"
      */
-    shortcut?: string[];
+    parent?: string;
 
     /**
-     * Searchable keywords for the action.
+     * Function executed when the action is triggered.
      *
      * @example
-     * keywords: "new create post blog article"
+     * perform: () => navigate("/posts/new")
      */
-    keywords?: string;
+    perform?: (currentActionImpl: ActionImpl) => any;
+
+    /**
+     * Optional priority to influence sorting (higher = earlier).
+     *
+     * @example
+     * priority: 10
+     */
+    priority?: number;
 
     /**
      * Section or category for UI grouping.
@@ -87,19 +110,19 @@ export interface QuickAction {
      * section: { name: "Admin", priority: 1 }
      */
     section?:
-        | string
         | {
               name: string;
               priority: number;
-          };
+          }
+        | string;
 
     /**
-     * Icon displayed alongside the action name.
+     * Keyboard shortcut to trigger the action.
      *
      * @example
-     * icon: <PlusIcon />
+     * shortcut: ["c", "p"]
      */
-    icon?: string | React.ReactElement | React.ReactNode;
+    shortcut?: string[];
 
     /**
      * Optional subtitle to show below the action name.
@@ -108,30 +131,6 @@ export interface QuickAction {
      * subtitle: "Quickly add a new blog post"
      */
     subtitle?: string;
-
-    /**
-     * Function executed when the action is triggered.
-     *
-     * @example
-     * perform: () => navigate("/posts/new")
-     */
-    perform?: (currentActionImpl: ActionImpl) => any;
-
-    /**
-     * Optional ID of the parent action if this is a sub-action.
-     *
-     * @example
-     * parent: "posts"
-     */
-    parent?: string;
-
-    /**
-     * Optional priority to influence sorting (higher = earlier).
-     *
-     * @example
-     * priority: 10
-     */
-    priority?: number;
 }
 
 /**
@@ -157,13 +156,34 @@ export interface QuickAction {
  * };
  */
 export interface ActionImpl extends QuickAction {
-    id: QuickAction["id"];
-    name: QuickAction["name"];
-    shortcut: QuickAction["shortcut"];
-    keywords: QuickAction["keywords"];
-    section: QuickAction["section"];
+    /**
+     * Adds a child action to the current one.
+     *
+     * @param childActionImpl - The action to add as a child.
+     */
+    addChild(childActionImpl: ActionImpl): void;
+    /**
+     * List of ancestor actions in the hierarchy.
+     */
+    ancestors: ActionImpl[];
+    /**
+     * List of children actions under this action.
+     */
+    children: ActionImpl[];
+    /**
+     * Associated command metadata.
+     */
+    command?: Command;
+    /**
+     * The parent action instance, if one exists.
+     */
+    get parentActionImpl(): ActionImpl;
     icon: QuickAction["icon"];
-    subtitle: QuickAction["subtitle"];
+    id: QuickAction["id"];
+    keywords: QuickAction["keywords"];
+
+    name: QuickAction["name"];
+
     parent?: QuickAction["parent"];
 
     /**
@@ -173,50 +193,23 @@ export interface ActionImpl extends QuickAction {
     perform: QuickAction["perform"];
 
     /**
-     * Associated command metadata.
-     */
-    command?: Command;
-
-    /**
-     * List of ancestor actions in the hierarchy.
-     */
-    ancestors: ActionImpl[];
-
-    /**
-     * List of children actions under this action.
-     */
-    children: ActionImpl[];
-
-    /**
-     * Adds a child action to the current one.
-     *
-     * @param childActionImpl - The action to add as a child.
-     */
-    addChild(childActionImpl: ActionImpl): void;
-
-    /**
      * Removes a child action from the current one.
      *
      * @param actionImpl - The action to remove.
      */
     removeChild(actionImpl: ActionImpl): void;
 
-    /**
-     * The parent action instance, if one exists.
-     */
-    get parentActionImpl(): ActionImpl;
+    section: QuickAction["section"];
+
+    shortcut: QuickAction["shortcut"];
+
+    subtitle: QuickAction["subtitle"];
 }
 
 /**
  * Hook callbacks that can be triggered during the quick actions lifecycle.
  */
 export interface PluginHooks {
-    /**
-     * Called before generating quick actions. Can be used to customize config.
-     * @param config - Configuration object passed to the plugin.
-     */
-    beforeActionsGenerated?: (config: any) => void;
-
     /**
      * Called after actions are generated, allowing modifications or filtering.
      * @param actions - List of generated quick actions.
@@ -225,10 +218,16 @@ export interface PluginHooks {
     afterActionsGenerated?: (actions: QuickAction[]) => QuickAction[];
 
     /**
+     * Called before generating quick actions. Can be used to customize config.
+     * @param config - Configuration object passed to the plugin.
+     */
+    beforeActionsGenerated?: (config: any) => void;
+
+    /**
      * Called when an action is executed.
      * @param action - The executed quick action.
      */
-    onActionExecute?: (action: QuickAction) => void | Promise<void>;
+    onActionExecute?: (action: QuickAction) => Promise<void> | void;
 }
 
 /**
@@ -236,47 +235,9 @@ export interface PluginHooks {
  */
 export interface QuickActionsPluginConfig {
     /**
-     * Determines where to place the quick actions in the UI.
-     * - "actions": In the actions section.
-     * - "before-nav-links": Before navigation links.
-     * - "after-nav-links": After navigation links.
-     */
-    position?: "actions" | "before-nav-links" | "after-nav-links";
-
-    /**
-     * Replaces the default actions with the provided list.
-     */
-    overrideActions?: QuickAction[];
-
-    /**
      * Adds additional actions on top of the defaults.
      */
     additionalActions?: QuickAction[];
-
-    /**
-     * Overrides the default icon map with custom JSX elements.
-     */
-    overrideIconsMap?: Record<string, JSX.Element>;
-
-    /**
-     * Enables generation of default create actions (e.g. "Create X").
-     */
-    defaultCreateActions?: boolean;
-
-    /**
-     * Passes custom KBar configuration options.
-     */
-    kbarOptions?: KBarOptions;
-
-    /**
-     * Custom lifecycle hooks to modify plugin behavior.
-     */
-    hooks?: PluginHooks;
-
-    /**
-     * Enables the default actions such as navigating to the dashboard or content.
-     */
-    enableDefaultActions?: boolean;
 
     /**
      * Function to build custom actions based on the plugin config.
@@ -286,13 +247,14 @@ export interface QuickActionsPluginConfig {
     customActionBuilder?: (config: any) => QuickAction[];
 
     /**
-     * Controls how actions are grouped in the UI.
-     * - "type": Group by type.
-     * - "priority": Group by priority.
-     * - "custom": Group by custom flag.
-     * - false: No grouping.
+     * Enables generation of default create actions (e.g. "Create X").
      */
-    groupBy?: "type" | "priority" | "custom" | false;
+    defaultCreateActions?: boolean;
+
+    /**
+     * Enables the default actions such as navigating to the dashboard or content.
+     */
+    enableDefaultActions?: boolean;
 
     /**
      * List of collection slugs to exclude from quick actions.
@@ -303,4 +265,41 @@ export interface QuickActionsPluginConfig {
      * List of global slugs to exclude from quick actions.
      */
     excludeGlobals?: string[];
+
+    /**
+     * Controls how actions are grouped in the UI.
+     * - "type": Group by type.
+     * - "priority": Group by priority.
+     * - "custom": Group by custom flag.
+     * - false: No grouping.
+     */
+    groupBy?: "custom" | "priority" | "type" | false;
+
+    /**
+     * Custom lifecycle hooks to modify plugin behavior.
+     */
+    hooks?: PluginHooks;
+
+    /**
+     * Passes custom KBar configuration options.
+     */
+    kbarOptions?: KBarOptions;
+
+    /**
+     * Replaces the default actions with the provided list.
+     */
+    overrideActions?: QuickAction[];
+
+    /**
+     * Overrides the default icon map with custom JSX elements.
+     */
+    overrideIconsMap?: Record<string, JSX.Element>;
+
+    /**
+     * Determines where to place the quick actions in the UI.
+     * - "actions": In the actions section.
+     * - "before-nav-links": Before navigation links.
+     * - "after-nav-links": After navigation links.
+     */
+    position?: "actions" | "after-nav-links" | "before-nav-links";
 }

@@ -1,67 +1,75 @@
-import { Config, Data } from "@measured/puck";
-import { ButtonProps } from "../config/blocks/Button";
-import { CardProps } from "../config/blocks/Card";
-import { FlexProps } from "../config/blocks/Flex";
-import { GridProps } from "../config/blocks/Grid";
-import { HeadingProps } from "../config/blocks/Heading";
-import { LogosProps } from "../config/blocks/Logos";
-import { SpaceProps } from "../config/blocks/Space";
-import { StatsProps } from "../config/blocks/Stats";
-import { TextProps } from "../config/blocks/Text";
-import { TopHeaderProps } from "../config/blocks/TopHeader";
-import { NavBarProps } from "../config/blocks/NavBar";
-import { Hero1Props } from "../config/blocks/Hero1";
-import { Hero2Props } from "../config/blocks/Hero2";
-import { Hero3Props } from "../config/blocks/Hero3";
-import { Hero4Props } from "../config/blocks/Hero4";
-import { Hero5Props } from "../config/blocks/Hero5";
-import { FooterProps } from "../config/blocks/Footer";
-import { ProductsGrid1Props } from "../config/blocks/ProductsGrid1";
-import { BreadcrumbProps } from "../config/blocks/Breadcrumb";
-import { ProductDetailsProps } from "../config/blocks/ProductDetails";
-import { RootProps } from "../config/root";
+import type { Config, Data } from "@puckeditor/core";
+
+import type { BreadcrumbProps } from "../config/blocks/Breadcrumb";
+import type { ButtonProps } from "../config/blocks/Button";
+import type { CardProps } from "../config/blocks/Card";
+import type { FlexProps } from "../config/blocks/Flex";
+import type { FooterProps } from "../config/blocks/Footer";
+import type { GridProps } from "../config/blocks/Grid";
+import type { HeadingProps } from "../config/blocks/Heading";
+import type { Hero1Props } from "../config/blocks/Hero1";
+import type { Hero2Props } from "../config/blocks/Hero2";
+import type { Hero3Props } from "../config/blocks/Hero3";
+import type { Hero4Props } from "../config/blocks/Hero4";
+import type { Hero5Props } from "../config/blocks/Hero5";
+import type { LogosProps } from "../config/blocks/Logos";
+import type { NavBarProps } from "../config/blocks/NavBar";
+import type { ProductDetailsProps } from "../config/blocks/ProductDetails";
+import type { ProductsGrid1Props } from "../config/blocks/ProductsGrid1";
+import type { SpaceProps } from "../config/blocks/Space";
+import type { StatsProps } from "../config/blocks/Stats";
+import type { TextProps } from "../config/blocks/Text";
+import type { TopHeaderProps } from "../config/blocks/TopHeader";
+import type { RootProps } from "../config/root";
 
 export type Components = {
-    TopHeader: TopHeaderProps;
-    NavBar: NavBarProps;
-    Footer: FooterProps;
     Breadcrumb: BreadcrumbProps;
+    Button: ButtonProps;
+    Card: CardProps;
+    Flex: FlexProps;
+    Footer: FooterProps;
+    Grid: GridProps;
+    Heading: HeadingProps;
     Hero1: Hero1Props;
     Hero2: Hero2Props;
     Hero3: Hero3Props;
     Hero4: Hero4Props;
     Hero5: Hero5Props;
-    ProductsGrid1: ProductsGrid1Props;
-    ProductDetails: ProductDetailsProps;
-    Button: ButtonProps;
-    Card: CardProps;
-    Grid: GridProps;
-    Heading: HeadingProps;
-    Flex: FlexProps;
     Logos: LogosProps;
+    NavBar: NavBarProps;
+    ProductDetails: ProductDetailsProps;
+    ProductsGrid1: ProductsGrid1Props;
+    Space: SpaceProps;
     Stats: StatsProps;
     Text: TextProps;
-    Space: SpaceProps;
+    TopHeader: TopHeaderProps;
 };
 
 export type UserConfig = Config<{
+    categories: [
+        "navigation",
+        "heroes",
+        "ecommerce",
+        "layout",
+        "typography",
+        "interactive",
+    ];
     components: Components;
-    root: RootProps;
-    categories: ["navigation", "heroes", "ecommerce", "layout", "typography", "interactive"];
     fields: {
-        userField: {
-            type: "userField";
-            option: boolean;
+        description: {
+            label: string;
+            type: "text";
         };
         title: {
-            type: "text";
             label: string;
+            type: "text";
         };
-        description: {
-            type: "text";
-            label: string;
+        userField: {
+            option: boolean;
+            type: "userField";
         };
     };
+    root: RootProps;
 }>;
 
 export type UserData = Data<Components, RootProps>;

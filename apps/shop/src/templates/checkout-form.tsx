@@ -1,8 +1,7 @@
-import { listCartShippingMethods } from "@/services/fulfillment";
-import { listCartPaymentMethods } from "@/services/payment";
-
 import Review from "@/components/checkout/review";
 import Shipping from "@/components/checkout/shipping";
+import { listCartShippingMethods } from "@/services/fulfillment";
+import { listCartPaymentMethods } from "@/services/payment";
 
 export default async function CheckoutForm({
     cart,

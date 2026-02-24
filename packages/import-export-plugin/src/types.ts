@@ -10,15 +10,15 @@ export type CollectionOverride = {
 } & CollectionConfig;
 
 type ImportColumn = {
-    name: string;
+    data_type?: "boolean" | "datetime" | "number" | "string";
+    description: string;
     /**
      * The key of the field in the collection
      * @example variants[0].gallery[0].url
      */
     key: string;
-    data_type?: "string" | "number" | "datetime" | "boolean";
+    name: string;
     required?: boolean;
-    description: string;
     suggested_mappings: string[];
 };
 
@@ -29,16 +29,16 @@ export type ImportExportPluginConfig = {
      */
     collections?: string[];
     /**
+     * Enable to force the export to run synchronously
+     */
+    disableJobsQueue?: boolean;
+    /**
      * Collections to include in the import collection
      */
     importCollections?: {
         collectionSlug: string;
         columns?: ImportColumn[];
     }[];
-    /**
-     * Enable to force the export to run synchronously
-     */
-    disableJobsQueue?: boolean;
     /**
      * This function takes the default export collection configured in the plugin and allows you to override it by modifying and returning it
      * @param collection

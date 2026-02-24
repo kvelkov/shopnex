@@ -1,9 +1,8 @@
+import useToggleState from "@/hooks/use-toggle-state";
 import { Disclosure } from "@headlessui/react";
 import { Badge, Button, clx } from "@medusajs/ui";
 import { useEffect } from "react";
 import { useFormStatus } from "react-dom";
-
-import useToggleState from "@/hooks/use-toggle-state";
 
 type AccountInfoProps = {
     children?: React.ReactNode;

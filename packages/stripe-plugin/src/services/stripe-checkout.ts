@@ -1,25 +1,25 @@
 import type { Cart, Payment, Shipping } from "@shopnex/types";
+import type { PayloadRequest } from "payload";
+
 import { createCheckoutSession } from "../utilities/create-checkout-session";
 import { mapToStripeLineItems } from "../utilities/map-to-stripe";
 
-import { PayloadRequest } from "payload";
-
 type StripeCheckoutProps = {
-    req: PayloadRequest;
     cart: Cart;
+    orderId: string;
     payment: Payment;
+    req: PayloadRequest;
     shipping: Shipping;
     total: number;
-    orderId: string;
 };
 
 export async function stripeCheckout({
-    req,
     cart,
+    orderId,
     payment,
+    req,
     shipping,
     total,
-    orderId,
 }: StripeCheckoutProps) {
     const shopUrl = req.payload.config?.custom?.shopUrl;
     const order = await req.payload.create({
@@ -29,10 +29,10 @@ export async function stripeCheckout({
             currency: "usd",
             orderId,
             orderStatus: "pending",
-            paymentMethod: "stripe",
             payment: payment?.id,
-            shipping: shipping?.id,
+            paymentMethod: "stripe",
             paymentStatus: "pending",
+            shipping: shipping?.id,
             totalAmount: total,
         },
         req,
@@ -48,16 +48,16 @@ export async function stripeCheckout({
     const lineItems = mapToStripeLineItems(cart.cartItems);
 
     const session = await createCheckoutSession({
+        cancelUrl,
         lineItems,
         orderId,
-        cancelUrl,
         successUrl,
     });
 
     // Update order with session info
     await req.payload.update({
-        collection: "orders",
         id: order.id,
+        collection: "orders",
         data: {
             sessionId: session.id,
             sessionUrl: session.url,

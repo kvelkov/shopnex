@@ -7,8 +7,8 @@ export default function PolicyTemplate({ policy }: { policy: any }) {
                     {policy.description && (
                         <div
                             className="prose prose-lg max-w-none"
-                            data-testid="policy-description"
                             dangerouslySetInnerHTML={{ __html: policy.description }}
+                            data-testid="policy-description"
                         />
                     )}
                 </div>

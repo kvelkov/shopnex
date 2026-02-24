@@ -313,6 +313,7 @@ async function getLatestPackageVersion({
 
     return latestVersion
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching Payload version:', error)
     throw error
   }

@@ -1,33 +1,30 @@
-import React from "react";
-import { ALargeSmall, AlignLeft } from "lucide-react";
+import type { ComponentConfig } from "@puckeditor/core";
 
-import { ComponentConfig } from "@measured/puck";
+import { ALargeSmall, AlignLeft } from "lucide-react";
+import React from "react";
+
+import type { WithLayout} from "../../components/Layout";
+
+import { withLayout } from "../../components/Layout";
 import { Section } from "../../components/Section";
-import { WithLayout, withLayout } from "../../components/Layout";
 
 export type TextProps = WithLayout<{
-    align: "left" | "center" | "right";
-    text?: string;
-    padding?: string;
-    size?: "s" | "m";
+    align: "center" | "left" | "right";
     color: "default" | "muted";
     maxWidth?: string;
+    padding?: string;
+    size?: "m" | "s";
+    text?: string;
 }>;
 
 const TextInner: ComponentConfig<TextProps> = {
+    defaultProps: {
+        align: "left",
+        color: "default",
+        size: "m",
+        text: "Text",
+    },
     fields: {
-        text: {
-            type: "textarea",
-            contentEditable: true,
-        },
-        size: {
-            type: "select",
-            labelIcon: <ALargeSmall size={16} />,
-            options: [
-                { label: "S", value: "s" },
-                { label: "M", value: "m" },
-            ],
-        },
         align: {
             type: "radio",
             labelIcon: <AlignLeft size={16} />,
@@ -45,14 +42,20 @@ const TextInner: ComponentConfig<TextProps> = {
             ],
         },
         maxWidth: { type: "text" },
+        size: {
+            type: "select",
+            labelIcon: <ALargeSmall size={16} />,
+            options: [
+                { label: "S", value: "s" },
+                { label: "M", value: "m" },
+            ],
+        },
+        text: {
+            type: "textarea",
+            contentEditable: true,
+        },
     },
-    defaultProps: {
-        align: "left",
-        text: "Text",
-        size: "m",
-        color: "default",
-    },
-    render: ({ align, color, text, size, maxWidth }) => {
+    render: ({ align, color, maxWidth, size, text }) => {
         return (
             <Section maxWidth={maxWidth}>
                 <span
@@ -62,17 +65,17 @@ const TextInner: ComponentConfig<TextProps> = {
                                 ? "inherit"
                                 : "var(--puck-color-grey-05)",
                         display: "flex",
-                        textAlign: align,
-                        width: "100%",
                         fontSize: size === "m" ? "20px" : "16px",
                         fontWeight: 300,
-                        maxWidth,
                         justifyContent:
                             align === "center"
                                 ? "center"
                                 : align === "right"
                                   ? "flex-end"
                                   : "flex-start",
+                        maxWidth,
+                        textAlign: align,
+                        width: "100%",
                     }}
                 >
                     {text}

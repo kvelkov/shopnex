@@ -10,8 +10,8 @@ export type APIResponse<T> =
  */
 export interface ApiResponseError {
     code: number;
-    result: boolean;
-    message: string;
     data: null;
+    message: string;
     requestId: string;
+    result: boolean;
 }

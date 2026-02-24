@@ -1,19 +1,20 @@
 "use client";
 
-import React from "react";
 import { PasswordField } from "@payloadcms/ui";
+import React from "react";
+
 import "./ApiToken.scss";
 
 interface ApiTokenProps {
+    label?: string;
     path: string;
     readOnly?: boolean;
-    label?: string;
 }
 
 export function ApiToken({
+    label = "API Token",
     path,
     readOnly,
-    label = "API Token",
 }: ApiTokenProps) {
     return (
         <PasswordField

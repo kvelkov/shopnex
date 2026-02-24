@@ -42,8 +42,8 @@ export function AddToCartWrapper({
         } else {
             await createCart({
                 id: variantId,
-                quantity,
                 productId,
+                quantity,
             });
         }
     };

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 import ProductTemplate from "@/templates/product";
-import { notFound } from "next/navigation";
 import { payloadSdk } from "@/utils/payload-sdk";
+import { notFound } from "next/navigation";
 
 type ProductPageProps = {
     params: Promise<{ productHandle: string }>;
@@ -17,16 +17,16 @@ export async function generateMetadata(
     const result = await payloadSdk.find({
         collection: "products",
         limit: 1,
+        select: {
+            meta: {
+                description: true,
+                title: true,
+            },
+            title: true,
+        },
         where: {
             handle: {
                 equals: productHandle,
-            },
-        },
-        select: {
-            title: true,
-            meta: {
-                title: true,
-                description: true,
             },
         },
     });
@@ -40,8 +40,8 @@ export async function generateMetadata(
     return {
         description: product.meta?.title || `${product.title}`, // Fallback to title if no meta description
         openGraph: {
-            title: product.meta?.title || `${product.title} | ShopNex`, // Fallback if no meta title
             description: product.meta?.description || `${product.title}`,
+            title: product.meta?.title || `${product.title} | ShopNex`, // Fallback if no meta title
             // images: product.thumbnail ? [product.thumbnail] : [],
         },
         title: product.meta?.title || `${product.title} | ShopNex`,

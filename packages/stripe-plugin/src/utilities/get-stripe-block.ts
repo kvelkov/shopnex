@@ -1,5 +1,5 @@
-import { Payment } from "@shopnex/types";
-import { PayloadRequest, PaginatedDocs } from "payload";
+import type { Payment } from "@shopnex/types";
+import type { PaginatedDocs, PayloadRequest } from "payload";
 
 export const getStripeBlock = async ({
     req,
@@ -15,7 +15,7 @@ export const getStripeBlock = async ({
                 equals: shopId,
             },
         },
-    })) as PaginatedDocs<Payment>;
+    }));
 
     const stripeBlock = paymentsDocument.docs[0]?.providers?.find(
         (provider: any) => provider.blockType === "stripe"

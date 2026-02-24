@@ -1,17 +1,21 @@
 "use client";
 
 import { SetStepNav, useTheme } from "@payloadcms/ui";
+
 import "./EmailTemplate.scss";
+
 import React from "react";
-import { EmailTemplateIframe } from "./ui/EmailTemplateIframe";
+
+import type { EmailTemplateProps } from "../types/email-template.types";
+
 import { createNavigationItems, isCreateMode } from "../utils/message-handlers";
-import { EmailTemplateProps } from "../types/email-template.types";
+import { EmailTemplateIframe } from "./ui/EmailTemplateIframe";
 
 export const EmailTemplate = ({
     identifier,
     iframeOrigin,
-    token,
     templateName,
+    token,
 }: EmailTemplateProps) => {
     const { theme } = useTheme();
     const navItems = createNavigationItems(templateName, identifier);

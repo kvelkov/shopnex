@@ -1,24 +1,25 @@
 "use client";
 
-import { Puck } from "@measured/puck";
 import { useField, useForm } from "@payloadcms/ui";
-import "@measured/puck/puck.css";
+import { Puck } from "@puckeditor/core";
+import "@puckeditor/core/puck.css";
+
 import { clientConfig } from "../config/client-config";
 import "./PuckEditor.scss";
 
 const initialData = {};
 
 export const PuckEditor = () => {
-    const { value, setValue } = useField<any>({ path: "page" });
-    const { value: title, setValue: setTitle } = useField<any>({
+    const { setValue, value } = useField<any>({ path: "page" });
+    const { setValue: setTitle, value: title } = useField<any>({
         path: "title",
     });
-    const { value: handle, setValue: setHandle } = useField<any>({
+    const { setValue: setHandle, value: handle } = useField<any>({
         path: "handle",
     });
     const { submit } = useForm();
     const save = () => {
-        submit();
+        void submit();
     };
     const onChange = (data: any) => {
         setValue(data);
@@ -33,8 +34,8 @@ export const PuckEditor = () => {
         <Puck
             config={clientConfig}
             data={value || initialData}
-            onPublish={save}
             onChange={onChange}
+            onPublish={save}
             overrides={{
                 headerActions: ({ children }) => (
                     <>

@@ -6,7 +6,8 @@ import type {
     PayloadRequest,
 } from "payload";
 import type Stripe from "stripe";
-import { SecretAccess } from "./blocks/StripeBlock";
+
+import type { SecretAccess } from "./blocks/StripeBlock";
 
 export type StripeWebhookHandler<T = any> = (args: {
     config: PayloadConfig;
@@ -34,21 +35,21 @@ export type SyncConfig = {
 };
 
 export type StripePluginConfig = {
-    isTestKey?: boolean;
-    logs?: boolean;
-    /** @default false */
-    stripeSecretKey: string;
-    stripeWebhooksEndpointSecret?: string;
-    webhooks?: StripeWebhookHandler | StripeWebhookHandlers;
     collectionOverrides?: {
         access: CollectionConfig["access"];
     };
+    isTestKey?: boolean;
+    logs?: boolean;
+    ordersCollectionSlug?: string;
     /**
      * The collection slug for the payments collection
      */
     paymentCollectionSlug?: string;
-    ordersCollectionSlug?: string;
     secretAccess?: SecretAccess;
+    /** @default false */
+    stripeSecretKey: string;
+    stripeWebhooksEndpointSecret?: string;
+    webhooks?: StripeWebhookHandler | StripeWebhookHandlers;
 };
 
 export type SanitizedStripePluginConfig = {} & StripePluginConfig;

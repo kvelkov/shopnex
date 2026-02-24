@@ -63,6 +63,7 @@ export const getExportCollection = ({
                 return;
             }
             const { user } = req;
+            // @ts-ignore
             await createExport({ input: { ...args.data, user }, req });
         });
     } else {
@@ -78,7 +79,7 @@ export const getExportCollection = ({
                 userCollection: "users",
             };
             await req.payload.jobs.queue({
-                input: input,
+                input,
                 task: "createCollectionExport",
             } as any);
         });

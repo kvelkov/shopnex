@@ -1,34 +1,39 @@
+import type { ComponentConfig } from "@puckeditor/core";
+
 import React from "react";
-import { ComponentConfig } from "@measured/puck";
+
 import styles from "./styles.module.css";
 
 export type TopHeaderProps = {
-    phone: string;
-    email: string;
-    showLanguageSelector: boolean;
-    showCurrencySelector: boolean;
     backgroundColor: string;
+    email: string;
+    phone: string;
+    showCurrencySelector: boolean;
+    showLanguageSelector: boolean;
     textColor: string;
 };
 
 export const TopHeader: ComponentConfig<TopHeaderProps> = {
-    label: "Top Header",
+    defaultProps: {
+        backgroundColor: "#f8f9fa",
+        email: "contact@mysite.com",
+        phone: "+55 (111) 123 777",
+        showCurrencySelector: true,
+        showLanguageSelector: true,
+        textColor: "#333333",
+    },
     fields: {
-        phone: {
+        backgroundColor: {
             type: "text",
-            label: "Phone Number",
+            label: "Background Color",
         },
         email: {
             type: "text",
             label: "Email Address",
         },
-        showLanguageSelector: {
-            type: "radio",
-            label: "Show Language Selector",
-            options: [
-                { label: "Yes", value: true },
-                { label: "No", value: false },
-            ],
+        phone: {
+            type: "text",
+            label: "Phone Number",
         },
         showCurrencySelector: {
             type: "radio",
@@ -38,28 +43,32 @@ export const TopHeader: ComponentConfig<TopHeaderProps> = {
                 { label: "No", value: false },
             ],
         },
-        backgroundColor: {
-            type: "text",
-            label: "Background Color",
+        showLanguageSelector: {
+            type: "radio",
+            label: "Show Language Selector",
+            options: [
+                { label: "Yes", value: true },
+                { label: "No", value: false },
+            ],
         },
         textColor: {
             type: "text",
             label: "Text Color",
         },
     },
-    defaultProps: {
-        phone: "+55 (111) 123 777",
-        email: "contact@mysite.com",
-        showLanguageSelector: true,
-        showCurrencySelector: true,
-        backgroundColor: "#f8f9fa",
-        textColor: "#333333",
-    },
-    render: ({ phone, email, showLanguageSelector, showCurrencySelector, backgroundColor, textColor }) => {
+    label: "Top Header",
+    render: ({
+        backgroundColor,
+        email,
+        phone,
+        showCurrencySelector,
+        showLanguageSelector,
+        textColor,
+    }) => {
         return (
-            <div 
-                className={styles.topHeader} 
-                style={{ 
+            <div
+                className={styles.topHeader}
+                style={{
                     backgroundColor,
                     color: textColor,
                 }}
@@ -79,7 +88,7 @@ export const TopHeader: ComponentConfig<TopHeaderProps> = {
                             </div>
                         )}
                     </div>
-                    
+
                     <div className={styles.rightSection}>
                         {showCurrencySelector && (
                             <div className={styles.selector}>

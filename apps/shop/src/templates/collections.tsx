@@ -1,11 +1,11 @@
-import { Suspense } from "react";
-
 import type { SortOptions } from "@/utils/sort-options";
+import type { Collection } from "@shopnex/types";
 
 import RefinementList from "@/components/refinement-list";
 import SkeletonProductGrid from "@/components/skeleton-product-grid";
+import { Suspense } from "react";
+
 import PaginatedProducts from "./paginated-product";
-import { Collection } from "@shopnex/types";
 
 export default function CollectionTemplate({
     collection,

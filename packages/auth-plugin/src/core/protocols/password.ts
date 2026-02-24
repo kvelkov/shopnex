@@ -1,9 +1,14 @@
-import {
+import type {
     CollectionSlug,
+    PayloadRequest} from "payload";
+
+import {
     getCookieExpiration,
-    parseCookies,
-    PayloadRequest,
+    parseCookies
 } from "payload";
+
+import { EPHEMERAL_CODE_COOKIE_NAME } from "../../constants";
+import { SuccessKind } from "../../types";
 import {
     AuthenticationFailed,
     EmailAlreadyExistError,
@@ -12,15 +17,13 @@ import {
     UnauthorizedAPIRequest,
     UserNotFoundAPIError,
 } from "../errors/apiErrors";
-import { hashPassword, verifyPassword } from "../utils/password";
-import { SuccessKind } from "../../types";
-import { ephemeralCode, verifyEphemeralCode } from "../utils/hash";
-import { EPHEMERAL_CODE_COOKIE_NAME } from "../../constants";
 import {
     createSessionCookies,
     invalidateSessionCookies,
     verifySessionCookie,
 } from "../utils/cookies";
+import { ephemeralCode, verifyEphemeralCode } from "../utils/hash";
+import { hashPassword, verifyPassword } from "../utils/password";
 import { revokeSession } from "../utils/session";
 
 export const PasswordSignin = async (
@@ -28,7 +31,7 @@ export const PasswordSignin = async (
     internal: {
         usersCollectionSlug: string;
     },
-    sessionCallBack: (user: { id: string; email: string }) => Promise<Response>
+    sessionCallBack: (user: { email: string; id: string }) => Promise<Response>
 ) => {
     const body =
         request.json &&
@@ -40,11 +43,11 @@ export const PasswordSignin = async (
 
     const { payload } = request;
     const { docs } = await payload.find({
-        collection: internal.usersCollectionSlug as CollectionSlug,
+        collection: internal.usersCollectionSlug,
+        limit: 1,
         where: {
             email: { equals: body.email },
         },
-        limit: 1,
     });
 
     if (docs.length !== 1) {
@@ -72,15 +75,15 @@ export const PasswordSignup = async (
     internal: {
         usersCollectionSlug: string;
     },
-    sessionCallBack: (user: { id: string; email: string }) => Promise<Response>
+    sessionCallBack: (user: { email: string; id: string }) => Promise<Response>
 ) => {
     const { logger } = request.payload;
     const body =
         request.json &&
         ((await request.json?.()) as {
+            allowAutoSignin?: boolean;
             email: string;
             password: string;
-            allowAutoSignin?: boolean;
             profile?: Record<string, unknown>;
         });
 
@@ -91,17 +94,17 @@ export const PasswordSignup = async (
     const { payload } = request;
     const { docs } = await payload.find({
         collection: internal.usersCollectionSlug as any,
+        limit: 1,
         where: {
             email: { equals: body.email },
         },
-        limit: 1,
     });
 
     if (docs.length > 0) {
         return new EmailAlreadyExistError();
     }
 
-    logger.info("Creating shop", "My Shop");
+    logger.info({ name: "My Shop" }, "Creating shop");
     const newShop = await payload.create({
         collection: "shops" as any,
         data: {
@@ -110,9 +113,9 @@ export const PasswordSignup = async (
         },
         req: request,
     });
-    logger.debug("New shop created", newShop);
+    logger.debug({ newShop }, "New shop created");
 
-    logger.info("Creating user", body.email);
+    logger.info({ email: body.email }, "Creating user");
     const user = await payload.create({
         collection: internal.usersCollectionSlug as any,
         data: {
@@ -120,27 +123,27 @@ export const PasswordSignup = async (
             password: body.password,
             shops: [
                 {
-                    shop: newShop.id,
                     roles: ["shop-admin"],
+                    shop: newShop.id,
                 },
             ],
             ...body.profile,
         },
-        showHiddenFields: true,
         req: request,
+        showHiddenFields: true,
     });
-    logger.debug("User created", user);
+    logger.debug({ user }, "User created");
 
     logger.info("Creating account entry");
     await payload.create({
         collection: "admins" as any,
         data: {
-            sub: body.email,
-            issuerName: "Password",
-            user: user.id,
-            shop: newShop.id,
-            scope: "admin",
             name: body.profile?.name || body.email.split("@")[0],
+            issuerName: "Password",
+            scope: "admin",
+            shop: newShop.id,
+            sub: body.email,
+            user: user.id,
         },
         req: request,
     });
@@ -154,10 +157,10 @@ export const PasswordSignup = async (
 
     return Response.json(
         {
-            message: "Signed up successfully",
-            kind: SuccessKind.Created,
-            isSuccess: true,
             isError: false,
+            isSuccess: true,
+            kind: SuccessKind.Created,
+            message: "Signed up successfully",
         },
         { status: 201 }
     );
@@ -183,10 +186,10 @@ export const ForgotPasswordInit = async (
 
     const { docs } = await payload.find({
         collection: internal.usersCollectionSlug as any,
+        limit: 1,
         where: {
             email: { equals: body.email },
         },
-        limit: 1,
     });
 
     if (docs.length !== 1) {
@@ -195,17 +198,17 @@ export const ForgotPasswordInit = async (
     const { code, hash } = await ephemeralCode(6, payload.secret);
 
     await payload.sendEmail({
-        to: body.email,
         subject: "Password recovery",
         text: "Password recovery code: " + code,
+        to: body.email,
     });
 
     const res = new Response(
         JSON.stringify({
-            message: "Password recovery initiated successfully",
-            kind: SuccessKind.Created,
-            isSuccess: true,
             isError: false,
+            isSuccess: true,
+            kind: SuccessKind.Created,
+            message: "Password recovery initiated successfully",
         }),
         { status: 201 }
     );
@@ -230,9 +233,9 @@ export const ForgotPasswordVerify = async (
     const body =
         request.json &&
         ((await request.json?.()) as {
+            code: string;
             email: string;
             password: string;
-            code: string;
         });
 
     if (!body?.email || !body?.password || !body.code) {
@@ -256,10 +259,10 @@ export const ForgotPasswordVerify = async (
     }
     const { docs } = await payload.find({
         collection: internal.usersCollectionSlug as any,
+        limit: 1,
         where: {
             email: { equals: body.email },
         },
-        limit: 1,
     });
 
     if (docs.length !== 1) {
@@ -268,26 +271,26 @@ export const ForgotPasswordVerify = async (
 
     const {
         hash: hashedPassword,
-        salt,
         iterations,
+        salt,
     } = await hashPassword(body.password);
 
     await payload.update({
-        collection: internal.usersCollectionSlug as any,
         id: docs[0].id,
+        collection: internal.usersCollectionSlug as any,
         data: {
             hashedPassword,
-            salt,
             hashIterations: iterations,
+            salt,
         },
     });
 
     const res = new Response(
         JSON.stringify({
-            message: "Password recovered successfully",
-            kind: SuccessKind.Updated,
-            isSuccess: true,
             isError: false,
+            isSuccess: true,
+            kind: SuccessKind.Updated,
+            message: "Password recovered successfully",
         }),
         { status: 201 }
     );
@@ -321,8 +324,8 @@ export const ResetPassword = async (
     const body =
         request.json &&
         ((await request.json?.()) as {
-            email: string;
             currentPassword: string;
+            email: string;
             newPassword: string;
             signoutOnUpdate?: boolean | undefined;
         });
@@ -333,10 +336,10 @@ export const ResetPassword = async (
 
     const { docs } = await payload.find({
         collection: internal.usersCollectionSlug as any,
+        limit: 1,
         where: {
             email: { equals: body.email },
         },
-        limit: 1,
     });
 
     if (docs.length !== 1) {
@@ -354,19 +357,19 @@ export const ResetPassword = async (
         return new InvalidCredentials();
     }
 
-    const { salt, iterations } = await hashPassword(body.newPassword);
+    const { iterations, salt } = await hashPassword(body.newPassword);
 
     await payload.update({
-        collection: internal.usersCollectionSlug as any,
         id: user.id,
+        collection: internal.usersCollectionSlug as any,
         data: {
+            hashIterations: iterations,
             password: body.newPassword,
             salt,
-            hashIterations: iterations,
         },
     });
 
-    if (!!body.signoutOnUpdate) {
+    if (body.signoutOnUpdate) {
         let cookies: string[] = [];
         cookies = [...invalidateSessionCookies(cookieName, cookies)];
         return revokeSession(cookies);
@@ -374,10 +377,10 @@ export const ResetPassword = async (
 
     const res = new Response(
         JSON.stringify({
-            message: "Password reset complete",
-            kind: SuccessKind.Updated,
-            isSuccess: true,
             isError: false,
+            isSuccess: true,
+            kind: SuccessKind.Updated,
+            message: "Password reset complete",
         }),
         {
             status: 201,

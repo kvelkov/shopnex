@@ -1,13 +1,14 @@
 import type * as oauth from "oauth4webapi";
+
 import type {
-    OAuthProviderConfig,
     AccountInfo,
     OAuthBaseProviderConfig,
+    OAuthProviderConfig,
 } from "../../types.js";
 
 const authorization_server: oauth.AuthorizationServer = {
-    issuer: "https://github.com",
     authorization_endpoint: "https://github.com/login/oauth/authorize",
+    issuer: "https://github.com",
     token_endpoint: "https://github.com/login/oauth/access_token",
     userinfo_endpoint: "https://api.github.com/user",
 };
@@ -71,19 +72,19 @@ function GitHubAuthProvider(config: GitHubAuthConfig): OAuthProviderConfig {
     return {
         ...config,
         id: "github",
-        scope: "read:user user:email",
-        authorization_server,
         name: "GitHub",
         algorithm: "oauth2",
+        authorization_server,
         kind: "oauth",
         profile: (profile): AccountInfo => {
             return {
-                sub: profile.id as string,
                 name: profile.name as string,
                 email: profile.email as string,
                 picture: profile.picture as string,
+                sub: profile.id as string,
             };
         },
+        scope: "read:user user:email",
     };
 }
 

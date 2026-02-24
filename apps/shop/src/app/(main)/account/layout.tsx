@@ -1,9 +1,8 @@
-import { Toaster } from "@medusajs/ui";
-import { headers as nextHeaders } from "next/headers";
-
 import AccountLayout from "@/templates/account-layout";
 import LoginTemplate from "@/templates/login-template";
 import { payloadSdk } from "@/utils/payload-sdk";
+import { Toaster } from "@medusajs/ui";
+import { headers as nextHeaders } from "next/headers";
 
 export default async function AccountPageLayout({
     children,

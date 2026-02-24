@@ -1,11 +1,11 @@
 "use client";
 
+import { useAuth } from "@/providers/auth";
 import { ArrowRightOnRectangle } from "@medusajs/icons";
 import { clx } from "@medusajs/ui";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 
-import { useAuth } from "@/providers/auth";
 import ChevronDown from "./icons/chevron-down";
 import MapPin from "./icons/map-pin";
 import Package from "./icons/package";

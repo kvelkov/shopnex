@@ -4,11 +4,11 @@ import { deepMergeSimple, importHandlerPath } from "payload";
 
 import type { ImportExportPluginConfig } from "./types";
 
+import pkg from "../package.json";
 import { getCreateCollectionExportTask } from "./export/getCreateExportCollectionTask";
 import { getExportCollection } from "./getExportCollection";
-import { translations } from "./translations/index";
 import { importHandler } from "./import/importHandler";
-import pkg from "../package.json";
+import { translations } from "./translations/index";
 
 export const importExportPlugin =
     (pluginConfig: ImportExportPluginConfig) =>
@@ -115,12 +115,12 @@ export const importExportPlugin =
             }
             await config.custom?.syncPlugin?.(payload, {
                 name: pkg.name,
-                version: pkg.version,
-                description: pkg.description,
-                license: pkg.license,
                 author: pkg.author,
-                icon: pkg.icon,
                 category: pkg.category,
+                description: pkg.description,
+                icon: pkg.icon,
+                license: pkg.license,
+                version: pkg.version,
             });
         };
 

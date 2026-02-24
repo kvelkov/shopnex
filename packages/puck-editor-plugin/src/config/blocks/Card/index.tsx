@@ -1,12 +1,15 @@
-/* eslint-disable @next/next/no-img-element */
-import React, { ReactElement } from "react";
-import { ComponentConfig } from "@measured/puck";
-import styles from "./styles.module.css";
+import type { ComponentConfig } from "@puckeditor/core";
+import type { ReactElement } from "react";
 
-import dynamic from "next/dynamic";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
-import { withLayout, WithLayout } from "../../components/Layout";
+import dynamic from "next/dynamic";
+import React from "react";
+
+import type { WithLayout } from "../../components/Layout";
+
+import { withLayout } from "../../components/Layout";
 import getClassNameFactory from "../../utils/get-class-name-factory";
+import styles from "./styles.module.css";
 
 const getClassName = getClassNameFactory("Card", styles);
 
@@ -27,18 +30,20 @@ const iconOptions = Object.keys(dynamicIconImports).map((iconName) => ({
 }));
 
 export type CardProps = WithLayout<{
-    title: string;
     description: string;
     icon?: string;
-    mode: "flat" | "card";
+    mode: "card" | "flat";
+    title: string;
 }>;
 
 const CardInner: ComponentConfig<CardProps> = {
+    defaultProps: {
+        description: "Description",
+        icon: "Feather",
+        mode: "flat",
+        title: "Title",
+    },
     fields: {
-        title: {
-            type: "text",
-            contentEditable: true,
-        },
         description: {
             type: "textarea",
             contentEditable: true,
@@ -54,14 +59,12 @@ const CardInner: ComponentConfig<CardProps> = {
                 { label: "flat", value: "flat" },
             ],
         },
+        title: {
+            type: "text",
+            contentEditable: true,
+        },
     },
-    defaultProps: {
-        title: "Title",
-        description: "Description",
-        icon: "Feather",
-        mode: "flat",
-    },
-    render: ({ title, icon, description, mode }) => {
+    render: ({ description, icon, mode, title }) => {
         return (
             <div className={getClassName({ [mode]: mode })}>
                 <div className={getClassName("inner")}>

@@ -1,4 +1,4 @@
-import { PasskeyProviderConfig } from "../types.js";
+import type { PasskeyProviderConfig } from "../types.js";
 
 function PasskeyAuthProvider(): PasskeyProviderConfig {
     return {
