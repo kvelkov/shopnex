@@ -17,7 +17,7 @@ main()
 async function main() {
   const root = path.resolve(dirname, '../../../../')
   const outputPath = path.resolve(dirname, '../../dist/template')
-  const sourceTemplatePath = path.resolve(root, 'templates/simple-shop')
+  const sourceTemplatePath = path.resolve(root, 'apps/simple-shop')
 
   if (!fs.existsSync(sourceTemplatePath)) {
     throw new Error(`Source path does not exist: ${sourceTemplatePath}`)

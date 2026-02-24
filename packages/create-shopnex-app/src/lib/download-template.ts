@@ -17,7 +17,7 @@ export async function downloadTemplate({
 }) {
     const branchOrTag = template.url.split("#")?.[1] || "main";
     const url = `https://codeload.github.com/shopnex-ai/shopnex/tar.gz/${branchOrTag}`;
-    const filter = `shopnex-${branchOrTag}/templates/${template.name}/`;
+    const filter = `shopnex-${branchOrTag}/apps/${template.name}/`;
 
     if (debug) {
         debugLog(`Using template url: ${template.url}`);
