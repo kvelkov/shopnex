@@ -4,6 +4,7 @@ import { cjPlugin } from '@shopnex/cj-plugin'
 import { importExportPlugin } from '@shopnex/import-export-plugin'
 import { stripePlugin } from '@shopnex/stripe-plugin'
 import { admins } from './access/roles'
+import { handleCheckoutSessionCompleted } from './collections/Orders/webhooks/checkout-session-completed'
 import { quickActionsPlugin } from '@shopnex/quick-actions-plugin'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { analyticsPlugin } from '@shopnex/analytics-plugin'
@@ -26,6 +27,9 @@ export const plugins: Plugin[] = [
     },
     stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
     stripeWebhooksEndpointSecret: process.env.STRIPE_WEBHOOKS_SIGNING_SECRET,
+    webhooks: {
+      'checkout.session.completed': handleCheckoutSessionCompleted,
+    },
   }),
   importExportPlugin({
     collections: ['products', 'orders'],

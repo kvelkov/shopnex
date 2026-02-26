@@ -191,7 +191,21 @@ export function CheckoutForm() {
                 return;
             }
 
-            // Store order data for confirmation
+            clearCart();
+
+            // If the payment provider returns a redirect URL, go there directly
+            if (result.redirectUrl) {
+                if (result.redirectUrl.startsWith("http")) {
+                    // External redirect (e.g. Stripe hosted checkout)
+                    window.location.href = result.redirectUrl;
+                } else {
+                    // Internal redirect (e.g. manual/bank transfer pending page)
+                    router.push(result.redirectUrl);
+                }
+                return;
+            }
+
+            // Fallback: store order data locally and show confirmation
             const orderData = {
                 id: result.orderId,
                 items: items,
@@ -209,11 +223,6 @@ export function CheckoutForm() {
             };
 
             localStorage.setItem("lastOrder", JSON.stringify(orderData));
-
-            // Clear cart
-            clearCart();
-
-            // Redirect to confirmation
             router.push(`/order-confirmation?orderId=${result.orderId}`);
         } catch (error) {
             console.error("Checkout error:", error);

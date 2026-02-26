@@ -225,20 +225,33 @@ export const checkoutEndpoint: Endpoint = {
 
       logger.info(`Processing checkout for order ${orderId} with ${paymentMethod} provider`)
 
+      // Create a real cart record and fetch it with depth so product variants are populated
+      const createdCart = await req.payload.create({
+        collection: 'carts',
+        data: {
+          sessionId: `checkout-${orderId}`,
+          cartItems: validatedItems.map((item) => ({
+            product: parseInt(item.id),
+            variantId: item.variantId,
+            quantity: item.quantity,
+          })),
+          completed: true,
+        },
+        req,
+      })
+
+      const cart = await req.payload.findByID({
+        collection: 'carts',
+        id: createdCart.id,
+        depth: 2,
+        req,
+      })
+
       // Create order data structure for payment providers
       const orderData = {
         req,
         orderId,
-        cart: {
-          id: `temp-${Date.now()}`,
-          cartItems: validatedItems.map((item) => ({
-            product: { id: item.id, title: item.name },
-            variantId: item.variantId,
-            quantity: item.quantity,
-            price: item.currentPrice,
-            name: item.name,
-          })),
-        },
+        cart,
         customer: customerInfo,
         payment,
         shipping,
