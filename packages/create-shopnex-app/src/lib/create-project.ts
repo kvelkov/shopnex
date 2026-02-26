@@ -238,7 +238,7 @@ export async function updatePackageJSON(args: {
     const packageObj = await fse.readJson(packageJsonPath)
     packageObj.name = projectName
 
-    updatePackageJSONDependencies({
+    await updatePackageJSONDependencies({
       latestVersion,
       packageJson: packageObj,
     })
@@ -252,28 +252,36 @@ export async function updatePackageJSON(args: {
 /**
  * Recursively updates a JSON object to replace all instances of `workspace:` with the latest version pinned.
  *
+ * - `payload` and `@payloadcms/*` packages use the provided Payload `latestVersion`.
+ * - `@shopnex/*` packages with a `workspace:*` reference have their own latest version fetched from npm.
+ * - All other `workspace:*` packages fall back to the Payload `latestVersion`.
+ *
  * Does not return and instead modifies the `packageJson` object in place.
  */
-export function updatePackageJSONDependencies(args: {
+export async function updatePackageJSONDependencies(args: {
   latestVersion: string
   packageJson: Record<string, unknown>
-}): void {
+}): Promise<void> {
   const { latestVersion, packageJson } = args
 
-  const updatedDependencies = Object.entries(packageJson.dependencies || {}).reduce(
-    (acc, [key, value]) => {
+  const entries = Object.entries(packageJson.dependencies || {})
+
+  const resolvedEntries = await Promise.all(
+    entries.map(async ([key, value]) => {
       if (typeof value === 'string' && value.startsWith('workspace:')) {
-        acc[key] = `${latestVersion}`
+        if (key.startsWith('@shopnex/')) {
+          const shopnexVersion = await getLatestPackageVersion({ packageName: key })
+          return [key, shopnexVersion] as [string, string]
+        }
+        return [key, latestVersion] as [string, string]
       } else if (key === 'payload' || key.startsWith('@payloadcms')) {
-        acc[key] = `${latestVersion}`
-      } else {
-        acc[key] = value
+        return [key, latestVersion] as [string, string]
       }
-      return acc
-    },
-    {} as Record<string, string>,
+      return [key, value] as [string, string]
+    }),
   )
-  packageJson.dependencies = updatedDependencies
+
+  packageJson.dependencies = Object.fromEntries(resolvedEntries)
 }
 
 /**
