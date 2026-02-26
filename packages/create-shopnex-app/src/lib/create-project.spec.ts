@@ -169,7 +169,7 @@ describe("createProject", () => {
         });
 
         describe("updates package.json", () => {
-            it("updates package name and bumps workspace versions", () => {
+            it("updates package name and bumps workspace versions", async () => {
                 const latestVersion = "3.0.0";
                 const initialJSON = {
                     name: "test-project",
@@ -191,7 +191,7 @@ describe("createProject", () => {
                     version: "1.0.0",
                 };
 
-                updatePackageJSONDependencies({
+                await updatePackageJSONDependencies({
                     latestVersion,
                     packageJson: initialJSON,
                 });
