@@ -904,6 +904,9 @@ importers:
       '@faceless-ui/modal':
         specifier: 3.0.0-beta.2
         version: 3.0.0-beta.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@payloadcms/translations':
+        specifier: '>=3.0.0'
+        version: 3.77.0
       cookie:
         specifier: ^1.0.2
         version: 1.0.2
@@ -961,6 +964,13 @@ importers:
       ts-essentials:
         specifier: 10.0.3
         version: 10.0.3(typescript@5.7.3)
+    devDependencies:
+      lucide-react:
+        specifier: ^0.484.0
+        version: 0.484.0(react@19.1.0)
+      react:
+        specifier: 19.1.0
+        version: 19.1.0
 
   packages/richtext-slate:
     dependencies:
