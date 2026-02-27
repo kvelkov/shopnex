@@ -7,5 +7,10 @@
     "access": "public",
     "baseBranch": "main",
     "updateInternalDependencies": "patch",
-    "ignore": ["@shopnex/cms"]
+    "ignore": [
+        "@shopnex/simple-shop",
+        "@shopnex/shop",
+        "@shopnex/docs",
+        "@shopnex/builder-shop"
+    ]
 }

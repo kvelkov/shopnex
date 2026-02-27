@@ -107,8 +107,8 @@ my-store/
 | --------------------------- | --------------------- | ------------------------ | ------------------------- |
 | ✅ Product Management       | ✅ Stripe Payment     | ✅ Custom Storefront     | 📋 Self-Hosting           |
 | ✅ Inventory Management     | ✅ CJ Dropshipping    | ✅ Builder.io            | 📋 Plugin Development     |
-| 🔄 Checkout Flow            | 📋 Shippo Fulfillment | ✅ Puck Editor           | 📋 Storefront Integration |
-| 🔄 Cart Management          | 📋 PayPal Payment     | 📋 Plasmic               | 📋 Authentication         |
+| ✅ Checkout Flow            | 📋 Shippo Fulfillment | ✅ Puck Editor           | 📋 Storefront Integration |
+| ✅ Cart Management          | 📋 PayPal Payment     | 📋 Plasmic               | 📋 Authentication         |
 | 📋 Order History / Tracking | 📋 Mollie Payment     | 🔍 Mobile (React Native) | 📋 Multi-Tenancy Guide    |
 | 📋 Omni-Channel             | 📋 Shopify Source     | 🔍 POS Integration       |                           |
 | 📋 Shipping Management      | 📋 Brightpearl        | 🔍 Marketplaces          |                           |

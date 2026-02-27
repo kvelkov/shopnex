@@ -1,5 +1,11 @@
 # @shopnex/import-export-plugin
 
+## 3.31.8
+
+### Patch Changes
+
+- Add missing peer dep
+
 ## 3.31.7
 
 ### Patch Changes
